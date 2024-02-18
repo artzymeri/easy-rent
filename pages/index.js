@@ -164,17 +164,24 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div style={{ width: "100%" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flexBasis: "45%",
+            flexGrow: "1",
+          }}
+        >
           <div
             style={{
               display: "flex",
               width: "100%",
               alignItems: "center",
               height: "50px",
-              background: "white",
+              background: "#015c92",
               borderTopLeftRadius: "12px",
               borderTopRightRadius: "12px",
-              color: "#015c92",
+              color: "white",
               fontWeight: "500",
               fontSize: "20px",
             }}
@@ -186,14 +193,6 @@ const Home = () => {
               }}
             >
               Mbërritjet e sotme
-            </span>
-            <span
-              style={{
-                flexGrow: "1",
-                textAlign: "center",
-              }}
-            >
-              Reservimet e sotme
             </span>
           </div>
           <div className="home-todays-exchange">
@@ -234,6 +233,40 @@ const Home = () => {
                 );
               })}
             </div>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flexBasis: "45%",
+            flexGrow: "1",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              alignItems: "center",
+              height: "50px",
+              background: "#015c92",
+              borderTopLeftRadius: "12px",
+              borderTopRightRadius: "12px",
+              color: "white",
+              fontWeight: "500",
+              fontSize: "20px",
+            }}
+          >
+            <span
+              style={{
+                flexGrow: "1",
+                textAlign: "center",
+              }}
+            >
+              Reservimet e sotme
+            </span>
+          </div>
+          <div className="home-todays-exchange">
             <div className="home-todays-exchange-item">
               {todaysDepartureArray.map((row) => {
                 return (
