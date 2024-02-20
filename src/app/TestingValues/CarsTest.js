@@ -11,6 +11,7 @@ const CarsTest = [
     engine: "2.0",
     availablility: "rented",
     color: "Gjelbër",
+    price: 35,
   },
   {
     id: 2,
@@ -24,6 +25,7 @@ const CarsTest = [
     engine: "3.0",
     availablility: "available",
     color: "Zezë",
+    price: 50,
   },
   {
     id: 3,
@@ -37,6 +39,7 @@ const CarsTest = [
     engine: "3.0",
     availablility: "in-service",
     color: "Zezë",
+    price: 40,
   },
   {
     id: 4,
@@ -50,6 +53,7 @@ const CarsTest = [
     engine: "2.0",
     availablility: "rented",
     color: "Bardhë",
+    price: 40
   },
   {
     id: 5,
@@ -63,6 +67,7 @@ const CarsTest = [
     engine: "2.0",
     availablility: "rented",
     color: "Kuqe",
+    price: 35
   },
 ];
 
