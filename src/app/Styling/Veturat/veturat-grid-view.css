@@ -1,60 +1,126 @@
 .veturat-grid-view-wrapper {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    height: calc(100% - 100px);
-    gap: 20px;
-    overflow-y: auto;
-    position: relative;
-    padding: 10px 10px 80px 10px;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  height: calc(100% - 100px);
+  gap: 20px;
+  overflow-y: auto;
+  position: relative;
+  padding: 10px 10px 80px 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .veturat-grid-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-basis: 290px;
-    flex-shrink: 0;
-    flex-grow: 0;
-    border-radius: 12px;
-    box-shadow: 0px 3px 10px #015d924d;
-    cursor: pointer;
-    transition: ease-in-out 0.15s;
-    gap: 10px;
-    padding: 0px;
-    align-self: start;
-    height: 270px;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-basis: 290px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border-radius: 12px;
+  box-shadow: 0px 3px 10px #015d924d;
+  cursor: pointer;
+  transition: ease-in-out 0.15s;
+  gap: 10px;
+  padding: 0px;
+  align-self: start;
+  position: relative;
 }
 
 .veturat-grid-item:hover {
-    box-shadow: 0px 3px 10px #015d929c;
+  box-shadow: 0px 3px 10px #015d929c;
 }
 
 .veturat-grid-item-image-container {
-    width: 100%;
-    height: 135px;
-    border-radius: 12px;
+  width: 100%;
+  height: 150px;
+  border-radius: 12px;
 }
 
 .veturat-grid-item-image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 12px;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.25);
 }
 
 .veturat-grid-status-badge {
-    position: absolute;
-    top: 5px;
-    left: 5px;
-}   
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
 
 .veturat-grid-status-badge .status-badge {
-    margin-left: unset !important;
-    width: 70px;
+  margin-left: unset !important;
+  width: 70px;
+}
+
+.veturat-grid-item-car-info {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  color: #015c92;
+  padding: 0px 20px;
+  gap: 10px;
+  height: 44px;
+  margin-top: 10px;
+}
+
+.veturat-grid-item-car-perks {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  justify-content: space-between;
+  padding: 10px;
+  gap: 20px;
+}
+
+.veturat-grid-item-car-perks-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-grow: 1;
+  color: #015c92;
+  gap: 7px;
+}
+
+.veturat-grid-item-car-perks-item button {
+  background-color: #015c92;
+  border: 0px solid transparent;
+  color: white;
+  padding: 7px 14px;
+  border-radius: 12px;
+}
+
+.transmission-grid-svg {
+  height: 1.3em;
+  width: 1.3em;
+}
+
+.transmission-grid-svg path {
+  fill: #015c92;
+}
+
+.available {
+  background-color: lightskyblue;
+  color: white;
+  box-shadow: 0px 3px 6px rgba(173, 216, 230, 0.5);
+}
+
+.rented {
+  background-color: red;
+  color: white;
+  box-shadow: 0px 3px 6px rgba(240, 128, 128, 0.5);
+}
+
+.in-service {
+  background-color: gray;
+  color: white;
+  box-shadow: 0px 3px 6px rgba(128, 128, 128, 0.5);
 }

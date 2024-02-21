@@ -1,62 +1,60 @@
 .veturat-list-footer {
-    display: flex;
-    align-items: center;
-    padding: 15px 30px;
-    position: absolute;
-    bottom: 0;
-    background-color: #015c92;
-    left: 25px;
-    height: 100px;
-    width: calc(100% - 50px);
-    content: "";
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    box-shadow: 0px -3px 10px #015d924d;
-  }
-  
-  .veturat-list-footer-item {
-    width: 25%;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    align-items: center;
-  }
-  
-  .veturat-list-footer-item label {
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 11px;
-    color: white;
-  }
-  
-  .veturat-list-footer-divider {
-    height: 100%;
-    width: 1px;
-    background-color: #015c924d;
-    content: '';
-  }
-  
-  .veturat-availability-select {
-    width: 120px;
-    border: 0px solid transparent;
-    padding: 5px 20px;
-    box-shadow: 0px 3px 10px rgba(255, 255, 255, 0.5);
-    border-radius: 30px;
-    appearance: none;
-    cursor: pointer;
-    color: #015c92;
-    text-transform: uppercase;
-    font-weight: 500;
-    font-size: 11px;
-    text-align: center;
-  }
-  
-  .veturat-availability-select option {
-    color: #015c92;
-  }
-  
-  .veturat-availability-select:focus,
-  .veturat-availability-select:focus-visible {
-    outline: none;
-  }
-  
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  background-color: #015c92;
+  left: 25px;
+  height: 100px;
+  width: calc(100% - 50px);
+  content: "";
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  box-shadow: 0px -3px 10px #015d924d;
+}
+
+.veturat-list-footer-item {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.veturat-list-footer-item label {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: white;
+}
+
+.veturat-list-footer-divider {
+  height: 100%;
+  width: 1px;
+  background-color: rgba(245, 245, 245, 0.5);
+  content: "";
+}
+
+.veturat-availability-select {
+  width: 120px;
+  border: 0px solid transparent;
+  padding: 5px 20px;
+  box-shadow: 0px 3px 10px rgba(255, 255, 255, 0.5);
+  border-radius: 30px;
+  appearance: none;
+  cursor: pointer;
+  color: #015c92;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 11px;
+  text-align: center;
+}
+
+.veturat-availability-select option {
+  color: #015c92;
+}
+
+.veturat-availability-select:focus,
+.veturat-availability-select:focus-visible {
+  outline: none;
+}
