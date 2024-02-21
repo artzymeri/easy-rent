@@ -9,19 +9,6 @@
   padding: 10px 10px 80px 10px;
 }
 
-.veturat-list-footer {
-  position: absolute;
-  bottom: 0;
-  background-color: white;
-  left: 25px;
-  height: 100px;
-  width: calc(100% - 50px);
-  content: "";
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  box-shadow: 0px -3px 10px #015d924d;
-}
-
 .veturat-list-item {
   padding: 15px;
   display: flex;
@@ -30,6 +17,12 @@
   align-items: center;
   box-shadow: 0px 3px 10px #015d924d;
   border-radius: 12px;
+  cursor: pointer;
+  transition: ease-in-out 0.15s;
+}
+
+.veturat-list-item:hover {
+  box-shadow: 0px 3px 10px #015d929c;
 }
 
 .veturat-list-item-image-container {
