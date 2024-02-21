@@ -6,6 +6,29 @@ import { Tooltip } from "@mui/material";
 import { Help, HelpCenter, LocalGasStationOutlined, RestoreOutlined, WavesOutlined } from "@mui/icons-material";
 
 const VeturatListView = () => {
+
+  const checkStatus = (carStatus) => {
+    if (carStatus == 'available') {
+      return (
+        <div className="status-badge available">
+          Gati
+        </div>
+      )
+    } else if (carStatus == 'rented') {
+      return (
+        <div className="status-badge rented">
+          Zënë
+        </div>
+      )
+    } else if (carStatus == 'in-service') {
+      return (
+        <div className="status-badge in-service">
+          servis
+        </div>
+      )
+    }
+  }
+
   return (
     <>
       <div className="m-t-50 veturat-list-view-wrapper">
@@ -18,8 +41,9 @@ const VeturatListView = () => {
               <div className="veturat-list-item-car-info">
                 <h3 style={{fontWeight: '300'}}>{car.make} <span style={{fontWeight: 'bold'}}>{car.model}</span></h3>
                 <h1 style={{color: 'orangered'}}>{car.price}€<span style={{fontSize: '18px', fontWeight: '300', marginLeft: '6px', fontStyle: 'italic'}}>çmimi për ditë</span></h1>
+                {checkStatus(car.availablility)}
                 <Tooltip title='Kliko për të shikuar detajet'>
-                  <button><Help sx={{height: '16px'}} /> Detajet </button>
+                  <button>Detajet</button>
                 </Tooltip>
               </div>
               <div className="veturat-list-item-child">
@@ -38,7 +62,64 @@ const VeturatListView = () => {
           );
         })}
       </div>
-      <div className="veturat-list-footer"></div>
+      <div className="veturat-list-footer">
+        <div className="veturat-list-footer-item">
+          <label for="availability-select">Filtro sipas statusit:</label>
+          <select id="availability-select" className="veturat-availability-select">
+            <option>Të Gjitha</option>
+            <option>Lirë</option>
+            <option>Zënë</option>
+            <option>Servis</option>
+          </select>
+        </div>
+        <div className="veturat-list-footer-divider"></div>
+        <div className="veturat-list-footer-item">
+          <label for="availability-select">Filtro sipas derivateve:</label>
+          <select id="availability-select" className="veturat-availability-select">
+            <option>Të Gjitha</option>
+            <option>Naftë</option>
+            <option>Benzinë</option>
+            <option>Elektrikë</option>
+          </select>
+        </div>
+        <div className="veturat-list-footer-divider"></div>
+        <div className="veturat-list-footer-item">
+          <label for="availability-select">Filtro sipas transmisionit:</label>
+          <select id="availability-select" className="veturat-availability-select">
+            <option>Të Gjitha</option>
+            <option>Manual</option>
+            <option>Automatik</option>
+          </select>
+        </div>
+        <div className="veturat-list-footer-divider"></div>
+        <div className="veturat-list-footer-item">
+          <label for="availability-select">Filtro sipas vitit:</label>
+          <select id="availability-select" className="veturat-availability-select">
+            <option>Të Gjitha</option>
+            <option>2024</option>
+            <option>2023</option>
+            <option>2022</option>
+            <option>2021</option>
+            <option>2020</option>
+            <option>2019</option>
+            <option>2018</option>
+            <option>2017</option>
+            <option>2016</option>
+            <option>2015</option>
+            <option>2014</option>
+            <option>2013</option>
+            <option>2012</option>
+            <option>2011</option>
+            <option>2010</option>
+            <option>2009</option>
+            <option>2008</option>
+            <option>2007</option>
+            <option>2006</option>
+            <option>2005</option>
+            <option>2004</option>
+          </select>
+        </div>
+      </div>
     </>
   );
 };
