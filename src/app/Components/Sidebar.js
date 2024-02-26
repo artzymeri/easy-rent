@@ -1,6 +1,7 @@
 import React from "react";
 import "@/app/Styling/Sidebar/sidebar.css";
 import {
+  Add,
   CalendarMonth,
   DirectionsCar,
   Fitbit,
@@ -31,13 +32,18 @@ const navigationOptions = [
     link: "/reservimet",
     icon: <CalendarMonth />,
   },
+  {
+    title: "Shto Reservim",
+    link: "/shtoreservim",
+    icon: <Add />,
+  }
 ];
 
 const Sidebar = ({ children }) => {
   const router = useRouter();
 
-  const activateButtonClass = (path) => {
-    if (router.pathname == path) {
+  const activateButtonClass = (navigation) => {
+    if (router.pathname == navigation.link) {
       return "sidebar-navigation-button sidebar-navigation-button-active";
     } else {
       return "sidebar-navigation-button";
@@ -62,7 +68,7 @@ const Sidebar = ({ children }) => {
             return (
               <div
                 key={index}
-                className={activateButtonClass(navigation.link)}
+                className={activateButtonClass(navigation)}
                 onClick={() => {
                   router.push(navigation.link);
                 }}

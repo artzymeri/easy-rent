@@ -23,9 +23,12 @@ const Reservimet = () => {
 
     return daysArray;
   };
+  
 
   // Generate array of objects representing each day of the current month
   const daysInMonth = generateDaysInMonth(currentMonth);
+
+  console.log(daysInMonth)
 
   const formatMonth = (month) => {
     return month.format('MMMM YYYY'); // Use dayjs formatting function to display month and year
@@ -51,13 +54,15 @@ const Reservimet = () => {
               <ArrowLeft onClick={previousMonth} style={{cursor: 'pointer'}} />
               <ArrowRight onClick={nextMonth} style={{cursor: 'pointer'}} />
             </div>
-            <h5><span style={{fontWeight: '300'}}>Month: </span>{formatMonth(currentMonth)}</h5>
+            <h5>{formatMonth(currentMonth)}</h5>
           </div>
         </div>
-        <div style={{display: 'flex', flexWrap: 'wrap', width: '100%', marginTop: '50px', gap: '5px'}}>
+        <div style={{display: 'flex', flexWrap: 'wrap', width: '100%', marginTop: '50px', gap: '5px', maxHeight: 'calc(100dvh - 110px)'}}>
           {daysInMonth.map((day)=>{
             return (
-              <div style={{display: 'flex', flexGrow: '0', content: '', border: '1px solid gray', height: '125px', flexBasis: '125px', borderRadius: '12px'}}></div>
+              <div style={{display: 'flex', flexGrow: '0', content: '', border: '1px solid gray', height: '130px', flexBasis: '130px', borderRadius: '12px', padding: '5px'}}>
+                <span>{day.date?.$D}</span>
+              </div>
             )
           })}
         </div>
