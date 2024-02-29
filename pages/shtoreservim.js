@@ -30,6 +30,7 @@ const ShtoReservim = () => {
     carInfo: null,
     startTime: null,
     endTime: null,
+    imagesArray: null,
   });
 
   const [images, setImages] = useState([]);
@@ -81,9 +82,18 @@ const ShtoReservim = () => {
       });
   };
 
+  const deleteImage = (deletedimage) => {
+    const newArray = images.filter((image) => deletedimage !== image);
+    setImages(newArray);
+  };
+
+  const saveImages = () => {
+    setNewReservation({ ...newReservation, imagesArray: images });
+    setOpenDialog(false);
+  };
+
   const addReservation = () => {
-    // Here comes the function to add the reservation to backend from newReservation object
-    console.log(images);
+    localStorage.setItem("reservation", JSON.stringify(newReservation));
   };
 
   return (
@@ -91,7 +101,6 @@ const ShtoReservim = () => {
       <Dialog
         open={openDialog}
         onClose={() => {
-          setImages([]);
           setOpenDialog(false);
         }}
       >
@@ -106,9 +115,12 @@ const ShtoReservim = () => {
         >
           Fotografitë e veturës
         </DialogTitle>
-        <DialogContent style={{ background: "whitesmoke" }}>
+        <DialogContent
+          sx={{ padding: "5px" }}
+          style={{ background: "whitesmoke" }}
+        >
           <ImageList
-            sx={{ width: 500, height: 450, marginTop: "4px" }}
+            sx={{ width: 500, height: 450, marginTop: "5px" }}
             cols={3}
             rowHeight={164}
           >
@@ -122,6 +134,9 @@ const ShtoReservim = () => {
                 key={index}
               >
                 <div
+                  onClick={() => {
+                    deleteImage(image);
+                  }}
                   style={{
                     position: "absolute",
                     top: "5px",
@@ -147,6 +162,41 @@ const ShtoReservim = () => {
                 />
               </ImageListItem>
             ))}
+            <div
+              style={{
+                width: "162px",
+                height: "162px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                background: "white",
+                borderRadius: "12px",
+                border: "1px solid #015c92",
+                cursor: "pointer",
+                position: "relative",
+                zIndex: "1",
+              }}
+            >
+              <input
+                style={{
+                  opacity: "0",
+                  position: "absolute",
+                  left: "0",
+                  right: "0",
+                  top: "0",
+                  bottom: "0",
+                  zIndex: "2",
+                  cursor: "alias",
+                }}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileChange}
+              />
+              <AddAPhoto
+                sx={{ color: "#015c92", height: "33px", width: "33px" }}
+              />
+            </div>
           </ImageList>
         </DialogContent>
         <DialogActions
@@ -154,6 +204,7 @@ const ShtoReservim = () => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            height: "64px",
           }}
         >
           <Button
@@ -166,12 +217,7 @@ const ShtoReservim = () => {
           >
             Mbyll
           </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              setOpenDialog(false);
-            }}
-          >
+          <Button variant="contained" onClick={saveImages}>
             Ruaj
           </Button>
         </DialogActions>
@@ -203,6 +249,12 @@ const ShtoReservim = () => {
             fullWidth
             style={{ background: "white" }}
             value={newReservation.firstAndLastName}
+            onChange={(e) => {
+              setNewReservation({
+                ...newReservation,
+                firstAndLastName: e.target.value,
+              });
+            }}
           />
           <TextField
             label="Numri Telefonit"
@@ -210,6 +262,12 @@ const ShtoReservim = () => {
             fullWidth
             style={{ background: "white" }}
             value={newReservation.phoneNumber}
+            onChange={(e) => {
+              setNewReservation({
+                ...newReservation,
+                phoneNumber: e.target.value,
+              });
+            }}
           />
           <TextField
             label="Kodi Leternjoftimit"
@@ -217,6 +275,12 @@ const ShtoReservim = () => {
             fullWidth
             style={{ background: "white" }}
             value={newReservation.documentId}
+            onChange={(e) => {
+              setNewReservation({
+                ...newReservation,
+                documentId: e.target.value,
+              });
+            }}
           />
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Vetura</InputLabel>

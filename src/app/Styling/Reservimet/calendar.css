@@ -1,0 +1,8 @@
+.calendar-wrapper {
+  max-height: calc(100dvh - 110px);
+  gap: 5px;
+  margin-top: 50px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
