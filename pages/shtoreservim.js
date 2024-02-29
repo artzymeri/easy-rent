@@ -1,6 +1,7 @@
 import Sidebar from "@/app/Components/Sidebar";
 import React, { useState } from "react";
 import "@/app/Styling/global-styling.css";
+import "@/app/Styling/Reservimet/shtoreservim.css"
 import {
   Button,
   FormControl,
@@ -121,10 +122,12 @@ const ShtoReservim = () => {
               onChange={handleEndTime}
             />
           </LocalizationProvider>
+          <input type="file" className="file-uploader" />
           <Button
             fullWidth
             variant="contained"
             onClick={addReservation}
+            sx={{height: '56px'}}
             size="large"
           >
             Shto Reservimin

@@ -63,6 +63,7 @@ const Klientet = () => {
             boxShadow: "0px 3px 10px #015d924d",
             color: "#015c92",
             borderRadius: "12px",
+            background: 'white'
           }}
           rows={rows}
           columns={columns}

@@ -65,11 +65,16 @@
   font-weight: 500;
   color: #015c92;
   cursor: pointer;
+  transition: 0.1s ease-in-out;
 }
 
 .sidebar-navigation-button-active {
   background-color: #015c92 !important;
   color: white !important;
+}
+
+.sidebar-navigation-button:hover {
+  background-color: whitesmoke;
 }
 
 .sidebar-bottom-profile {
