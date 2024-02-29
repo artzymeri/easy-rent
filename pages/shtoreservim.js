@@ -21,6 +21,7 @@ import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { AddAPhoto, Close, Delete } from "@mui/icons-material";
+import axios from "axios";
 
 const ShtoReservim = () => {
   const [newReservation, setNewReservation] = useState({
@@ -93,7 +94,13 @@ const ShtoReservim = () => {
   };
 
   const addReservation = () => {
-    localStorage.setItem("reservation", JSON.stringify(newReservation));
+    axios
+      .post("http://localhost:1234/addreservation", {
+        newReservation,
+      })
+      .then(() => {
+        window.location.reload();
+      });
   };
 
   return (
@@ -306,11 +313,13 @@ const ShtoReservim = () => {
               label="Koha e fillimit"
               sx={{ width: "100%", background: "white" }}
               onChange={handleStartTime}
+              value={newReservation.startTime}
             />
             <DateTimePicker
               label="Koha e mbarimit"
               sx={{ width: "100%", background: "white" }}
               onChange={handleEndTime}
+              value={newReservation.endTime}
             />
           </LocalizationProvider>
           <input

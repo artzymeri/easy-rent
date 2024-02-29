@@ -3,10 +3,19 @@ import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import "@/app/Styling/Reservimet/calendar.css";
+import axios from "axios";
 
 const Reservimet = () => {
+  const [reservations, setReservations] = useState([]);
+
   useEffect(() => {
-    console.log(JSON.parse(localStorage.getItem("reservation")));
+    axios.get("http://localhost:1234/getreservations").then((res) => {
+      setReservations(res.data);
+      console.log(res.data);
+      for (const time in res.data[0]) {
+        console.log(dayjs(time.startTime));
+      }
+    });
   }, []);
 
   const [currentMonth, setCurrentMonth] = useState(dayjs()); // Initialize with current month using dayjs
