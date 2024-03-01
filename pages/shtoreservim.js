@@ -238,6 +238,8 @@ const ShtoReservim = () => {
           alignItems: "center",
           flexDirection: "column",
           width: "100%",
+          maxHeight: "100%",
+          overflowY: "auto",
         }}
       >
         <div
