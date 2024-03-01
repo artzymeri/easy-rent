@@ -1,0 +1,504 @@
+.nr-0 {
+  background-color: #696969;
+  color: white;
+}
+
+.nr-1 {
+  background-color: #4682b4; /* Steel Blue */
+  color: white;
+}
+
+.nr-2 {
+  background-color: #32cd32; /* Lime Green */
+  color: white;
+}
+
+.nr-3 {
+  background-color: #9932cc; /* Dark Orchid */
+  color: white;
+}
+
+.nr-4 {
+  background-color: #ff6347; /* Tomato */
+  color: white;
+}
+
+.nr-5 {
+  background-color: #ffd700; /* Gold */
+  color: black;
+}
+
+.nr-6 {
+  background-color: #00ffff; /* Cyan */
+  color: black;
+}
+
+.nr-7 {
+  background-color: #ff69b4; /* Hot Pink */
+  color: black;
+}
+
+.nr-8 {
+  background-color: #1e90ff; /* Dodger Blue */
+  color: white;
+}
+
+.nr-9 {
+  background-color: #8a2be2; /* Blue Violet */
+  color: white;
+}
+
+.nr-10 {
+  background-color: #20b2aa; /* Light Sea Green */
+  color: white;
+}
+
+.nr-11 {
+  background-color: #ff4500; /* Orange Red */
+  color: white;
+}
+
+.nr-12 {
+  background-color: #7cfc00; /* Lawn Green */
+  color: black;
+}
+
+.nr-13 {
+  background-color: #ba55d3; /* Medium Orchid */
+  color: white;
+}
+
+.nr-14 {
+  background-color: #ffa500; /* Orange */
+  color: black;
+}
+
+.nr-15 {
+  background-color: #6b8e23; /* Olive Drab */
+  color: white;
+}
+
+.nr-16 {
+  background-color: #9370db; /* Medium Purple */
+  color: white;
+}
+
+.nr-17 {
+  background-color: #3cb371; /* Medium Sea Green */
+  color: white;
+}
+
+.nr-18 {
+  background-color: #696969; /* Dim Gray */
+  color: white;
+}
+
+.nr-19 {
+  background-color: #8b4513; /* Saddle Brown */
+  color: white;
+}
+
+.nr-20 {
+  background-color: #00bfff; /* Deep Sky Blue */
+  color: black;
+}
+
+.nr-21 {
+  background-color: #7b68ee; /* Medium Slate Blue */
+  color: white;
+}
+
+.nr-22 {
+  background-color: #00fa9a; /* Medium Spring Green */
+  color: black;
+}
+
+.nr-23 {
+  background-color: #4682b4; /* Steel Blue */
+  color: white;
+}
+
+.nr-24 {
+  background-color: #32cd32; /* Lime Green */
+  color: black;
+}
+
+.nr-25 {
+  background-color: #9932cc; /* Dark Orchid */
+  color: white;
+}
+
+.nr-26 {
+  background-color: #ff6347; /* Tomato */
+  color: white;
+}
+
+.nr-27 {
+  background-color: #ffd700; /* Gold */
+  color: black;
+}
+
+.nr-28 {
+  background-color: #00ffff; /* Cyan */
+  color: black;
+}
+
+.nr-29 {
+  background-color: #ff69b4; /* Hot Pink */
+  color: black;
+}
+
+.nr-30 {
+  background-color: #1e90ff; /* Dodger Blue */
+  color: white;
+}
+
+.nr-31 {
+  background-color: #8a2be2; /* Blue Violet */
+  color: white;
+}
+
+.nr-32 {
+  background-color: #20b2aa; /* Light Sea Green */
+  color: white;
+}
+
+.nr-33 {
+  background-color: #ff4500; /* Orange Red */
+  color: white;
+}
+
+.nr-34 {
+  background-color: #7cfc00; /* Lawn Green */
+  color: black;
+}
+
+.nr-35 {
+  background-color: #ba55d3; /* Medium Orchid */
+  color: white;
+}
+
+.nr-36 {
+  background-color: #ffa500; /* Orange */
+  color: black;
+}
+
+.nr-37 {
+  background-color: #6b8e23; /* Olive Drab */
+  color: white;
+}
+
+.nr-38 {
+  background-color: #9370db; /* Medium Purple */
+  color: white;
+}
+
+.nr-39 {
+  background-color: #3cb371; /* Medium Sea Green */
+  color: white;
+}
+
+.nr-40 {
+  background-color: #696969; /* Dim Gray */
+  color: white;
+}
+
+.nr-41 {
+  background-color: #8b4513; /* Saddle Brown */
+  color: white;
+}
+
+.nr-42 {
+  background-color: #00bfff; /* Deep Sky Blue */
+  color: black;
+}
+
+.nr-43 {
+  background-color: #7b68ee; /* Medium Slate Blue */
+  color: white;
+}
+
+.nr-44 {
+  background-color: #00fa9a; /* Medium Spring Green */
+  color: black;
+}
+
+.nr-45 {
+  background-color: #4682b4; /* Steel Blue */
+  color: white;
+}
+
+.nr-46 {
+  background-color: #32cd32; /* Lime Green */
+  color: black;
+}
+
+.nr-47 {
+  background-color: #9932cc; /* Dark Orchid */
+  color: white;
+}
+
+.nr-48 {
+  background-color: #ff6347; /* Tomato */
+  color: white;
+}
+
+.nr-49 {
+  background-color: #ffd700; /* Gold */
+  color: black;
+}
+
+.nr-50 {
+  background-color: #00ffff; /* Cyan */
+  color: black;
+}
+
+.nr-51 {
+  background-color: #ff69b4; /* Hot Pink */
+  color: black;
+}
+
+.nr-52 {
+  background-color: #1e90ff; /* Dodger Blue */
+  color: white;
+}
+
+.nr-53 {
+  background-color: #8a2be2; /* Blue Violet */
+  color: white;
+}
+
+.nr-54 {
+  background-color: #20b2aa; /* Light Sea Green */
+  color: white;
+}
+
+.nr-55 {
+  background-color: #ff4500; /* Orange Red */
+  color: white;
+}
+
+.nr-56 {
+  background-color: #7cfc00; /* Lawn Green */
+  color: black;
+}
+
+.nr-57 {
+  background-color: #ba55d3; /* Medium Orchid */
+  color: white;
+}
+
+.nr-58 {
+  background-color: #ffa500; /* Orange */
+  color: black;
+}
+
+.nr-59 {
+  background-color: #6b8e23; /* Olive Drab */
+  color: white;
+}
+
+.nr-60 {
+  background-color: #9370db; /* Medium Purple */
+  color: white;
+}
+
+.nr-61 {
+  background-color: #3cb371; /* Medium Sea Green */
+  color: white;
+}
+
+.nr-62 {
+  background-color: #696969; /* Dim Gray */
+  color: white;
+}
+
+.nr-63 {
+  background-color: #8b4513; /* Saddle Brown */
+  color: white;
+}
+
+.nr-64 {
+  background-color: #00bfff; /* Deep Sky Blue */
+  color: black;
+}
+
+.nr-65 {
+  background-color: #7b68ee; /* Medium Slate Blue */
+  color: white;
+}
+
+.nr-66 {
+  background-color: #00fa9a; /* Medium Spring Green */
+  color: black;
+}
+
+.nr-67 {
+  background-color: #4682b4; /* Steel Blue */
+  color: white;
+}
+
+.nr-68 {
+  background-color: #32cd32; /* Lime Green */
+  color: black;
+}
+
+.nr-69 {
+  background-color: #9932cc; /* Dark Orchid */
+  color: white;
+}
+
+.nr-70 {
+  background-color: #ff6347; /* Tomato */
+  color: white;
+}
+
+.nr-71 {
+  background-color: #ffd700; /* Gold */
+  color: black;
+}
+
+.nr-72 {
+  background-color: #00ffff; /* Cyan */
+  color: black;
+}
+
+.nr-73 {
+  background-color: #ff69b4; /* Hot Pink */
+  color: black;
+}
+
+.nr-74 {
+  background-color: #1e90ff; /* Dodger Blue */
+  color: white;
+}
+
+.nr-75 {
+  background-color: #8a2be2; /* Blue Violet */
+  color: white;
+}
+
+.nr-76 {
+  background-color: #20b2aa; /* Light Sea Green */
+  color: white;
+}
+
+.nr-77 {
+  background-color: #ff4500; /* Orange Red */
+  color: white;
+}
+
+.nr-78 {
+  background-color: #7cfc00; /* Lawn Green */
+  color: black;
+}
+
+.nr-79 {
+  background-color: #ba55d3; /* Medium Orchid */
+  color: white;
+}
+
+.nr-80 {
+  background-color: #ffa500; /* Orange */
+  color: black;
+}
+
+.nr-81 {
+  background-color: #6b8e23; /* Olive Drab */
+  color: white;
+}
+
+.nr-82 {
+  background-color: #9370db; /* Medium Purple */
+  color: white;
+}
+
+.nr-83 {
+  background-color: #3cb371; /* Medium Sea Green */
+  color: white;
+}
+
+.nr-84 {
+  background-color: #696969; /* Dim Gray */
+  color: white;
+}
+
+.nr-85 {
+  background-color: #8b4513; /* Saddle Brown */
+  color: white;
+}
+
+.nr-86 {
+  background-color: #00bfff; /* Deep Sky Blue */
+  color: black;
+}
+
+.nr-87 {
+  background-color: #7b68ee; /* Medium Slate Blue */
+  color: white;
+}
+
+.nr-88 {
+  background-color: #00fa9a; /* Medium Spring Green */
+  color: black;
+}
+
+.nr-89 {
+  background-color: #4682b4; /* Steel Blue */
+  color: white;
+}
+
+.nr-90 {
+  background-color: #32cd32; /* Lime Green */
+  color: black;
+}
+
+.nr-91 {
+  background-color: #9932cc; /* Dark Orchid */
+  color: white;
+}
+
+.nr-92 {
+  background-color: #ff6347; /* Tomato */
+  color: white;
+}
+
+.nr-93 {
+  background-color: #ffd700; /* Gold */
+  color: black;
+}
+
+.nr-94 {
+  background-color: #00ffff; /* Cyan */
+  color: black;
+}
+
+.nr-95 {
+  background-color: #ff69b4; /* Hot Pink */
+  color: black;
+}
+
+.nr-96 {
+  background-color: #1e90ff; /* Dodger Blue */
+  color: white;
+}
+
+.nr-97 {
+  background-color: #8a2be2; /* Blue Violet */
+  color: white;
+}
+
+.nr-98 {
+  background-color: #20b2aa; /* Light Sea Green */
+  color: white;
+}
+
+.nr-99 {
+  background-color: #ff4500; /* Orange Red */
+  color: white;
+}
+
+.nr-100 {
+  background-color: #7cfc00; /* Lawn Green */
+  color: black;
+}

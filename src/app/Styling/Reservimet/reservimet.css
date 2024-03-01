@@ -1,0 +1,21 @@
+.reservimet-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.reservimet-header-container h3 {
+  font-weight: 400;
+}
+
+.reservimet-header-date-navigator {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.reservimet-header-date-navigator-arrows {
+  display: flex;
+  gap: 5px;
+}

@@ -2,14 +2,15 @@ import Sidebar from "@/app/Components/Sidebar";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import "@/app/Styling/Reservimet/calendar.css";
+import "@/app/Styling/Reservimet/calendar_day_colors.css";
+import "@/app/Styling/Reservimet/reservimet.css";
 import axios from "axios";
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
-
 
 const Reservimet = () => {
   const [reservations, setReservations] = useState([]);
@@ -17,7 +18,6 @@ const Reservimet = () => {
   useEffect(() => {
     axios.get("http://localhost:1234/getreservations").then((res) => {
       setReservations(res.data);
-      console.log(res.data);
     });
   }, []);
 
@@ -43,10 +43,41 @@ const Reservimet = () => {
   // Generate array of objects representing each day of the current month
   const daysInMonth = generateDaysInMonth(currentMonth);
 
-  console.log(daysInMonth);
-
   const formatMonth = (month) => {
-    return month.format("MMMM YYYY"); // Use dayjs formatting function to display month and year
+    console.log(month.format("MMMM YYYY"));
+    if (month.format("MMMM YYYY") == `January ${month.format("YYYY")}`) {
+      return `Janar ${month.format("YYYY")}`;
+    } else if (
+      month.format("MMMM YYYY") == `February ${month.format("YYYY")}`
+    ) {
+      return `Shkurt ${month.format("YYYY")}`;
+    } else if (month.format("MMMM YYYY") == `March ${month.format("YYYY")}`) {
+      return `Mars ${month.format("YYYY")}`;
+    } else if (month.format("MMMM YYYY") == `April ${month.format("YYYY")}`) {
+      return `Prill ${month.format("YYYY")}`;
+    } else if (month.format("MMMM YYYY") == `May ${month.format("YYYY")}`) {
+      return `Maj ${month.format("YYYY")}`;
+    } else if (month.format("MMMM YYYY") == `June ${month.format("YYYY")}`) {
+      return `Qershor ${month.format("YYYY")}`;
+    } else if (month.format("MMMM YYYY") == `July ${month.format("YYYY")}`) {
+      return `Korrik ${month.format("YYYY")}`;
+    } else if (month.format("MMMM YYYY") == `August ${month.format("YYYY")}`) {
+      return `Gusht ${month.format("YYYY")}`;
+    } else if (
+      month.format("MMMM YYYY") == `September ${month.format("YYYY")}`
+    ) {
+      return `Shtator ${month.format("YYYY")}`;
+    } else if (month.format("MMMM YYYY") == `October ${month.format("YYYY")}`) {
+      return `Tetor ${month.format("YYYY")}`;
+    } else if (
+      month.format("MMMM YYYY") == `November ${month.format("YYYY")}`
+    ) {
+      return `Nëntor ${month.format("YYYY")}`;
+    } else if (
+      month.format("MMMM YYYY") == `December ${month.format("YYYY")}`
+    ) {
+      return `Dhjetor ${month.format("YYYY")}`;
+    }
   };
 
   const previousMonth = () => {
@@ -68,17 +99,10 @@ const Reservimet = () => {
           alignItems: "center",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          <h3 style={{ fontWeight: "400" }}>Reservimet</h3>
-          <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
-            <div style={{ display: "flex", gap: "5px" }}>
+        <div className="reservimet-header-container">
+          <h3>Reservimet</h3>
+          <div className="reservimet-header-date-navigator">
+            <div className="reservimet-header-date-navigator-arrows">
               <ArrowLeft
                 onClick={previousMonth}
                 style={{ cursor: "pointer" }}
@@ -92,34 +116,41 @@ const Reservimet = () => {
           {daysInMonth.map((day) => {
             return (
               <div
-                key={day.date.format('YYYY-MM-DD')} // Adding a unique key for each day
-                style={{
-                  display: "flex",
-                  flexGrow: "0",
-                  content: "",
-                  border: "1px solid gray",
-                  height: "130px",
-                  flexBasis: "130px",
-                  borderRadius: "12px",
-                  padding: "5px",
-                }}
+                className="calendar-day-box"
+                key={day.date.format("YYYY-MM-DD")}
               >
-                <span>{day.date.format("D")}</span>
-                {reservations.map((reservation) => {
-                  const reservationDateStart = dayjs(reservation.startTime).format('YYYY-MM-DD');
-                  const reservationDateEnd = dayjs(reservation.endTime).format('YYYY-MM-DD');
-                  const todayDate = dayjs(day.date).format('YYYY-MM-DD');
-                  if(
-                    dayjs(todayDate).isSameOrBefore(reservationDateEnd, 'day') &&
-                    dayjs(todayDate).isSameOrAfter(reservationDateStart, 'day')
-                  ){
-                    return (
-                      <div>
-                        Day
-                      </div>
-                    )
-                  }
-                })}
+                <div className="calendar-day-box-header">
+                  <span>{day.date.format("D")}</span>
+                </div>
+                <div className="calendar-day-box-reservations-container">
+                  {reservations.map((reservation, index) => {
+                    const reservationDateStart = dayjs(
+                      reservation.startTime
+                    ).format("YYYY-MM-DD");
+                    const reservationDateEnd = dayjs(
+                      reservation.endTime
+                    ).format("YYYY-MM-DD");
+                    const todayDate = dayjs(day.date).format("YYYY-MM-DD");
+                    if (
+                      dayjs(todayDate).isSameOrBefore(
+                        reservationDateEnd,
+                        "day"
+                      ) &&
+                      dayjs(todayDate).isSameOrAfter(
+                        reservationDateStart,
+                        "day"
+                      )
+                    ) {
+                      return (
+                        <div
+                          className={`nr-${index} calendar-day-box-reservations-item`}
+                        >
+                          {reservation.clientNameSurname}
+                        </div>
+                      );
+                    }
+                  })}
+                </div>
               </div>
             );
           })}
