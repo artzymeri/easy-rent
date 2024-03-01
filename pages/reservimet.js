@@ -2,8 +2,14 @@ import Sidebar from "@/app/Components/Sidebar";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import "@/app/Styling/Reservimet/calendar.css";
 import axios from "axios";
+
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
+
 
 const Reservimet = () => {
   const [reservations, setReservations] = useState([]);
@@ -12,9 +18,6 @@ const Reservimet = () => {
     axios.get("http://localhost:1234/getreservations").then((res) => {
       setReservations(res.data);
       console.log(res.data);
-      for (const time in res.data[0]) {
-        console.log(dayjs(time.startTime));
-      }
     });
   }, []);
 
@@ -89,6 +92,7 @@ const Reservimet = () => {
           {daysInMonth.map((day) => {
             return (
               <div
+                key={day.date.format('YYYY-MM-DD')} // Adding a unique key for each day
                 style={{
                   display: "flex",
                   flexGrow: "0",
@@ -100,7 +104,22 @@ const Reservimet = () => {
                   padding: "5px",
                 }}
               >
-                <span>{day.date?.$D}</span>
+                <span>{day.date.format("D")}</span>
+                {reservations.map((reservation) => {
+                  const reservationDateStart = dayjs(reservation.startTime).format('YYYY-MM-DD');
+                  const reservationDateEnd = dayjs(reservation.endTime).format('YYYY-MM-DD');
+                  const todayDate = dayjs(day.date).format('YYYY-MM-DD');
+                  if(
+                    dayjs(todayDate).isSameOrBefore(reservationDateEnd, 'day') &&
+                    dayjs(todayDate).isSameOrAfter(reservationDateStart, 'day')
+                  ){
+                    return (
+                      <div>
+                        Day
+                      </div>
+                    )
+                  }
+                })}
               </div>
             );
           })}
