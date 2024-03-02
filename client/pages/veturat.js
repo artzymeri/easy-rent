@@ -1,10 +1,10 @@
-import Sidebar from "../client/src/app/Components/Sidebar";
+import Sidebar from "../src/app/Components/Sidebar";
 import React, { useState } from "react";
 import "@/app/Styling/global-styling.css";
 import "@/app/Styling/Veturat/veturat-listing.css";
 import { GridView, Tune, ViewList } from "@mui/icons-material";
-import VeturatListView from "../client/src/app/Components/VeturatListView";
-import VeturatGridView from "../client/src/app/Components/VeturatGridView";
+import VeturatListView from "../src/app/Components/VeturatListView";
+import VeturatGridView from "../src/app/Components/VeturatGridView";
 
 const Veturat = () => {
   const [carViewMode, setCarViewMode] = useState("list");
