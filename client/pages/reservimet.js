@@ -1,4 +1,4 @@
-import Sidebar from "@/app/Components/Sidebar";
+import Sidebar from "../src/app/Components/Sidebar";
 import {
   AddAPhoto,
   ArrowLeft,
@@ -14,7 +14,7 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import "@/app/Styling/Reservimet/calendar.css";
 import "@/app/Styling/Reservimet/calendar_day_colors.css";
 import "@/app/Styling/Reservimet/reservimet.css";
-import CarsTest from "@/app/TestingValues/CarsTest";
+import CarsTest from "../src/app/TestingValues/CarsTest";
 import axios from "axios";
 import {
   Button,
@@ -464,15 +464,7 @@ const Reservimet = () => {
                         setReservations(res.data);
                       });
                   });
-                setSelectedReservation({
-                  firstAndLastName: null,
-                  phoneNumber: null,
-                  documentId: null,
-                  carInfo: null,
-                  startTime: null,
-                  endTime: null,
-                  imagesArray: null,
-                });
+                setSelectedReservation(null);
                 setSelectedReservationDialog(false);
               }}
             >

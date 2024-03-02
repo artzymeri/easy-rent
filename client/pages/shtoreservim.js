@@ -1,4 +1,4 @@
-import Sidebar from "@/app/Components/Sidebar";
+import Sidebar from "../client/src/app/Components/Sidebar";
 import React, { useState } from "react";
 import "@/app/Styling/global-styling.css";
 import "@/app/Styling/Reservimet/shtoreservim.css";
@@ -16,7 +16,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import CarsTest from "@/app/TestingValues/CarsTest";
+import CarsTest from "../client/src/app/TestingValues/CarsTest";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";

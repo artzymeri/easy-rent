@@ -1,7 +1,7 @@
 import React from "react";
 import "@/app/Styling/global-styling.css";
 import "@/app/Styling/Home/home.css";
-import Sidebar from "@/app/Components/Sidebar";
+import Sidebar from "../src/app/Components/Sidebar";
 import {
   AccessTime,
   AccountBalanceWallet,

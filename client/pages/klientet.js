@@ -1,4 +1,4 @@
-import Sidebar from "@/app/Components/Sidebar";
+import Sidebar from "../src/app/Components/Sidebar";
 import React from "react";
 import "@/app/Styling/global-styling.css";
 import "@/app/Styling/Klientet/klientet.css";
@@ -63,7 +63,7 @@ const Klientet = () => {
             boxShadow: "0px 3px 10px #015d924d",
             color: "#015c92",
             borderRadius: "12px",
-            background: 'white'
+            background: "white",
           }}
           rows={rows}
           columns={columns}
