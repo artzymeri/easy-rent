@@ -5,6 +5,7 @@ import {
   ArrowRight,
   CloseFullscreen,
   Delete,
+  Error,
 } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
@@ -120,8 +121,7 @@ const Reservimet = () => {
   };
 
   const saveImages = (images) => {
-    let previousArray = JSON.parse(selectedReservation.imagesArray);
-    console.log(previousArray);
+    let previousArray = JSON.parse(selectedReservation.imagesArray) || [];
     images.map((image) => {
       previousArray.push(image);
     });
@@ -129,12 +129,12 @@ const Reservimet = () => {
       ...selectedReservation,
       imagesArray: JSON.stringify(previousArray),
     });
-    console.log(previousArray);
   };
 
   const handleReservationSelection = (reservation_object) => {
     setSelectedReservation({
       ...selectedReservation,
+      id: reservation_object.id,
       firstAndLastName: reservation_object.clientNameSurname,
       phoneNumber: reservation_object.clientPhoneNumber,
       documentId: reservation_object.clientDocumentId,
@@ -213,6 +213,19 @@ const Reservimet = () => {
     setCurrentMonth(newMonth);
   };
 
+  const saveEditReservation = () => {
+    axios
+      .post(`http://localhost:1234/editreservation/${selectedReservation.id}`, {
+        selectedReservation,
+      })
+      .then((res) => {
+        const { title, message } = res.data;
+        axios.get("http://localhost:1234/getreservations").then((res) => {
+          setReservations(res.data);
+        });
+      });
+  };
+
   return (
     <Sidebar>
       <Dialog open={clickedImage} onClose={() => setClickedImage(null)}>
@@ -262,6 +275,7 @@ const Reservimet = () => {
             carInfo: null,
             startTime: null,
             endTime: null,
+            imagesArray: null,
           });
         }}
       >
@@ -348,22 +362,41 @@ const Reservimet = () => {
             />
           </LocalizationProvider>
           <div className="edit-dialog-images-container">
-            {selectedReservation.imagesArray &&
-              JSON.parse(selectedReservation.imagesArray).map((image) => {
-                return (
-                  <div className="edit-dialog-images-item">
-                    {editState && (
-                      <div
-                        className="edit-dialog-images-delete-item"
-                        onClick={() => deleteImage(image)}
-                      >
-                        <Delete sx={{ color: "red" }} />
+            {JSON.parse(selectedReservation.imagesArray)
+              ? JSON.parse(selectedReservation.imagesArray).map(
+                  (image, index) => {
+                    return (
+                      <div className="edit-dialog-images-item" key={index}>
+                        {editState && (
+                          <div
+                            className="edit-dialog-images-delete-item"
+                            onClick={() => deleteImage(image)}
+                          >
+                            <Delete sx={{ color: "red" }} />
+                          </div>
+                        )}
+                        <img
+                          src={image}
+                          onClick={() => setClickedImage(image)}
+                        />
                       </div>
-                    )}
-                    <img src={image} onClick={() => setClickedImage(image)} />
+                    );
+                  }
+                )
+              : !editState && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                    }}
+                  >
+                    <Error sx={{ color: "gray" }} />
+                    <span style={{ color: "gray", textWrap: "nowrap" }}>
+                      Reservimi nuk ka fotografi
+                    </span>
                   </div>
-                );
-              })}
+                )}
             {editState && (
               <div
                 className="edit-dialog-images-item"
@@ -415,21 +448,54 @@ const Reservimet = () => {
           >
             Mbyll
           </Button>
-          {editState ? (
+          <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
             <Button
               variant="contained"
+              color="error"
               onClick={() => {
-                setImages([]);
-                setEditState(false);
+                axios
+                  .post(
+                    `http://localhost:1234/deletereservation/${selectedReservation.id}`
+                  )
+                  .then(() => {
+                    axios
+                      .get("http://localhost:1234/getreservations")
+                      .then((res) => {
+                        setReservations(res.data);
+                      });
+                  });
+                setSelectedReservation({
+                  firstAndLastName: null,
+                  phoneNumber: null,
+                  documentId: null,
+                  carInfo: null,
+                  startTime: null,
+                  endTime: null,
+                  imagesArray: null,
+                });
+                setSelectedReservationDialog(false);
               }}
             >
-              Ruaj
+              Fshi Reservimin
             </Button>
-          ) : (
-            <Button variant="contained" onClick={() => setEditState(true)}>
-              Edito
-            </Button>
-          )}
+            {editState ? (
+              <Button
+                variant="contained"
+                onClick={() => {
+                  saveEditReservation();
+                  setImages([]);
+                  setEditState(false);
+                  setSelectedReservationDialog(false);
+                }}
+              >
+                Ruaj
+              </Button>
+            ) : (
+              <Button variant="contained" onClick={() => setEditState(true)}>
+                Edito
+              </Button>
+            )}
+          </div>
         </DialogActions>
       </Dialog>
       <div
