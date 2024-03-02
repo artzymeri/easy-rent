@@ -102,6 +102,7 @@ const Reservimet = () => {
     Promise.all(promises)
       .then((base64Images) => {
         setImages((prevImages) => [...prevImages, ...base64Images]);
+        saveImages(base64Images);
       })
       .finally(() => {
         setSelectedReservationDialog(true);
@@ -118,13 +119,20 @@ const Reservimet = () => {
     });
   };
 
-  const saveImages = () => {
-    setSelectedReservation({ ...selectedReservation, imagesArray: images });
-    setOpenDialog(false);
+  const saveImages = (images) => {
+    let previousArray = JSON.parse(selectedReservation.imagesArray);
+    console.log(previousArray);
+    images.map((image) => {
+      previousArray.push(image);
+    });
+    setSelectedReservation({
+      ...selectedReservation,
+      imagesArray: JSON.stringify(previousArray),
+    });
+    console.log(previousArray);
   };
 
   const handleReservationSelection = (reservation_object) => {
-    console.log(JSON.parse(reservation_object.imagesArray));
     setSelectedReservation({
       ...selectedReservation,
       firstAndLastName: reservation_object.clientNameSurname,
@@ -160,7 +168,6 @@ const Reservimet = () => {
   const daysInMonth = generateDaysInMonth(currentMonth);
 
   const formatMonth = (month) => {
-    console.log(month.format("MMMM YYYY"));
     if (month.format("MMMM YYYY") == `January ${month.format("YYYY")}`) {
       return `Janar ${month.format("YYYY")}`;
     } else if (
@@ -245,6 +252,7 @@ const Reservimet = () => {
       <Dialog
         open={selectedReservationDialog}
         onClose={() => {
+          setImages([]);
           setSelectedReservationDialog(false);
           setEditState(false);
           setSelectedReservation({
@@ -402,12 +410,19 @@ const Reservimet = () => {
               });
               setEditState(false);
               setSelectedReservationDialog(false);
+              setImages([]);
             }}
           >
             Mbyll
           </Button>
           {editState ? (
-            <Button variant="contained" onClick={() => setEditState(false)}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setImages([]);
+                setEditState(false);
+              }}
+            >
               Ruaj
             </Button>
           ) : (
