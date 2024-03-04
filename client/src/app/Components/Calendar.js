@@ -25,20 +25,14 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
 const Calendar = (props) => {
-  const [reservations, setReservations] = useState([]);
-
   const daysInMonth = props.daysInMonth;
+
+  const reservations = props.reservations;
 
   const [selectedReservationDialog, setSelectedReservationDialog] =
     useState(false);
 
   const [editState, setEditState] = useState(false);
-
-  useEffect(() => {
-    axios.get("http://localhost:1234/getreservations").then((res) => {
-      setReservations(res.data);
-    });
-  }, []);
 
   const [selectedReservation, setSelectedReservation] = useState({
     firstAndLastName: null,

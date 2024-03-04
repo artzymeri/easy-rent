@@ -43,11 +43,22 @@ app.post("/addreservation", async (req, res) => {
       imagesArray,
     } = req.body.newReservation;
 
+    let checkedPhoneNumber = phoneNumber;
+    let checkedDocumentId = documentId;
+
+    if (phoneNumber === "") {
+      checkedPhoneNumber = null;
+    }
+
+    if (documentId === "") {
+      checkedDocumentId = null;
+    }
+
     await reservations.create({
       clientNameSurname: firstAndLastName,
-      clientPhoneNumber: phoneNumber,
+      clientPhoneNumber: checkedPhoneNumber,
       carInfo: carInfo,
-      clientDocumentId: documentId,
+      clientDocumentId: checkedDocumentId,
       startTime: startTime,
       endTime: endTime,
       imagesArray: JSON.stringify(imagesArray),

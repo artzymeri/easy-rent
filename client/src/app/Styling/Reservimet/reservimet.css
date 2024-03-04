@@ -6,8 +6,10 @@
   color: #015c92;
 }
 
-.reservimet-header-container h3 {
-  font-weight: 600;
+.reservimet-header-view-switch-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .reservimet-header-date-navigator {

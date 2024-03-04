@@ -18,6 +18,7 @@
   flex-basis: 130px;
   padding: 4px;
   border-radius: 4px;
+  background-color: white;
 }
 
 .calendar-day-box-header {

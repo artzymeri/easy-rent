@@ -2,11 +2,27 @@ import Sidebar from "../src/app/Components/Sidebar";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import "@/app/Styling/Reservimet/reservimet.css";
 import Calendar from "@/app/Components/Calendar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { Button } from "@mui/material";
+import ReservationsList from "@/app/Components/ReservationsList";
+import axios from "axios";
 
 const Reservimet = () => {
-  const [currentMonth, setCurrentMonth] = useState(dayjs()); // Initialize with current month using dayjs
+  const [currentMonth, setCurrentMonth] = useState(dayjs());
+
+  const [currentDay, setCurrentDay] = useState(dayjs());
+
+  const [calendarActive, setCalendarActive] = useState(true);
+  const [reservationsListActive, setReservationsListActive] = useState(false);
+
+  const [reservations, setReservations] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:1234/getreservations").then((res) => {
+      setReservations(res.data);
+    });
+  }, []);
 
   const generateDaysInMonth = (month) => {
     const daysInMonth = month.daysInMonth();
@@ -17,7 +33,6 @@ const Reservimet = () => {
       const day = firstDayOfMonth.add(i, "day");
       daysArray.push({
         date: day,
-        // Add any additional properties you may need
       });
     }
 
@@ -70,6 +85,17 @@ const Reservimet = () => {
     const newMonth = currentMonth.add(1, "month"); // Use dayjs add function to move to next month
     setCurrentMonth(newMonth);
   };
+
+  const previousDay = () => {
+    const newDay = currentDay.add(1, "day"); // Use dayjs add function to move to next day
+    setCurrentDay(newDay);
+  };
+
+  const nextDay = () => {
+    const newDay = currentDay.subtract(1, "day"); // Use dayjs subtract function to move to previous day
+    setCurrentDay(newDay);
+  };
+
   return (
     <Sidebar>
       <div
@@ -80,19 +106,69 @@ const Reservimet = () => {
         }}
       >
         <div className="reservimet-header-container">
-          <h3>Reservimet</h3>
+          <div className="reservimet-header-view-switch-buttons">
+            {calendarActive ? (
+              <Button variant="contained">Kalendari</Button>
+            ) : (
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setReservationsListActive(false);
+                  setCalendarActive(true);
+                }}
+              >
+                Kalendari
+              </Button>
+            )}
+            {reservationsListActive ? (
+              <Button variant="contained">Lista Ditore</Button>
+            ) : (
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setCalendarActive(false);
+                  setReservationsListActive(true);
+                }}
+              >
+                Lista Ditore
+              </Button>
+            )}
+          </div>
           <div className="reservimet-header-date-navigator">
             <div className="reservimet-header-date-navigator-arrows">
-              <ArrowLeft
-                onClick={previousMonth}
-                style={{ cursor: "pointer" }}
-              />
-              <ArrowRight onClick={nextMonth} style={{ cursor: "pointer" }} />
+              {calendarActive ? (
+                <ArrowLeft
+                  onClick={previousMonth}
+                  style={{ cursor: "pointer" }}
+                />
+              ) : (
+                <ArrowLeft
+                  onClick={previousDay}
+                  style={{ cursor: "pointer" }}
+                />
+              )}
+              {calendarActive ? (
+                <ArrowRight onClick={nextMonth} style={{ cursor: "pointer" }} />
+              ) : (
+                <ArrowRight onClick={nextDay} style={{ cursor: "pointer" }} />
+              )}
             </div>
-            <h5>{formatMonth(currentMonth)}</h5>
+            {calendarActive ? (
+              <h5>{formatMonth(currentMonth)}</h5>
+            ) : (
+              <h5>{currentDay.format("DD MM YYYY")}</h5>
+            )}
           </div>
         </div>
-        <Calendar daysInMonth={daysInMonth} />
+        {calendarActive && (
+          <Calendar daysInMonth={daysInMonth} reservations={reservations} />
+        )}
+        {reservationsListActive && (
+          <ReservationsList
+            reservations={reservations}
+            currentDay={currentDay}
+          />
+        )}
       </div>
     </Sidebar>
   );
