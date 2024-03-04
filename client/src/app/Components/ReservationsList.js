@@ -4,6 +4,13 @@ import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isBetween from "dayjs/plugin/isBetween";
+import {
+  AccessTime,
+  ArrowDownward,
+  ArrowUpward,
+  SwapVert,
+} from "@mui/icons-material";
+import { Button } from "@mui/material";
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
@@ -37,10 +44,10 @@ const ReservationsList = (props) => {
 
     if (dayjs(reservation.startTime).isSame(startOfDay, "day")) {
       console.log(`${reservation.clientNameSurname} is arriving today`);
-      return true;
+      return "arriving";
     } else if (dayjs(reservation.endTime).isSame(endOfDay, "day")) {
       console.log(`${reservation.clientNameSurname} is departing today`);
-      return true;
+      return "departing";
     } else if (
       dayjs(currentDay).isBetween(
         reservation.startTime,
@@ -50,7 +57,7 @@ const ReservationsList = (props) => {
       )
     ) {
       console.log(`${reservation.clientNameSurname}`, "is between");
-      return true;
+      return "between";
     } else {
       console.log(`${reservation.clientNameSurname}`, "is not between");
       return false;
@@ -106,7 +113,83 @@ const ReservationsList = (props) => {
                         {reservation.active ? "Aktive" : "Mbyllur"}
                       </span>
                     </div>
-                    <div>{checkIfBetween(reservation)}</div>
+                    {checkIfBetween(reservation) == "arriving" ? (
+                      <div style={{ flexDirection: "column", gap: "5px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "5px",
+                            alignItems: "center",
+                            width: "100%",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <ArrowUpward sx={{ color: "blue" }} />
+                          <span>Fillon sot në ora:</span>
+                        </div>
+                        <span
+                          style={{
+                            textAlign: "center",
+                            display: "flex",
+                            gap: "5px",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <AccessTime sx={{ width: "17px", height: "17px" }} />
+                          {dayjs(reservation.startTime).format("HH : mm")}
+                        </span>
+                      </div>
+                    ) : null}
+                    {checkIfBetween(reservation) == "departing" ? (
+                      <div style={{ flexDirection: "column", gap: "5px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "5px",
+                            alignItems: "center",
+                            width: "100%",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <ArrowDownward sx={{ color: "orangered" }} />
+                          <span>Mbaron sot në ora:</span>
+                        </div>
+                        <span
+                          style={{
+                            textAlign: "center",
+                            display: "flex",
+                            gap: "5px",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <AccessTime sx={{ width: "17px", height: "17px" }} />
+                          {dayjs(reservation.endTime).format("HH : mm")}
+                        </span>
+                      </div>
+                    ) : null}
+                    {checkIfBetween(reservation) == "between" ? (
+                      <div
+                        style={{
+                          flexDirection: "row",
+                          gap: "5px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <SwapVert sx={{ color: "gray" }} />
+                        <span>Gjithë ditën</span>
+                      </div>
+                    ) : null}
+                    <div
+                      style={{
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <Button variant="contained">Edito</Button>
+                    </div>
                   </div>
                 );
               }
