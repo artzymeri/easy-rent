@@ -18,16 +18,24 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isBetween from "dayjs/plugin/isBetween";
 import { AddAPhoto, CloseFullscreen, Delete, Error } from "@mui/icons-material";
 import CarsTest from "../TestingValues/CarsTest";
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
+dayjs.extend(isBetween);
 
 const Calendar = (props) => {
   const daysInMonth = props.daysInMonth;
 
   const reservations = props.reservations;
+
+  const deleteReservation = props.deleteReservation;
+
+  const saveEditReservation = props.saveEditReservation;
+
+  const viewSelectedDay = props.viewSelectedDay;
 
   const [selectedReservationDialog, setSelectedReservationDialog] =
     useState(false);
@@ -133,21 +141,6 @@ const Calendar = (props) => {
   };
 
   // Function to generate an array of objects representing each day of the month
-
-  // Generate array of objects representing each day of the current month
-
-  const saveEditReservation = () => {
-    axios
-      .post(`http://localhost:1234/editreservation/${selectedReservation.id}`, {
-        selectedReservation,
-      })
-      .then((res) => {
-        const { title, message } = res.data;
-        axios.get("http://localhost:1234/getreservations").then((res) => {
-          setReservations(res.data);
-        });
-      });
-  };
 
   return (
     <>
@@ -376,18 +369,16 @@ const Calendar = (props) => {
               variant="contained"
               color="error"
               onClick={() => {
-                axios
-                  .post(
-                    `http://localhost:1234/deletereservation/${selectedReservation.id}`
-                  )
-                  .then(() => {
-                    axios
-                      .get("http://localhost:1234/getreservations")
-                      .then((res) => {
-                        setReservations(res.data);
-                      });
-                  });
-                setSelectedReservation(null);
+                deleteReservation(selectedReservation.id);
+                setSelectedReservation({
+                  firstAndLastName: null,
+                  phoneNumber: null,
+                  documentId: null,
+                  carInfo: null,
+                  startTime: null,
+                  endTime: null,
+                  imagesArray: null,
+                });
                 setSelectedReservationDialog(false);
               }}
             >
@@ -397,7 +388,10 @@ const Calendar = (props) => {
               <Button
                 variant="contained"
                 onClick={() => {
-                  saveEditReservation();
+                  saveEditReservation(
+                    selectedReservation.id,
+                    selectedReservation
+                  );
                   setImages([]);
                   setEditState(false);
                   setSelectedReservationDialog(false);
@@ -421,7 +415,13 @@ const Calendar = (props) => {
               key={day.date.format("YYYY-MM-DD")}
             >
               <div className="calendar-day-box-header">
-                <span>{day.date.format("D")}</span>
+                <span
+                  onClick={() => {
+                    viewSelectedDay(day.date);
+                  }}
+                >
+                  {day.date.format("D")}
+                </span>
               </div>
               <div className="calendar-day-box-reservations-container">
                 {reservations.map((reservation, index) => {

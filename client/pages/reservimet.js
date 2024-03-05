@@ -87,13 +87,42 @@ const Reservimet = () => {
   };
 
   const previousDay = () => {
-    const newDay = currentDay.add(1, "day"); // Use dayjs add function to move to next day
+    const newDay = currentDay.subtract(1, "day"); // Use dayjs subtract function to move to next day
     setCurrentDay(newDay);
   };
 
   const nextDay = () => {
-    const newDay = currentDay.subtract(1, "day"); // Use dayjs subtract function to move to previous day
+    const newDay = currentDay.add(1, "day"); // Use dayjs add function to move to previous day
     setCurrentDay(newDay);
+  };
+
+  const viewSelectedDay = (day) => {
+    setCurrentDay(day);
+    setCalendarActive(false);
+    setReservationsListActive(true);
+  };
+
+  const deleteReservation = (reservationId) => {
+    axios
+      .post(`http://localhost:1234/deletereservation/${reservationId}`)
+      .then(() => {
+        axios.get("http://localhost:1234/getreservations").then((res) => {
+          setReservations(res.data);
+        });
+      });
+  };
+
+  const saveEditReservation = (reservationId, object) => {
+    axios
+      .post(`http://localhost:1234/editreservation/${reservationId}`, {
+        object,
+      })
+      .then((res) => {
+        const { title, message } = res.data;
+        axios.get("http://localhost:1234/getreservations").then((res) => {
+          setReservations(res.data);
+        });
+      });
   };
 
   return (
@@ -156,17 +185,25 @@ const Reservimet = () => {
             {calendarActive ? (
               <h5>{formatMonth(currentMonth)}</h5>
             ) : (
-              <h5>{currentDay.format("DD MM YYYY")}</h5>
+              <h5>{currentDay.format("DD/MM/YYYY")}</h5>
             )}
           </div>
         </div>
         {calendarActive && (
-          <Calendar daysInMonth={daysInMonth} reservations={reservations} />
+          <Calendar
+            daysInMonth={daysInMonth}
+            reservations={reservations}
+            deleteReservation={deleteReservation}
+            saveEditReservation={saveEditReservation}
+            viewSelectedDay={viewSelectedDay}
+          />
         )}
         {reservationsListActive && (
           <ReservationsList
             reservations={reservations}
             currentDay={currentDay}
+            deleteReservation={deleteReservation}
+            saveEditReservation={saveEditReservation}
           />
         )}
       </div>

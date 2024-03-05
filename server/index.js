@@ -76,6 +76,8 @@ app.post("/addreservation", async (req, res) => {
 app.post("/editreservation/:reservationId", async (req, res) => {
   const { reservationId } = req.params;
 
+  console.log(req.body);
+
   const {
     firstAndLastName,
     phoneNumber,
@@ -84,9 +86,9 @@ app.post("/editreservation/:reservationId", async (req, res) => {
     startTime,
     endTime,
     imagesArray,
-  } = req.body.selectedReservation;
+  } = req.body.object;
 
-  console.log(req.body.selectedReservation.imagesArray);
+  console.log(req.body.object.imagesArray);
 
   const reservationToEdit = await reservations.findByPk(reservationId);
 

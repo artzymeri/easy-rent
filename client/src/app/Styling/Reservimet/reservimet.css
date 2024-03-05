@@ -16,6 +16,11 @@
   display: flex;
   gap: 15px;
   align-items: center;
+  background-color: #015c92;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 12px;
+  width: 170px;
 }
 
 .reservimet-header-date-navigator-arrows {
