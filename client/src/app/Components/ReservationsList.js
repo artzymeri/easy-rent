@@ -33,116 +33,26 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isBetween);
 
 const ReservationsList = (props) => {
-  const reservations = props.reservations;
-
-  const currentDay = props.currentDay;
-
-  const deleteReservation = props.deleteReservation;
-
-  const saveEditReservation = props.saveEditReservation;
-
-  const [selectedReservationDialog, setSelectedReservationDialog] =
-    useState(false);
-
-  const [editState, setEditState] = useState(false);
-
-  const [selectedReservation, setSelectedReservation] = useState({
-    firstAndLastName: null,
-    phoneNumber: null,
-    documentId: null,
-    carInfo: null,
-    startTime: null,
-    endTime: null,
-    imagesArray: null,
-  });
-
-  const [images, setImages] = useState([]);
-
-  const [clickedImage, setClickedImage] = useState(null);
-
-  const handleCarSelectChange = (carinfo) => {
-    setSelectedReservation({
-      ...selectedReservation,
-      carInfo: carinfo.target.value,
-    });
-  };
-
-  const handleStartTime = (startTimeValue) => {
-    setSelectedReservation({
-      ...selectedReservation,
-      startTime: startTimeValue.format(),
-    });
-  };
-
-  const handleEndTime = (endTimeValue) => {
-    setSelectedReservation({
-      ...selectedReservation,
-      endTime: endTimeValue.format(),
-    });
-  };
-
-  const handleFileChange = (event) => {
-    const selectedFiles = event.target.files;
-
-    // Convert each file to base64 and store in an array
-    const promises = [];
-    for (let i = 0; i < selectedFiles.length; i++) {
-      const file = selectedFiles[i];
-      promises.push(
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = (e) => resolve(e.target.result);
-          reader.onerror = (error) => reject(error);
-          reader.readAsDataURL(file);
-        })
-      );
-    }
-
-    // Resolve all promises and update the state with base64 strings
-    Promise.all(promises)
-      .then((base64Images) => {
-        setImages((prevImages) => [...prevImages, ...base64Images]);
-        saveImages(base64Images);
-      })
-      .finally(() => {
-        setSelectedReservationDialog(true);
-      });
-  };
-
-  const deleteImage = (deletedimage) => {
-    const newArray = JSON.parse(selectedReservation.imagesArray).filter(
-      (image) => deletedimage !== image
-    );
-    setSelectedReservation({
-      ...selectedReservation,
-      imagesArray: JSON.stringify(newArray),
-    });
-  };
-
-  const saveImages = (images) => {
-    let previousArray = JSON.parse(selectedReservation.imagesArray) || [];
-    images.map((image) => {
-      previousArray.push(image);
-    });
-    setSelectedReservation({
-      ...selectedReservation,
-      imagesArray: JSON.stringify(previousArray),
-    });
-  };
-
-  const handleReservationSelection = (reservation_object) => {
-    setSelectedReservation({
-      ...selectedReservation,
-      id: reservation_object.id,
-      firstAndLastName: reservation_object.clientNameSurname,
-      phoneNumber: reservation_object.clientPhoneNumber,
-      documentId: reservation_object.clientDocumentId,
-      carInfo: reservation_object.carInfo,
-      startTime: reservation_object.startTime,
-      endTime: reservation_object.endTime,
-      imagesArray: reservation_object.imagesArray,
-    });
-  };
+  const {
+    reservations,
+    currentDay,
+    deleteReservation,
+    saveEditReservation,
+    selectedReservationDialog,
+    editState,
+    clickedImage,
+    selectedReservation,
+    handleCarSelectChange,
+    handleStartTime,
+    handleEndTime,
+    handleReservationSelection,
+    setSelectedReservationDialog,
+    setImages,
+    setEditState,
+    setSelectedReservation,
+    handleFileChange,
+    deleteImage,
+  } = props;
 
   const checkIfToday = (reservation) => {
     if (
