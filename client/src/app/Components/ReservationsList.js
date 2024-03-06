@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "@/app/Styling/Reservimet/reservations_list.css";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -11,6 +11,7 @@ import {
   ArrowUpward,
   CloseFullscreen,
   Delete,
+  Error,
   SwapVert,
 } from "@mui/icons-material";
 import {
@@ -52,6 +53,7 @@ const ReservationsList = (props) => {
     setSelectedReservation,
     handleFileChange,
     deleteImage,
+    setClickedImage,
   } = props;
 
   const checkIfToday = (reservation) => {
@@ -72,10 +74,8 @@ const ReservationsList = (props) => {
     const endOfDay = dayjs(currentDay).endOf("day");
 
     if (dayjs(reservation.startTime).isSame(startOfDay, "day")) {
-      console.log(`${reservation.clientNameSurname} is arriving today`);
       return "arriving";
     } else if (dayjs(reservation.endTime).isSame(endOfDay, "day")) {
-      console.log(`${reservation.clientNameSurname} is departing today`);
       return "departing";
     } else if (
       dayjs(currentDay).isBetween(
@@ -85,10 +85,8 @@ const ReservationsList = (props) => {
         "[]"
       )
     ) {
-      console.log(`${reservation.clientNameSurname}`, "is between");
       return "between";
     } else {
-      console.log(`${reservation.clientNameSurname}`, "is not between");
       return false;
     }
   };
@@ -143,15 +141,15 @@ const ReservationsList = (props) => {
           setImages([]);
           setSelectedReservationDialog(false);
           setEditState(false);
-          // setSelectedReservation({
-          //   firstAndLastName: null,
-          //   phoneNumber: null,
-          //   documentId: null,
-          //   carInfo: null,
-          //   startTime: null,
-          //   endTime: null,
-          //   imagesArray: null,
-          // });
+          setSelectedReservation({
+            firstAndLastName: null,
+            phoneNumber: null,
+            documentId: null,
+            carInfo: null,
+            startTime: null,
+            endTime: null,
+            imagesArray: JSON.stringify([]),
+          });
         }}
       >
         <DialogContent dividers>
@@ -237,7 +235,7 @@ const ReservationsList = (props) => {
             />
           </LocalizationProvider>
           <div className="edit-dialog-images-container">
-            {JSON.parse(selectedReservation.imagesArray)
+            {JSON.parse(selectedReservation.imagesArray).length > 0
               ? JSON.parse(selectedReservation.imagesArray).map(
                   (image, index) => {
                     return (
@@ -253,6 +251,7 @@ const ReservationsList = (props) => {
                         <img
                           src={image}
                           onClick={() => setClickedImage(image)}
+                          alt={index}
                         />
                       </div>
                     );
@@ -314,7 +313,7 @@ const ReservationsList = (props) => {
                 carInfo: null,
                 startTime: null,
                 endTime: null,
-                imagesArray: null,
+                imagesArray: "[]",
               });
               setEditState(false);
               setSelectedReservationDialog(false);
@@ -336,7 +335,7 @@ const ReservationsList = (props) => {
                   carInfo: null,
                   startTime: null,
                   endTime: null,
-                  imagesArray: null,
+                  imagesArray: JSON.stringify([]),
                 });
                 setSelectedReservationDialog(false);
               }}

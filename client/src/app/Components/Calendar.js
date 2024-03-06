@@ -47,6 +47,7 @@ const Calendar = (props) => {
     setSelectedReservation,
     handleFileChange,
     deleteImage,
+    setClickedImage,
   } = props;
 
   return (
@@ -98,7 +99,7 @@ const Calendar = (props) => {
             carInfo: null,
             startTime: null,
             endTime: null,
-            imagesArray: null,
+            imagesArray: '[]',
           });
         }}
       >
@@ -185,7 +186,7 @@ const Calendar = (props) => {
             />
           </LocalizationProvider>
           <div className="edit-dialog-images-container">
-            {JSON.parse(selectedReservation.imagesArray)
+            {JSON.parse(selectedReservation.imagesArray).length > 0
               ? JSON.parse(selectedReservation.imagesArray).map(
                   (image, index) => {
                     return (
@@ -262,7 +263,7 @@ const Calendar = (props) => {
                 carInfo: null,
                 startTime: null,
                 endTime: null,
-                imagesArray: null,
+                imagesArray: '[]',
               });
               setEditState(false);
               setSelectedReservationDialog(false);
@@ -284,7 +285,7 @@ const Calendar = (props) => {
                   carInfo: null,
                   startTime: null,
                   endTime: null,
-                  imagesArray: null,
+                  imagesArray: '[]',
                 });
                 setSelectedReservationDialog(false);
               }}

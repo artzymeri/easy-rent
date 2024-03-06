@@ -1,5 +1,5 @@
 import Sidebar from "../src/app/Components/Sidebar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "@/app/Styling/global-styling.css";
 import "@/app/Styling/Reservimet/shtoreservim.css";
 import {
@@ -29,6 +29,9 @@ const ShtoReservim = () => {
     phoneNumber: null,
     documentId: null,
     carInfo: null,
+    pricePerDay: null,
+    numberOfDays: null,
+    totalPrice: null,
     startTime: null,
     endTime: null,
     imagesArray: null,
@@ -38,8 +41,18 @@ const ShtoReservim = () => {
 
   const [openDialog, setOpenDialog] = useState(false);
 
-  const handleCarSelectChange = (carinfo) => {
-    setNewReservation({ ...newReservation, carInfo: carinfo.target.value });
+  const [selectedCar, setSelectedCar] = useState(null);
+
+  const [numberOfDays, setNumberOfDays] = useState(0);
+
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  const handleCarSelectChange = (car) => {
+    setNewReservation({
+      ...newReservation,
+      carInfo: car.target.value,
+    });
+    setTotalPrice(0); // Reset total price when car changes
   };
 
   const handleStartTime = (startTimeValue) => {
@@ -47,6 +60,7 @@ const ShtoReservim = () => {
       ...newReservation,
       startTime: startTimeValue.format(),
     });
+    calculateDays(startTimeValue, newReservation.endTime);
   };
 
   const handleEndTime = (endTimeValue) => {
@@ -54,6 +68,24 @@ const ShtoReservim = () => {
       ...newReservation,
       endTime: endTimeValue.format(),
     });
+    calculateDays(newReservation.startTime, endTimeValue);
+  };
+
+  const calculateDays = (start, end) => {
+    const startDate = dayjs(start);
+    const endDate = dayjs(end);
+    const days = endDate.diff(startDate, "days") + 1; // Adding 1 to include both start and end dates
+    setNumberOfDays(days);
+  };
+
+  const calculateTotalPrice = (price, totalDays) => {
+    if (price == null || price == "") {
+      return;
+    } else if (totalDays == null || totalDays == "") {
+      return;
+    } else {
+      setTotalPrice(parseInt(price) * parseInt(totalDays));
+    }
   };
 
   const handleFileChange = (event) => {
@@ -102,6 +134,12 @@ const ShtoReservim = () => {
         window.location.reload();
       });
   };
+
+  useEffect(() => {
+    if (selectedCar !== null) {
+      calculateTotalPrice(selectedCar.price, numberOfDays);
+    }
+  }, [selectedCar, numberOfDays]);
 
   return (
     <Sidebar>
@@ -303,7 +341,12 @@ const ShtoReservim = () => {
             >
               {CarsTest.map((car) => {
                 return (
-                  <MenuItem value={car.make + " " + car.model}>
+                  <MenuItem
+                    value={car.make + " " + car.model}
+                    onClick={() => {
+                      setSelectedCar(car);
+                    }}
+                  >
                     {car.make} {car.model}
                   </MenuItem>
                 );
@@ -324,6 +367,44 @@ const ShtoReservim = () => {
               value={newReservation.endTime}
             />
           </LocalizationProvider>
+          <TextField
+            label="Cmimi në ditë"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white" }}
+            value={selectedCar?.price || ""}
+            onChange={(e) => {
+              setSelectedCar({
+                ...selectedCar,
+                price: parseInt(e.target.value),
+              });
+            }}
+          />
+          <TextField
+            label="Numri i ditëve"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white" }}
+            value={numberOfDays || ""}
+            onChange={(e) => {
+              setNumberOfDays(parseInt(e.target.value));
+            }}
+            inputProps={
+              {
+                readOnly: true
+              }
+            }
+          />
+          <TextField
+            label="Totali"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white" }}
+            value={totalPrice || ""}
+            onChange={(e) => {
+              setTotalPrice(parseFloat(e.target.value).toFixed(2));
+            }}
+          />
           <input
             type="file"
             accept="image/*"

@@ -28,7 +28,7 @@ const Reservimet = () => {
     carInfo: null,
     startTime: null,
     endTime: null,
-    imagesArray: null,
+    imagesArray: '[]',
   });
 
   const [clickedImage, setClickedImage] = useState(null);
@@ -117,7 +117,7 @@ const Reservimet = () => {
       carInfo: reservation_object.carInfo,
       startTime: reservation_object.startTime,
       endTime: reservation_object.endTime,
-      imagesArray: reservation_object.imagesArray,
+      imagesArray: reservation_object.imagesArray || '[]',
     });
   };
 
@@ -313,6 +313,7 @@ const Reservimet = () => {
             setSelectedReservation={setSelectedReservation}
             handleFileChange={handleFileChange}
             deleteImage={deleteImage}
+            setClickedImage={setClickedImage}
           />
         )}
         {reservationsListActive && (
@@ -335,6 +336,7 @@ const Reservimet = () => {
             setSelectedReservation={setSelectedReservation}
             handleFileChange={handleFileChange}
             deleteImage={deleteImage}
+            setClickedImage={setClickedImage}
           />
         )}
       </div>

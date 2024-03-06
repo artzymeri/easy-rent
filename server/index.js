@@ -76,7 +76,6 @@ app.post("/addreservation", async (req, res) => {
 app.post("/editreservation/:reservationId", async (req, res) => {
   const { reservationId } = req.params;
 
-  console.log(req.body);
 
   const {
     firstAndLastName,
@@ -88,7 +87,6 @@ app.post("/editreservation/:reservationId", async (req, res) => {
     imagesArray,
   } = req.body.object;
 
-  console.log(req.body.object.imagesArray);
 
   const reservationToEdit = await reservations.findByPk(reservationId);
 
