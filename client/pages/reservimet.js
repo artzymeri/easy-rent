@@ -392,6 +392,7 @@ const Reservimet = () => {
             handleFileChange={handleFileChange}
             deleteImage={deleteImage}
             setClickedImage={setClickedImage}
+            setSelectedCar={setSelectedCar}
           />
         )}
       </div>

@@ -39,6 +39,20 @@
   transition: ease-in-out 0.15s;
 }
 
+.add-car-button {
+  gap: 5px;
+}
+
+.add-car-button span {
+  display: none;
+  transition: ease-in-out 0.15s;
+  color: white;
+}
+
+.add-car-button:hover span {
+  display: inline;
+}
+
 .veturat-listing-button:hover {
   color: white;
   background-color: #015c92;
@@ -48,4 +62,3 @@
   background-color: #015c92;
   color: white;
 }
-

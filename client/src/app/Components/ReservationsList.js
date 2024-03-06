@@ -54,6 +54,7 @@ const ReservationsList = (props) => {
     handleFileChange,
     deleteImage,
     setClickedImage,
+    setSelectedCar,
   } = props;
 
   const checkIfToday = (reservation) => {
@@ -211,7 +212,12 @@ const ReservationsList = (props) => {
             >
               {CarsTest.map((car) => {
                 return (
-                  <MenuItem value={car.make + " " + car.model}>
+                  <MenuItem
+                    value={car.make + " " + car.model}
+                    onClick={() => {
+                      setSelectedCar(car);
+                    }}
+                  >
                     {car.make} {car.model}
                   </MenuItem>
                 );
