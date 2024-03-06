@@ -14,9 +14,12 @@ const Reservimet = () => {
   const [currentDay, setCurrentDay] = useState(dayjs());
 
   const [calendarActive, setCalendarActive] = useState(true);
+
   const [reservationsListActive, setReservationsListActive] = useState(false);
 
   const [reservations, setReservations] = useState([]);
+
+  const [selectedCar, setSelectedCar] = useState(null);
 
   const [selectedReservationDialog, setSelectedReservationDialog] =
     useState(false);
@@ -26,9 +29,12 @@ const Reservimet = () => {
     phoneNumber: null,
     documentId: null,
     carInfo: null,
+    pricePerDay: null,
     startTime: null,
     endTime: null,
-    imagesArray: '[]',
+    numberOfDays: null,
+    totalPrice: null,
+    imagesArray: "[]",
   });
 
   const [clickedImage, setClickedImage] = useState(null);
@@ -49,6 +55,7 @@ const Reservimet = () => {
       ...selectedReservation,
       startTime: startTimeValue.format(),
     });
+    calculateDays(startTimeValue, selectedReservation.endTime);
   };
 
   const handleEndTime = (endTimeValue) => {
@@ -56,6 +63,7 @@ const Reservimet = () => {
       ...selectedReservation,
       endTime: endTimeValue.format(),
     });
+    calculateDays(selectedReservation.startTime, endTimeValue);
   };
 
   const handleFileChange = (event) => {
@@ -115,17 +123,61 @@ const Reservimet = () => {
       phoneNumber: reservation_object.clientPhoneNumber,
       documentId: reservation_object.clientDocumentId,
       carInfo: reservation_object.carInfo,
+      pricePerDay: reservation_object.pricePerDay,
       startTime: reservation_object.startTime,
       endTime: reservation_object.endTime,
-      imagesArray: reservation_object.imagesArray || '[]',
+      numberOfDays: reservation_object.numberOfDays,
+      totalPrice: reservation_object.totalPrice,
+      imagesArray: reservation_object.imagesArray || "[]",
     });
   };
 
   useEffect(() => {
     axios.get("http://localhost:1234/getreservations").then((res) => {
       setReservations(res.data);
+      console.log(res.data);
     });
   }, []);
+
+  const calculateDays = (start, end) => {
+    const startDate = dayjs(start);
+    const endDate = dayjs(end);
+    const days = endDate.diff(startDate, "days") + 1; // Adding 1 to include both start and end dates
+    setSelectedReservation({ ...selectedReservation, numberOfDays: days });
+  };
+
+  const calculateTotalPrice = (price, numberOfDays) => {
+    if (price == null || price == "") {
+      return;
+    } else if (numberOfDays == null || numberOfDays == "") {
+      return;
+    } else {
+      setSelectedReservation({
+        ...selectedReservation,
+        totalPrice:
+          parseInt(selectedReservation.pricePerDay) *
+          parseInt(selectedReservation.numberOfDays),
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (selectedReservation.pricePerDay !== null) {
+      calculateTotalPrice(
+        selectedReservation.pricePerDay,
+        selectedReservation.numberOfDays
+      );
+    }
+  }, [selectedReservation.numberOfDays, selectedReservation.pricePerDay]);
+
+  useEffect(() => {
+    if (selectedCar !== null) {
+      setSelectedReservation({
+        ...selectedReservation,
+        pricePerDay: selectedCar.price,
+      });
+    }
+  }, [selectedCar]);
 
   const generateDaysInMonth = (month) => {
     const daysInMonth = month.daysInMonth();
@@ -244,6 +296,7 @@ const Reservimet = () => {
             ) : (
               <Button
                 variant="outlined"
+                style={{ background: "white" }}
                 onClick={() => {
                   setReservationsListActive(false);
                   setCalendarActive(true);
@@ -257,6 +310,7 @@ const Reservimet = () => {
             ) : (
               <Button
                 variant="outlined"
+                style={{ background: "white" }}
                 onClick={() => {
                   setCalendarActive(false);
                   setReservationsListActive(true);
@@ -314,6 +368,7 @@ const Reservimet = () => {
             handleFileChange={handleFileChange}
             deleteImage={deleteImage}
             setClickedImage={setClickedImage}
+            setSelectedCar={setSelectedCar}
           />
         )}
         {reservationsListActive && (

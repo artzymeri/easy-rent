@@ -218,6 +218,20 @@ const ReservationsList = (props) => {
               })}
             </Select>
           </FormControl>
+          <TextField
+            disabled={!editState}
+            label="Çmimi për ditë"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white", marginTop: "15px" }}
+            value={selectedReservation.pricePerDay}
+            onChange={(e) => {
+              setSelectedReservation({
+                ...selectedReservation,
+                pricePerDay: e.target.value,
+              });
+            }}
+          />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               disabled={!editState}
@@ -234,6 +248,31 @@ const ReservationsList = (props) => {
               value={dayjs(selectedReservation.endTime)}
             />
           </LocalizationProvider>
+          <TextField
+            disabled={!editState}
+            label="Numri i ditëve"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white", marginTop: "15px" }}
+            value={selectedReservation.numberOfDays || ""}
+            onChange={(e) => {
+              setNumberOfDays(parseInt(e.target.value));
+            }}
+            inputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            disabled={!editState}
+            label="Totali"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white", marginTop: "15px" }}
+            value={selectedReservation.totalPrice || ""}
+            onChange={(e) => {
+              setTotalPrice(parseInt(e.target.value));
+            }}
+          />
           <div className="edit-dialog-images-container">
             {JSON.parse(selectedReservation.imagesArray).length > 0
               ? JSON.parse(selectedReservation.imagesArray).map(

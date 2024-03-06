@@ -48,6 +48,7 @@ const Calendar = (props) => {
     handleFileChange,
     deleteImage,
     setClickedImage,
+    setSelectedCar,
   } = props;
 
   return (
@@ -99,7 +100,7 @@ const Calendar = (props) => {
             carInfo: null,
             startTime: null,
             endTime: null,
-            imagesArray: '[]',
+            imagesArray: "[]",
           });
         }}
       >
@@ -162,13 +163,32 @@ const Calendar = (props) => {
             >
               {CarsTest.map((car) => {
                 return (
-                  <MenuItem value={car.make + " " + car.model}>
+                  <MenuItem
+                    value={car.make + " " + car.model}
+                    onClick={() => {
+                      setSelectedCar(car);
+                    }}
+                  >
                     {car.make} {car.model}
                   </MenuItem>
                 );
               })}
             </Select>
           </FormControl>
+          <TextField
+            disabled={!editState}
+            label="Çmimi për ditë"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white", marginTop: "15px" }}
+            value={selectedReservation.pricePerDay}
+            onChange={(e) => {
+              setSelectedReservation({
+                ...selectedReservation,
+                pricePerDay: e.target.value,
+              });
+            }}
+          />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               disabled={!editState}
@@ -185,6 +205,28 @@ const Calendar = (props) => {
               value={dayjs(selectedReservation.endTime)}
             />
           </LocalizationProvider>
+          <TextField
+            disabled={!editState}
+            label="Numri i ditëve"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white", marginTop: "15px" }}
+            value={selectedReservation.numberOfDays || ""}
+            inputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            disabled={!editState}
+            label="Totali"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white", marginTop: "15px" }}
+            value={selectedReservation.totalPrice || ""}
+            onChange={(e) => {
+              setTotalPrice(parseFloat(e.target.value).toFixed(2));
+            }}
+          />
           <div className="edit-dialog-images-container">
             {JSON.parse(selectedReservation.imagesArray).length > 0
               ? JSON.parse(selectedReservation.imagesArray).map(
@@ -263,7 +305,7 @@ const Calendar = (props) => {
                 carInfo: null,
                 startTime: null,
                 endTime: null,
-                imagesArray: '[]',
+                imagesArray: "[]",
               });
               setEditState(false);
               setSelectedReservationDialog(false);
@@ -285,7 +327,7 @@ const Calendar = (props) => {
                   carInfo: null,
                   startTime: null,
                   endTime: null,
-                  imagesArray: '[]',
+                  imagesArray: "[]",
                 });
                 setSelectedReservationDialog(false);
               }}

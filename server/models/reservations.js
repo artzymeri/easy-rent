@@ -28,6 +28,13 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       },
     },
+    pricePerDay: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
     startTime: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -36,6 +43,20 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     endTime: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    numberOfDays: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    totalPrice: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {

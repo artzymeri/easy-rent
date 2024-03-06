@@ -52,7 +52,6 @@ const ShtoReservim = () => {
       ...newReservation,
       carInfo: car.target.value,
     });
-    setTotalPrice(0); // Reset total price when car changes
   };
 
   const handleStartTime = (startTimeValue) => {
@@ -129,6 +128,9 @@ const ShtoReservim = () => {
     axios
       .post("http://localhost:1234/addreservation", {
         newReservation,
+        selectedCar,
+        numberOfDays,
+        totalPrice,
       })
       .then(() => {
         window.location.reload();
@@ -267,7 +269,14 @@ const ShtoReservim = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <h3 style={{ textAlign: "center", fontWeight: "700", color: "#015c92" }}>
+      <h3
+        style={{
+          textAlign: "center",
+          fontWeight: "700",
+          color: "#015c92",
+          paddingBottom: "10px",
+        }}
+      >
         Shto Reservim
       </h3>
       <div
@@ -278,6 +287,7 @@ const ShtoReservim = () => {
           width: "100%",
           maxHeight: "100%",
           overflowY: "auto",
+          paddingBottom: "100px",
         }}
       >
         <div
@@ -353,6 +363,19 @@ const ShtoReservim = () => {
               })}
             </Select>
           </FormControl>
+          <TextField
+            label="Çmimi në ditë"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white" }}
+            value={selectedCar?.price || ""}
+            onChange={(e) => {
+              setSelectedCar({
+                ...selectedCar,
+                price: parseInt(e.target.value),
+              });
+            }}
+          />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               label="Koha e fillimit"
@@ -368,19 +391,6 @@ const ShtoReservim = () => {
             />
           </LocalizationProvider>
           <TextField
-            label="Cmimi në ditë"
-            variant="outlined"
-            fullWidth
-            style={{ background: "white" }}
-            value={selectedCar?.price || ""}
-            onChange={(e) => {
-              setSelectedCar({
-                ...selectedCar,
-                price: parseInt(e.target.value),
-              });
-            }}
-          />
-          <TextField
             label="Numri i ditëve"
             variant="outlined"
             fullWidth
@@ -389,11 +399,9 @@ const ShtoReservim = () => {
             onChange={(e) => {
               setNumberOfDays(parseInt(e.target.value));
             }}
-            inputProps={
-              {
-                readOnly: true
-              }
-            }
+            inputProps={{
+              readOnly: true,
+            }}
           />
           <TextField
             label="Totali"

@@ -43,6 +43,10 @@ app.post("/addreservation", async (req, res) => {
       imagesArray,
     } = req.body.newReservation;
 
+    const pricePerDay = req.body.selectedCar.price;
+
+    const { numberOfDays, totalPrice } = req.body;
+
     let checkedPhoneNumber = phoneNumber;
     let checkedDocumentId = documentId;
 
@@ -57,10 +61,13 @@ app.post("/addreservation", async (req, res) => {
     await reservations.create({
       clientNameSurname: firstAndLastName,
       clientPhoneNumber: checkedPhoneNumber,
-      carInfo: carInfo,
       clientDocumentId: checkedDocumentId,
+      carInfo: carInfo,
+      pricePerDay: pricePerDay,
       startTime: startTime,
       endTime: endTime,
+      numberOfDays: numberOfDays,
+      totalPrice: totalPrice,
       imagesArray: JSON.stringify(imagesArray),
     });
     res.json({
@@ -76,17 +83,18 @@ app.post("/addreservation", async (req, res) => {
 app.post("/editreservation/:reservationId", async (req, res) => {
   const { reservationId } = req.params;
 
-
   const {
     firstAndLastName,
     phoneNumber,
     documentId,
     carInfo,
+    pricePerDay,
     startTime,
     endTime,
+    numberOfDays,
+    totalPrice,
     imagesArray,
   } = req.body.object;
-
 
   const reservationToEdit = await reservations.findByPk(reservationId);
 
@@ -98,8 +106,11 @@ app.post("/editreservation/:reservationId", async (req, res) => {
   reservationToEdit.clientPhoneNumber = phoneNumber;
   reservationToEdit.clientDocumentId = documentId;
   reservationToEdit.carInfo = carInfo;
+  reservationToEdit.pricePerDay = pricePerDay;
   reservationToEdit.startTime = startTime;
   reservationToEdit.endTime = endTime;
+  reservationToEdit.numberOfDays = numberOfDays;
+  reservationToEdit.totalPrice = totalPrice;
 
   if (imagesArray == "[]") {
     reservationToEdit.imagesArray = null;
