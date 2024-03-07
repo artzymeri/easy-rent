@@ -1,5 +1,5 @@
 import Sidebar from "../src/app/Components/Sidebar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "@/app/Styling/global-styling.css";
 import "@/app/Styling/Veturat/veturat-listing.css";
 import "@/app/Styling/Reservimet/shtoreservim.css";
@@ -14,8 +14,11 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import axios from "axios";
 
 const Veturat = () => {
+  const [carsData, setCarsData] = useState([]);
+
   const [carViewMode, setCarViewMode] = useState("list");
 
   const [addCarDialog, setAddCarDialog] = useState(false);
@@ -31,7 +34,15 @@ const Veturat = () => {
     price: null,
     label: null,
     expiryDate: null,
+    image: null,
   });
+
+  useEffect(() => {
+    axios.get("http://localhost:1234/getveturat").then((res) => {
+      console.log(res.data);
+      setCarsData(res.data);
+    });
+  }, []);
 
   const handleFileChange = (event) => {
     const files = event.target.files;
@@ -45,6 +56,25 @@ const Veturat = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const saveAddCar = () => {
+    axios.post("http://localhost:1234/addveture", { newCar }).then((res) => {
+      setNewCar({
+        make: null,
+        model: null,
+        year: null,
+        transmission: null,
+        fuel: null,
+        engine: null,
+        color: null,
+        price: null,
+        label: null,
+        expiryDate: null,
+        image: null,
+      });
+      setAddCarDialog(false);
+    });
   };
 
   return (
@@ -198,12 +228,7 @@ const Veturat = () => {
           >
             Mbyll
           </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              console.log(newCar);
-            }}
-          >
+          <Button variant="contained" onClick={saveAddCar}>
             Shto
           </Button>
         </DialogActions>
@@ -272,7 +297,11 @@ const Veturat = () => {
           )}
         </div>
       </div>
-      {carViewMode == "list" ? <VeturatListView /> : <VeturatGridView />}
+      {carViewMode == "list" ? (
+        <VeturatListView carsData={carsData} />
+      ) : (
+        <VeturatGridView carsData={carsData} />
+      )}
     </Sidebar>
   );
 };

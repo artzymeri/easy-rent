@@ -8,7 +8,7 @@ require("dotenv").config();
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
 
-const { reservations } = require("./models");
+const { reservations, veturat } = require("./models");
 
 const app = express();
 app.use(express.json({ limit: "50mb" }));
@@ -19,6 +19,8 @@ app.use(bodyParser.json());
 const db = require("./models");
 
 const port = 1234;
+
+//RESERVATIONS ------------------------------>
 
 app.get("/getreservations", async (req, res) => {
   try {
@@ -137,6 +139,59 @@ app.post("/deletereservation/:reservationId", async (req, res) => {
     res.json({ title: "success", message: "Produkti u fshi me sukses" });
   } catch (error) {
     console.log(error);
+  }
+});
+
+//VETURAT ------------------------------>
+
+app.get("/getveturat", async (req, res) => {
+  try {
+    const veturatData = await veturat.findAll();
+
+    res.json(veturatData);
+  } catch (error) {
+    console.error("Database query error:", error);
+    res.status(500).json({ message: "An error occurred" });
+  }
+});
+
+app.post("/addveture", async (req, res) => {
+  console.log(req.body);
+  try {
+    const {
+      make,
+      model,
+      year,
+      transmission,
+      fuel,
+      engine,
+      color,
+      price,
+      label,
+      expiryDate,
+      image,
+    } = req.body.newCar;
+
+    await veturat.create({
+      make: make,
+      model: model,
+      year: year,
+      transmission: transmission,
+      fuel: fuel,
+      engine: engine,
+      color: color,
+      price: price,
+      label: label,
+      expiryDate: expiryDate,
+      image: image,
+    });
+    res.json({
+      title: "success",
+      message: "Reservimi u shtua me sukses",
+    });
+  } catch (error) {
+    console.error("Database query error:", error);
+    res.json({ title: "error", message: "Një problem u shkaktua" });
   }
 });
 

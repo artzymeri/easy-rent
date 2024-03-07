@@ -5,7 +5,9 @@ import CarsTest from "../TestingValues/CarsTest";
 import VeturatFooter from "./VeturatFooter";
 import { LocalGasStationOutlined, RestoreOutlined } from "@mui/icons-material";
 
-const VeturatListView = () => {
+const VeturatListView = (props) => {
+  const { carsData } = props;
+
   const checkStatus = (carStatus) => {
     if (carStatus == "available") {
       return <div className="status-badge available">Gati</div>;
@@ -19,14 +21,14 @@ const VeturatListView = () => {
   return (
     <>
       <div className="m-t-50 veturat-grid-view-wrapper">
-        {CarsTest.map((car) => {
+        {carsData.map((car) => {
           return (
             <div key={car.id} className="veturat-grid-item">
               <div className="veturat-grid-status-badge">
                 {checkStatus(car.availablility)}
               </div>
               <div className="veturat-grid-item-image-container">
-                <img src={car.photoLink} />
+                <img src={car.image} />
               </div>
               <div className="veturat-grid-item-car-info">
                 <h3
