@@ -23,3 +23,29 @@
   opacity: 1;
   border-radius: 5px;
 }
+
+.file-uploader-single {
+  width: 100%;
+  height: 56px;
+  position: relative;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.file-uploader-single::after {
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: white;
+  content: "Shto fotografinë e veturës";
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed #015c92;
+  color: #015c92;
+  font-size: 1rem;
+  opacity: 1;
+  border-radius: 5px;
+}

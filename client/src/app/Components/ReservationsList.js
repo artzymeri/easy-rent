@@ -27,7 +27,6 @@ import {
 } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import CarsTest from "../TestingValues/CarsTest";
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
@@ -55,6 +54,7 @@ const ReservationsList = (props) => {
     deleteImage,
     setClickedImage,
     setSelectedCar,
+    carsData,
   } = props;
 
   const checkIfToday = (reservation) => {
@@ -210,7 +210,7 @@ const ReservationsList = (props) => {
               onChange={handleCarSelectChange}
               style={{ background: "white" }}
             >
-              {CarsTest.map((car) => {
+              {carsData.map((car) => {
                 return (
                   <MenuItem
                     value={car.make + " " + car.model}

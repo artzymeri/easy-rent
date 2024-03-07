@@ -19,6 +19,8 @@ const Reservimet = () => {
 
   const [reservations, setReservations] = useState([]);
 
+  const [carsData, setCarsData] = useState([]);
+
   const [selectedCar, setSelectedCar] = useState(null);
 
   const [selectedReservationDialog, setSelectedReservationDialog] =
@@ -135,6 +137,13 @@ const Reservimet = () => {
   useEffect(() => {
     axios.get("http://localhost:1234/getreservations").then((res) => {
       setReservations(res.data);
+      console.log(res.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    axios.get("http://localhost:1234/getveturat").then((res) => {
+      setCarsData(res.data);
       console.log(res.data);
     });
   }, []);
@@ -369,6 +378,7 @@ const Reservimet = () => {
             deleteImage={deleteImage}
             setClickedImage={setClickedImage}
             setSelectedCar={setSelectedCar}
+            carsData={carsData}
           />
         )}
         {reservationsListActive && (
@@ -393,6 +403,7 @@ const Reservimet = () => {
             deleteImage={deleteImage}
             setClickedImage={setClickedImage}
             setSelectedCar={setSelectedCar}
+            carsData={carsData}
           />
         )}
       </div>

@@ -37,6 +37,16 @@ const ShtoReservim = () => {
     imagesArray: null,
   });
 
+  const [carsData, setCarsData] = useState([]);
+
+  const [carViewImage, setCarViewImage] = useState(null);
+
+  useEffect(() => {
+    axios.get("http://localhost:1234/getveturat").then((res) => {
+      setCarsData(res.data);
+    });
+  }, []);
+
   const [images, setImages] = useState([]);
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -202,9 +212,16 @@ const ShtoReservim = () => {
                   <Delete sx={{ color: "red" }} />
                 </div>
                 <img
+                  onClick={() => {
+                    setCarViewImage(image);
+                  }}
                   srcSet={image}
                   src={image}
-                  style={{ objectFit: "contain", objectPosition: "center" }}
+                  style={{
+                    objectFit: "contain",
+                    objectPosition: "center",
+                    cursor: "pointer",
+                  }}
                   loading="lazy"
                 />
               </ImageListItem>
@@ -268,6 +285,17 @@ const ShtoReservim = () => {
             Ruaj
           </Button>
         </DialogActions>
+      </Dialog>
+      <Dialog
+        open={carViewImage}
+        onClose={() => {
+          setCarViewImage(null);
+        }}
+      >
+        <img
+          src={carViewImage}
+          style={{ width: "100%", height: "auto", objectFit: "cover" }}
+        />
       </Dialog>
       <h3
         style={{
@@ -349,7 +377,7 @@ const ShtoReservim = () => {
               onChange={handleCarSelectChange}
               style={{ background: "white" }}
             >
-              {CarsTest.map((car) => {
+              {carsData.map((car) => {
                 return (
                   <MenuItem
                     value={car.make + " " + car.model}

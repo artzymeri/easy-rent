@@ -20,7 +20,6 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isBetween from "dayjs/plugin/isBetween";
 import { AddAPhoto, CloseFullscreen, Delete, Error } from "@mui/icons-material";
-import CarsTest from "../TestingValues/CarsTest";
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
@@ -49,6 +48,7 @@ const Calendar = (props) => {
     deleteImage,
     setClickedImage,
     setSelectedCar,
+    carsData,
   } = props;
 
   return (
@@ -161,7 +161,7 @@ const Calendar = (props) => {
               onChange={handleCarSelectChange}
               style={{ background: "white" }}
             >
-              {CarsTest.map((car) => {
+              {carsData.map((car) => {
                 return (
                   <MenuItem
                     value={car.make + " " + car.model}

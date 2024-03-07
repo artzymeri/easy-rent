@@ -19,11 +19,22 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Snackbar,
   TextField,
   Tooltip,
 } from "@mui/material";
 import axios from "axios";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import {
+  DatePicker,
+  DateTimePicker,
+  LocalizationProvider,
+} from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 const Veturat = () => {
   const [carsData, setCarsData] = useState([]);
@@ -101,10 +112,17 @@ const Veturat = () => {
       color: car.color,
       price: car.price,
       label: car.label,
-      expiryDate: car.expiryDate,
+      expiryDate: dayjs(car.expiryDate),
       image: car.image,
     });
     setEditCarDialog(true);
+  };
+
+  const handleExpiryDate = (date) => {
+    setCarInfo({
+      ...carInfo,
+      expiryDate: date.format(),
+    });
   };
 
   const saveAddCar = () => {
@@ -261,22 +279,39 @@ const Veturat = () => {
               setCarInfo({ ...carInfo, year: e.target.value });
             }}
           />
-          <TextField
-            label="Transmisioni"
-            value={carInfo.transmission}
-            style={{ background: "white" }}
-            onChange={(e) => {
-              setCarInfo({ ...carInfo, transmission: e.target.value });
-            }}
-          />
-          <TextField
-            label="Derivati"
-            value={carInfo.fuel}
-            style={{ background: "white" }}
-            onChange={(e) => {
-              setCarInfo({ ...carInfo, fuel: e.target.value });
-            }}
-          />
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Transmisioni</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={carInfo.transmission}
+              label="Transmisioni"
+              onChange={(e) => {
+                setCarInfo({ ...carInfo, transmission: e.target.value });
+              }}
+              style={{ background: "white" }}
+            >
+              <MenuItem value="Automatikë">Automatikë</MenuItem>
+              <MenuItem value="Manual">Manual</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Derivati</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={carInfo.fuel}
+              label="Derivati"
+              onChange={(e) => {
+                setCarInfo({ ...carInfo, fuel: e.target.value });
+              }}
+              style={{ background: "white" }}
+            >
+              <MenuItem value="Naftë">Naftë</MenuItem>
+              <MenuItem value="Benzinë">Benzinë</MenuItem>
+              <MenuItem value="Elektrikë">Elektrikë</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             label="Motori"
             value={carInfo.engine}
@@ -310,20 +345,69 @@ const Veturat = () => {
               setCarInfo({ ...carInfo, label: e.target.value });
             }}
           />
-          <TextField
-            label="Data e Skadimit"
-            value={carInfo.expiryDate}
-            style={{ background: "white" }}
-            onChange={(e) => {
-              setCarInfo({ ...carInfo, expiryDate: e.target.value });
-            }}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="file-uploader"
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Skadimi regjistrimit"
+              sx={{ width: "100%", background: "white" }}
+              onChange={handleExpiryDate}
+              value={carInfo.expiryDate}
+            />
+          </LocalizationProvider>
+          {carInfo.image ? (
+            <div
+              style={{
+                width: "100%",
+                gridColumn: "span 2",
+                borderRadius: "5px",
+                position: "relative",
+              }}
+            >
+              <Tooltip title="Ndrysho fotografinë e veturës">
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    width: "35px",
+                    height: "35px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    background: "white",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <input
+                    type="file"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "absolute",
+                      opacity: "0",
+                      gridColumn: "span 2",
+                    }}
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="file-uploader-single"
+                  />
+                  <ChangeCircle />
+                </div>
+              </Tooltip>
+              <img
+                src={carInfo.image}
+                style={{ width: "100%", borderRadius: "5px" }}
+              />
+            </div>
+          ) : (
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="file-uploader-single"
+              style={{ gridColumn: "span 2" }}
+            />
+          )}
         </DialogContent>
         <DialogActions
           sx={{
@@ -415,22 +499,39 @@ const Veturat = () => {
               setCarInfo({ ...carInfo, year: e.target.value });
             }}
           />
-          <TextField
-            label="Transmisioni"
-            value={carInfo.transmission}
-            style={{ background: "white" }}
-            onChange={(e) => {
-              setCarInfo({ ...carInfo, transmission: e.target.value });
-            }}
-          />
-          <TextField
-            label="Derivati"
-            value={carInfo.fuel}
-            style={{ background: "white" }}
-            onChange={(e) => {
-              setCarInfo({ ...carInfo, fuel: e.target.value });
-            }}
-          />
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Transmisioni</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={carInfo.transmission}
+              label="Transmisioni"
+              onChange={(e) => {
+                setCarInfo({ ...carInfo, transmission: e.target.value });
+              }}
+              style={{ background: "white" }}
+            >
+              <MenuItem value="Automatikë">Automatikë</MenuItem>
+              <MenuItem value="Manual">Manual</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Derivati</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={carInfo.fuel}
+              label="Derivati"
+              onChange={(e) => {
+                setCarInfo({ ...carInfo, fuel: e.target.value });
+              }}
+              style={{ background: "white" }}
+            >
+              <MenuItem value="Naftë">Naftë</MenuItem>
+              <MenuItem value="Benzinë">Benzinë</MenuItem>
+              <MenuItem value="Elektrikë">Elektrikë</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             label="Motori"
             value={carInfo.engine}
@@ -464,14 +565,14 @@ const Veturat = () => {
               setCarInfo({ ...carInfo, label: e.target.value });
             }}
           />
-          <TextField
-            label="Data e Skadimit"
-            value={carInfo.expiryDate}
-            style={{ background: "white" }}
-            onChange={(e) => {
-              setCarInfo({ ...carInfo, expiryDate: e.target.value });
-            }}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Skadimi regjistrimit"
+              sx={{ width: "100%", background: "white" }}
+              onChange={handleExpiryDate}
+              value={carInfo.expiryDate}
+            />
+          </LocalizationProvider>
           {carInfo.image ? (
             <div
               style={{
@@ -504,10 +605,11 @@ const Veturat = () => {
                       height: "100%",
                       position: "absolute",
                       opacity: "0",
+                      gridColumn: "span 2",
                     }}
                     accept="image/*"
                     onChange={handleFileChange}
-                    className="file-uploader"
+                    className="file-uploader-single"
                   />
                   <ChangeCircle />
                 </div>
@@ -522,7 +624,7 @@ const Veturat = () => {
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              className="file-uploader"
+              className="file-uploader-single"
               style={{ gridColumn: "span 2" }}
             />
           )}
@@ -599,7 +701,7 @@ const Veturat = () => {
           <Button
             variant="outlined"
             color="error"
-            onClose={() => {
+            onClick={() => {
               setDeleteCarDialog(false);
               setCarInfo({
                 make: null,

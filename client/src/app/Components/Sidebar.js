@@ -23,11 +23,6 @@ const navigationOptions = [
     icon: <DirectionsCar />,
   },
   {
-    title: "Klientët",
-    link: "/klientet",
-    icon: <Person2 />,
-  },
-  {
     title: "Reservimet",
     link: "/reservimet",
     icon: <CalendarMonth />,
@@ -36,7 +31,7 @@ const navigationOptions = [
     title: "Shto Reservim",
     link: "/shtoreservim",
     icon: <Add />,
-  }
+  },
 ];
 
 const Sidebar = ({ children }) => {
