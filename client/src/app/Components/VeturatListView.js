@@ -1,19 +1,16 @@
 import React from "react";
 import "@/app/Styling/global-styling.css";
 import "@/app/Styling/Veturat/veturat-list-view.css";
-import CarsTest from "../TestingValues/CarsTest";
 import { Tooltip } from "@mui/material";
 import {
-  Help,
-  HelpCenter,
+  Delete,
   LocalGasStationOutlined,
   RestoreOutlined,
-  WavesOutlined,
 } from "@mui/icons-material";
 import VeturatFooter from "./VeturatFooter";
 
 const VeturatListView = (props) => {
-  const { carsData } = props;
+  const { carsData, handleClickOnCar, handleDeleteCarClick } = props;
 
   const checkStatus = (carStatus) => {
     if (carStatus == "available") {
@@ -31,6 +28,31 @@ const VeturatListView = (props) => {
         {carsData.map((car) => {
           return (
             <div key={car.id} className="veturat-list-item">
+              <Tooltip title="Fshij veturën">
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "0",
+                    top: "0",
+                    width: "30px",
+                    height: "30px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    background: "red",
+                    borderTopRightRadius: "12px",
+                    borderBottomLeftRadius: "12px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    handleDeleteCarClick(car);
+                  }}
+                >
+                  <Delete
+                    sx={{ height: "18px", width: "18px", color: "white" }}
+                  />
+                </div>
+              </Tooltip>
               <div className="veturat-list-item-image-container">
                 <img src={car.image} />
               </div>
@@ -53,9 +75,20 @@ const VeturatListView = (props) => {
                   </span>
                 </h1>
                 {checkStatus(car.availablility)}
-                <Tooltip title="Kliko për të shikuar detajet">
-                  <button>Detajet</button>
-                </Tooltip>
+                <div style={{ display: "flex" }}>
+                  <Tooltip title="Kliko për të shikuar detajet">
+                    <button>Detajet</button>
+                  </Tooltip>
+                  <Tooltip title="Kliko për të edituar veturën">
+                    <button
+                      onClick={() => {
+                        handleClickOnCar(car);
+                      }}
+                    >
+                      Edito
+                    </button>
+                  </Tooltip>
+                </div>
               </div>
               <div className="veturat-list-item-child">
                 <LocalGasStationOutlined

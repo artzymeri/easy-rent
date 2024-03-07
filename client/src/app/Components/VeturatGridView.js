@@ -1,12 +1,16 @@
 import React from "react";
 import "@/app/Styling/global-styling.css";
 import "@/app/Styling/Veturat/veturat-grid-view.css";
-import CarsTest from "../TestingValues/CarsTest";
 import VeturatFooter from "./VeturatFooter";
-import { LocalGasStationOutlined, RestoreOutlined } from "@mui/icons-material";
+import {
+  Delete,
+  LocalGasStationOutlined,
+  RestoreOutlined,
+} from "@mui/icons-material";
+import { Tooltip } from "@mui/material";
 
 const VeturatListView = (props) => {
-  const { carsData } = props;
+  const { carsData, handleClickOnCar, handleDeleteCarClick } = props;
 
   const checkStatus = (carStatus) => {
     if (carStatus == "available") {
@@ -24,6 +28,31 @@ const VeturatListView = (props) => {
         {carsData.map((car) => {
           return (
             <div key={car.id} className="veturat-grid-item">
+              <Tooltip title="Fshij veturën">
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "0",
+                    top: "0",
+                    width: "30px",
+                    height: "30px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    background: "red",
+                    borderTopRightRadius: "12px",
+                    borderBottomLeftRadius: "12px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    handleDeleteCarClick(car);
+                  }}
+                >
+                  <Delete
+                    sx={{ height: "18px", width: "18px", color: "white" }}
+                  />
+                </div>
+              </Tooltip>
               <div className="veturat-grid-status-badge">
                 {checkStatus(car.availablility)}
               </div>
@@ -72,19 +101,44 @@ const VeturatListView = (props) => {
                   <h5>{car.year}</h5>
                 </div>
               </div>
-              <button
+              <div
                 style={{
+                  display: "flex",
+                  gap: "10px",
                   width: "calc(100% - 30px)",
-                  margin: "5px 15px 15px 15px",
-                  border: "0px solid transparent",
-                  background: "#015c92",
-                  color: "white",
-                  padding: "10px 0px",
-                  borderRadius: "6px",
+                  paddingBottom: "10px",
                 }}
               >
-                Detajet
-              </button>
+                <button
+                  style={{
+                    border: "0px solid transparent",
+                    background: "#015c92",
+                    color: "white",
+                    borderRadius: "6px",
+                    width: "100%",
+                    height: "30px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Detajet
+                </button>
+                <button
+                  onClick={() => {
+                    handleClickOnCar(car);
+                  }}
+                  style={{
+                    border: "0px solid transparent",
+                    background: "#015c92",
+                    color: "white",
+                    borderRadius: "6px",
+                    width: "100%",
+                    height: "30px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Edito
+                </button>
+              </div>
             </div>
           );
         })}

@@ -170,7 +170,7 @@ app.post("/addveture", async (req, res) => {
       label,
       expiryDate,
       image,
-    } = req.body.newCar;
+    } = req.body.carInfo;
 
     await veturat.create({
       make: make,
@@ -192,6 +192,63 @@ app.post("/addveture", async (req, res) => {
   } catch (error) {
     console.error("Database query error:", error);
     res.json({ title: "error", message: "Një problem u shkaktua" });
+  }
+});
+
+app.post("/editveture/:veturaId", async (req, res) => {
+  const { veturaId } = req.params;
+
+  const {
+    make,
+    model,
+    year,
+    transmission,
+    fuel,
+    engine,
+    color,
+    price,
+    label,
+    expiryDate,
+    image,
+  } = req.body.carInfo;
+
+  const veturaToEdit = await veturat.findByPk(veturaId);
+
+  if (!veturaId) {
+    res.json({ title: "error", message: "Produkti nuk ekziston" });
+  }
+
+  veturaToEdit.make = make;
+  veturaToEdit.model = model;
+  veturaToEdit.year = year;
+  veturaToEdit.transmission = transmission;
+  veturaToEdit.fuel = fuel;
+  veturaToEdit.engine = engine;
+  veturaToEdit.color = color;
+  veturaToEdit.price = price;
+  veturaToEdit.label = label;
+  veturaToEdit.expiryDate = expiryDate;
+  veturaToEdit.image = image;
+
+  await veturaToEdit.save();
+  res.json({ title: "success", message: "Produkti u editua me sukses" });
+});
+
+app.post("/deletevetura/:veturaId", async (req, res) => {
+  try {
+    const { veturaId } = req.params;
+
+    const deletedRequest = await veturat.destroy({
+      where: { id: veturaId },
+    });
+
+    if (!deletedRequest) {
+      res.json({ title: "error", message: "Produkti nuk u fshi me sukses" });
+    }
+
+    res.json({ title: "success", message: "Produkti u fshi me sukses" });
+  } catch (error) {
+    console.log(error);
   }
 });
 

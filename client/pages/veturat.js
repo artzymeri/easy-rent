@@ -3,16 +3,25 @@ import React, { useEffect, useState } from "react";
 import "@/app/Styling/global-styling.css";
 import "@/app/Styling/Veturat/veturat-listing.css";
 import "@/app/Styling/Reservimet/shtoreservim.css";
-import { Add, GridView, Tune, ViewList } from "@mui/icons-material";
+import {
+  Add,
+  ChangeCircle,
+  GridView,
+  Tune,
+  ViewList,
+} from "@mui/icons-material";
 import VeturatListView from "../src/app/Components/VeturatListView";
 import VeturatGridView from "../src/app/Components/VeturatGridView";
 import {
+  Alert,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Snackbar,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import axios from "axios";
 
@@ -23,7 +32,29 @@ const Veturat = () => {
 
   const [addCarDialog, setAddCarDialog] = useState(false);
 
-  const [newCar, setNewCar] = useState({
+  const [editCarDialog, setEditCarDialog] = useState(false);
+
+  const [deleteCarDialog, setDeleteCarDialog] = useState(false);
+
+  const handleDeleteCarClick = (car) => {
+    setCarInfo({
+      id: car.id,
+      make: car.make,
+      model: car.model,
+      year: car.year,
+      transmission: car.transmission,
+      fuel: car.fuel,
+      engine: car.engine,
+      color: car.color,
+      price: car.price,
+      label: car.label,
+      expiryDate: car.expiryDate,
+      image: car.image,
+    });
+    setDeleteCarDialog(true);
+  };
+
+  const [carInfo, setCarInfo] = useState({
     make: null,
     model: null,
     year: null,
@@ -39,7 +70,7 @@ const Veturat = () => {
 
   useEffect(() => {
     axios.get("http://localhost:1234/getveturat").then((res) => {
-      console.log(res.data);
+      console.log("carsFromBackend", res.data);
       setCarsData(res.data);
     });
   }, []);
@@ -52,15 +83,40 @@ const Veturat = () => {
       reader.onload = (event) => {
         const imageDataURL = event.target.result;
         console.log(imageDataURL);
-        setNewCar({ ...newCar, image: imageDataURL });
+        setCarInfo({ ...carInfo, image: imageDataURL });
       };
       reader.readAsDataURL(file);
     }
   };
 
+  const handleClickOnCar = (car) => {
+    setCarInfo({
+      id: car.id,
+      make: car.make,
+      model: car.model,
+      year: car.year,
+      transmission: car.transmission,
+      fuel: car.fuel,
+      engine: car.engine,
+      color: car.color,
+      price: car.price,
+      label: car.label,
+      expiryDate: car.expiryDate,
+      image: car.image,
+    });
+    setEditCarDialog(true);
+  };
+
   const saveAddCar = () => {
-    axios.post("http://localhost:1234/addveture", { newCar }).then((res) => {
-      setNewCar({
+    if (
+      Object.values(carInfo).some((value) => value === null || value === "")
+    ) {
+      console.log("One or more properties are empty");
+      return;
+    }
+
+    axios.post("http://localhost:1234/addveture", { carInfo }).then((res) => {
+      setCarInfo({
         make: null,
         model: null,
         year: null,
@@ -73,12 +129,88 @@ const Veturat = () => {
         expiryDate: null,
         image: null,
       });
+      axios.get("http://localhost:1234/getveturat").then((res) => {
+        setCarsData(res.data);
+      });
       setAddCarDialog(false);
+    });
+  };
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const saveEditCar = () => {
+    if (
+      Object.values(carInfo).some((value) => value === null || value === "")
+    ) {
+      setSnackbarOpen(true);
+      return;
+    }
+
+    axios
+      .post(`http://localhost:1234/editveture/${carInfo.id}`, { carInfo })
+      .then((res) => {
+        setCarInfo({
+          make: null,
+          model: null,
+          year: null,
+          transmission: null,
+          fuel: null,
+          engine: null,
+          color: null,
+          price: null,
+          label: null,
+          expiryDate: null,
+          image: null,
+        });
+        axios.get("http://localhost:1234/getveturat").then((res) => {
+          setCarsData(res.data);
+        });
+        setEditCarDialog(false);
+      });
+  };
+
+  const deleteCar = () => {
+    axios.post(`http://localhost:1234/deletevetura/${carInfo.id}`).then(() => {
+      setCarInfo({
+        make: null,
+        model: null,
+        year: null,
+        transmission: null,
+        fuel: null,
+        engine: null,
+        color: null,
+        price: null,
+        label: null,
+        expiryDate: null,
+        image: null,
+      });
+      axios.get("http://localhost:1234/getveturat").then((res) => {
+        setCarsData(res.data);
+      });
+      setDeleteCarDialog(false);
     });
   };
 
   return (
     <Sidebar>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => {
+          setSnackbarOpen(false);
+        }}
+      >
+        <Alert
+          onClose={() => {
+            setSnackbarOpen(false);
+          }}
+          severity="warning"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          Ju lutem plotësoni të gjitha rubrikat
+        </Alert>
+      </Snackbar>
       <Dialog
         open={addCarDialog}
         onClose={() => {
@@ -105,85 +237,85 @@ const Veturat = () => {
         >
           <TextField
             label="Marka"
-            value={newCar.make}
+            value={carInfo.make}
             style={{ background: "white" }}
             onChange={(e) => {
-              setNewCar({ ...newCar, make: e.target.value });
+              setCarInfo({ ...carInfo, make: e.target.value });
             }}
           />
           <TextField
             label="Modeli"
-            value={newCar.model}
+            value={carInfo.model}
             style={{ background: "white" }}
             onChange={(e) => {
-              setNewCar({ ...newCar, model: e.target.value });
+              setCarInfo({ ...carInfo, model: e.target.value });
             }}
           />
 
           <TextField
             label="Viti veturës"
-            value={newCar.year}
+            value={carInfo.year}
             style={{ background: "white" }}
             type="number"
             onChange={(e) => {
-              setNewCar({ ...newCar, year: e.target.value });
+              setCarInfo({ ...carInfo, year: e.target.value });
             }}
           />
           <TextField
             label="Transmisioni"
-            value={newCar.transmission}
+            value={carInfo.transmission}
             style={{ background: "white" }}
             onChange={(e) => {
-              setNewCar({ ...newCar, transmission: e.target.value });
+              setCarInfo({ ...carInfo, transmission: e.target.value });
             }}
           />
           <TextField
             label="Derivati"
-            value={newCar.fuel}
+            value={carInfo.fuel}
             style={{ background: "white" }}
             onChange={(e) => {
-              setNewCar({ ...newCar, fuel: e.target.value });
+              setCarInfo({ ...carInfo, fuel: e.target.value });
             }}
           />
           <TextField
             label="Motori"
-            value={newCar.engine}
+            value={carInfo.engine}
             style={{ background: "white" }}
             onChange={(e) => {
-              setNewCar({ ...newCar, engine: e.target.value });
+              setCarInfo({ ...carInfo, engine: e.target.value });
             }}
           />
           <TextField
             label="Ngjyra"
-            value={newCar.color}
+            value={carInfo.color}
             style={{ background: "white" }}
             onChange={(e) => {
-              setNewCar({ ...newCar, color: e.target.value });
+              setCarInfo({ ...carInfo, color: e.target.value });
             }}
           />
           <TextField
             label="Çmimi për ditë"
             type="number"
-            value={newCar.price}
+            value={carInfo.price}
             style={{ background: "white" }}
             onChange={(e) => {
-              setNewCar({ ...newCar, price: e.target.value });
+              setCarInfo({ ...carInfo, price: e.target.value });
             }}
           />
           <TextField
             label="Targat"
-            value={newCar.label}
+            value={carInfo.label}
             style={{ background: "white" }}
             onChange={(e) => {
-              setNewCar({ ...newCar, label: e.target.value });
+              setCarInfo({ ...carInfo, label: e.target.value });
             }}
           />
           <TextField
             label="Data e Skadimit"
-            value={newCar.expiryDate}
+            value={carInfo.expiryDate}
             style={{ background: "white" }}
             onChange={(e) => {
-              setNewCar({ ...newCar, expiryDate: e.target.value });
+              setCarInfo({ ...carInfo, expiryDate: e.target.value });
             }}
           />
           <input
@@ -210,7 +342,7 @@ const Veturat = () => {
           <Button
             variant="outlined"
             onClick={() => {
-              setNewCar({
+              setCarInfo({
                 make: null,
                 model: null,
                 year: null,
@@ -230,6 +362,264 @@ const Veturat = () => {
           </Button>
           <Button variant="contained" onClick={saveAddCar}>
             Shto
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={editCarDialog}
+        onClose={() => {
+          setEditCarDialog(false);
+        }}
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          borderBottom={"1px solid lightgray"}
+        >
+          Edito Veturën
+        </DialogTitle>
+        <DialogContent
+          sx={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
+          style={{
+            background: "whitesmoke",
+            padding: "20px",
+            gap: "10px",
+          }}
+        >
+          <TextField
+            label="Marka"
+            value={carInfo.make}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, make: e.target.value });
+            }}
+          />
+          <TextField
+            label="Modeli"
+            value={carInfo.model}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, model: e.target.value });
+            }}
+          />
+
+          <TextField
+            label="Viti veturës"
+            value={carInfo.year}
+            style={{ background: "white" }}
+            type="number"
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, year: e.target.value });
+            }}
+          />
+          <TextField
+            label="Transmisioni"
+            value={carInfo.transmission}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, transmission: e.target.value });
+            }}
+          />
+          <TextField
+            label="Derivati"
+            value={carInfo.fuel}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, fuel: e.target.value });
+            }}
+          />
+          <TextField
+            label="Motori"
+            value={carInfo.engine}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, engine: e.target.value });
+            }}
+          />
+          <TextField
+            label="Ngjyra"
+            value={carInfo.color}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, color: e.target.value });
+            }}
+          />
+          <TextField
+            label="Çmimi për ditë"
+            type="number"
+            value={carInfo.price}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, price: e.target.value });
+            }}
+          />
+          <TextField
+            label="Targat"
+            value={carInfo.label}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, label: e.target.value });
+            }}
+          />
+          <TextField
+            label="Data e Skadimit"
+            value={carInfo.expiryDate}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, expiryDate: e.target.value });
+            }}
+          />
+          {carInfo.image ? (
+            <div
+              style={{
+                width: "100%",
+                gridColumn: "span 2",
+                borderRadius: "5px",
+                position: "relative",
+              }}
+            >
+              <Tooltip title="Ndrysho fotografinë e veturës">
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    width: "35px",
+                    height: "35px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    background: "white",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <input
+                    type="file"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "absolute",
+                      opacity: "0",
+                    }}
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="file-uploader"
+                  />
+                  <ChangeCircle />
+                </div>
+              </Tooltip>
+              <img
+                src={carInfo.image}
+                style={{ width: "100%", borderRadius: "5px" }}
+              />
+            </div>
+          ) : (
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="file-uploader"
+              style={{ gridColumn: "span 2" }}
+            />
+          )}
+        </DialogContent>
+        <DialogActions
+          sx={{
+            height: "65px",
+            border: "1px solid lightgray",
+            borderLeft: "0px",
+            borderRight: "0px",
+            borderBottom: "0px",
+          }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setCarInfo({
+                make: null,
+                model: null,
+                year: null,
+                transmission: null,
+                fuel: null,
+                engine: null,
+                color: null,
+                price: null,
+                label: null,
+                expiryDate: null,
+                image: null,
+              });
+              setEditCarDialog(false);
+            }}
+          >
+            Mbyll
+          </Button>
+          <Button variant="contained" onClick={saveEditCar}>
+            Edito
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={deleteCarDialog}
+        onClose={() => {
+          setDeleteCarDialog(false);
+          setCarInfo({
+            make: null,
+            model: null,
+            year: null,
+            transmission: null,
+            fuel: null,
+            engine: null,
+            color: null,
+            price: null,
+            label: null,
+            expiryDate: null,
+            image: null,
+          });
+        }}
+      >
+        <DialogContent>
+          A doni të fshini veturën e caktuar nga databaza?
+        </DialogContent>
+        <DialogActions
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button
+            variant="outlined"
+            color="error"
+            onClose={() => {
+              setDeleteCarDialog(false);
+              setCarInfo({
+                make: null,
+                model: null,
+                year: null,
+                transmission: null,
+                fuel: null,
+                engine: null,
+                color: null,
+                price: null,
+                label: null,
+                expiryDate: null,
+                image: null,
+              });
+            }}
+          >
+            Mbyll
+          </Button>
+          <Button variant="contained" color="error" onClick={deleteCar}>
+            Fshij
           </Button>
         </DialogActions>
       </Dialog>
@@ -298,9 +688,17 @@ const Veturat = () => {
         </div>
       </div>
       {carViewMode == "list" ? (
-        <VeturatListView carsData={carsData} />
+        <VeturatListView
+          carsData={carsData}
+          handleClickOnCar={handleClickOnCar}
+          handleDeleteCarClick={handleDeleteCarClick}
+        />
       ) : (
-        <VeturatGridView carsData={carsData} />
+        <VeturatGridView
+          carsData={carsData}
+          handleClickOnCar={handleClickOnCar}
+          handleDeleteCarClick={handleDeleteCarClick}
+        />
       )}
     </Sidebar>
   );
