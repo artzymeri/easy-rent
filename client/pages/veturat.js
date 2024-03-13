@@ -1,5 +1,5 @@
 import Sidebar from "../src/app/Components/Sidebar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "@/app/Styling/global-styling.css";
 import "@/app/Styling/Veturat/veturat-listing.css";
 import "@/app/Styling/Reservimet/shtoreservim.css";
@@ -38,6 +38,8 @@ import dayjs from "dayjs";
 
 const Veturat = () => {
   const [carsData, setCarsData] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [carViewMode, setCarViewMode] = useState("list");
 
@@ -93,7 +95,6 @@ const Veturat = () => {
       const reader = new FileReader();
       reader.onload = (event) => {
         const imageDataURL = event.target.result;
-        console.log(imageDataURL);
         setCarInfo({ ...carInfo, image: imageDataURL });
       };
       reader.readAsDataURL(file);
@@ -129,7 +130,7 @@ const Veturat = () => {
     if (
       Object.values(carInfo).some((value) => value === null || value === "")
     ) {
-      console.log("One or more properties are empty");
+      setSnackbarOpen(true);
       return;
     }
 
@@ -208,6 +209,23 @@ const Veturat = () => {
       setDeleteCarDialog(false);
     });
   };
+
+  const filteredCarsData = useMemo(() => {
+    if (searchQuery.trim() !== '') {
+      return carsData.filter((car) => 
+        car.color.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        car.make.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        car.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        car.engine.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        car.fuel.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        car.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        car.transmission.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        car.price.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        car.year.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    return carsData;
+  }, [carsData, searchQuery]);
 
   return (
     <Sidebar>
@@ -425,6 +443,7 @@ const Veturat = () => {
         >
           <Button
             variant="outlined"
+            color="error"
             onClick={() => {
               setCarInfo({
                 make: null,
@@ -645,6 +664,7 @@ const Veturat = () => {
         >
           <Button
             variant="outlined"
+            color="error"
             onClick={() => {
               setCarInfo({
                 make: null,
@@ -737,6 +757,10 @@ const Veturat = () => {
             className="veturat-listing-search"
             type="text"
             placeholder="Kërko veturat..."
+            value={searchQuery}
+            onChange={(e)=>{
+              setSearchQuery(e.target.value)
+            }}
           />
           <button
             className="veturat-listing-button add-car-button"
@@ -791,13 +815,13 @@ const Veturat = () => {
       </div>
       {carViewMode == "list" ? (
         <VeturatListView
-          carsData={carsData}
+          carsData={filteredCarsData}
           handleClickOnCar={handleClickOnCar}
           handleDeleteCarClick={handleDeleteCarClick}
         />
       ) : (
         <VeturatGridView
-          carsData={carsData}
+          carsData={filteredCarsData}
           handleClickOnCar={handleClickOnCar}
           handleDeleteCarClick={handleDeleteCarClick}
         />

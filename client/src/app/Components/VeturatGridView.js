@@ -143,7 +143,7 @@ const VeturatListView = (props) => {
           );
         })}
       </div>
-      <VeturatFooter />
+      {/* <VeturatFooter /> */}
     </>
   );
 };

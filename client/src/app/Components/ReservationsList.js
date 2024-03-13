@@ -20,9 +20,11 @@ import {
   DialogActions,
   DialogContent,
   FormControl,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
+  Switch,
   TextField,
 } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -270,7 +272,7 @@ const ReservationsList = (props) => {
           />
           <TextField
             disabled={!editState}
-            label="Totali"
+            label="Totali i Çmimit"
             variant="outlined"
             fullWidth
             style={{ background: "white", marginTop: "15px" }}
@@ -343,6 +345,17 @@ const ReservationsList = (props) => {
               </div>
             )}
           </div>
+          <FormControlLabel
+            control={<Switch defaultChecked />}
+            label="Aktive"
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "10px",
+            }}
+          />
         </DialogContent>
         <DialogActions
           style={{ display: "flex", justifyContent: "space-between" }}

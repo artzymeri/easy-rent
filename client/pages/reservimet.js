@@ -2,7 +2,7 @@ import Sidebar from "../src/app/Components/Sidebar";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import "@/app/Styling/Reservimet/reservimet.css";
 import Calendar from "@/app/Components/Calendar";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { Button } from "@mui/material";
 import ReservationsList from "@/app/Components/ReservationsList";
@@ -37,6 +37,7 @@ const Reservimet = () => {
     numberOfDays: null,
     totalPrice: null,
     imagesArray: "[]",
+    active: false,
   });
 
   const [clickedImage, setClickedImage] = useState(null);
@@ -131,6 +132,7 @@ const Reservimet = () => {
       numberOfDays: reservation_object.numberOfDays,
       totalPrice: reservation_object.totalPrice,
       imagesArray: reservation_object.imagesArray || "[]",
+      active: reservation_object.active,
     });
   };
 
@@ -289,6 +291,14 @@ const Reservimet = () => {
       });
   };
 
+  const handleAvailabilityChange = (event) => {
+    console.log(event.target.checked);
+    setSelectedReservation({
+      ...selectedReservation,
+      active: event.target.checked,
+    });
+  };
+
   return (
     <Sidebar>
       <div
@@ -379,6 +389,7 @@ const Reservimet = () => {
             setClickedImage={setClickedImage}
             setSelectedCar={setSelectedCar}
             carsData={carsData}
+            handleAvailabilityChange={handleAvailabilityChange}
           />
         )}
         {reservationsListActive && (
@@ -404,6 +415,7 @@ const Reservimet = () => {
             setClickedImage={setClickedImage}
             setSelectedCar={setSelectedCar}
             carsData={carsData}
+            handleAvailabilityChange={handleAvailabilityChange}
           />
         )}
       </div>

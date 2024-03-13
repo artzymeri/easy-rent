@@ -8,9 +8,11 @@ import {
   DialogActions,
   DialogContent,
   FormControl,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
+  Switch,
   TextField,
 } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -49,7 +51,10 @@ const Calendar = (props) => {
     setClickedImage,
     setSelectedCar,
     carsData,
+    handleAvailabilityChange,
   } = props;
+
+  console.log(selectedReservation);
 
   return (
     <>
@@ -218,7 +223,7 @@ const Calendar = (props) => {
           />
           <TextField
             disabled={!editState}
-            label="Totali"
+            label="Totali i Çmimit"
             variant="outlined"
             fullWidth
             style={{ background: "white", marginTop: "15px" }}
@@ -290,6 +295,23 @@ const Calendar = (props) => {
               </div>
             )}
           </div>
+          <FormControlLabel
+            disabled={!editState}
+            control={
+              <Switch
+                checked={selectedReservation.active}
+                onChange={handleAvailabilityChange}
+              />
+            }
+            label="Aktive"
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "10px",
+            }}
+          />
         </DialogContent>
         <DialogActions
           style={{ display: "flex", justifyContent: "space-between" }}

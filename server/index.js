@@ -96,6 +96,7 @@ app.post("/editreservation/:reservationId", async (req, res) => {
     numberOfDays,
     totalPrice,
     imagesArray,
+    active,
   } = req.body.object;
 
   const reservationToEdit = await reservations.findByPk(reservationId);
@@ -113,6 +114,7 @@ app.post("/editreservation/:reservationId", async (req, res) => {
   reservationToEdit.endTime = endTime;
   reservationToEdit.numberOfDays = numberOfDays;
   reservationToEdit.totalPrice = totalPrice;
+  reservationToEdit.active = active;
 
   if (imagesArray == "[]") {
     reservationToEdit.imagesArray = null;

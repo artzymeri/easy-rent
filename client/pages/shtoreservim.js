@@ -432,7 +432,7 @@ const ShtoReservim = () => {
             }}
           />
           <TextField
-            label="Totali"
+            label="Totali i Çmimit"
             variant="outlined"
             fullWidth
             style={{ background: "white" }}
