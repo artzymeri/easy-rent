@@ -7,6 +7,8 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
+const { createInvoice } = require("./createInvoice.js");
+
 
 const { reservations, veturat } = require("./models");
 
@@ -141,6 +143,26 @@ app.post("/deletereservation/:reservationId", async (req, res) => {
     res.json({ title: "success", message: "Produkti u fshi me sukses" });
   } catch (error) {
     console.log(error);
+  }
+});
+
+app.post("/generatepdfdirectly/", async (req, res) => {
+  const theReservation = req.body.newReservation;
+
+  theReservation.numberOfDays = req.body.numberOfDays;
+  theReservation.totalPrice = req.body.totalPrice;
+  theReservation.pricePerDay = req.body.selectedCar.price;
+
+  console.log(theReservation);
+
+  try {
+    await createInvoice(theReservation, res);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      title: "error",
+      message: "Diçka nuk shkoi mirë me kërkesën",
+    });
   }
 });
 

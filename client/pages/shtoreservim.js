@@ -134,6 +134,29 @@ const ShtoReservim = () => {
     setOpenDialog(false);
   };
 
+  const generatePDF = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:1234/generatepdfdirectly",
+        { newReservation, totalPrice, numberOfDays, selectedCar },
+        { responseType: "blob" }
+      );
+
+      const downloadLink = document.createElement("a");
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+
+      downloadLink.href = url;
+      downloadLink.setAttribute(
+        "download",
+        `aaa.pdf`
+      );
+      downloadLink.click();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const addReservation = () => {
     axios
       .post("http://localhost:1234/addreservation", {
@@ -152,6 +175,8 @@ const ShtoReservim = () => {
       calculateTotalPrice(selectedCar.price, numberOfDays);
     }
   }, [selectedCar, numberOfDays]);
+
+  
 
   return (
     <Sidebar>
@@ -457,6 +482,7 @@ const ShtoReservim = () => {
           >
             Shto Reservimin
           </Button>
+          <Button variant="contained" onClick={generatePDF}>PDF</Button>
         </div>
       </div>
     </Sidebar>

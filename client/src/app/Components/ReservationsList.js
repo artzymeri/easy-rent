@@ -98,7 +98,7 @@ const ReservationsList = (props) => {
     if (reservation.active) {
       return "active-reservation";
     } else {
-      ("inactive-reservation");
+      return "inactive-reservation";
     }
   };
 
