@@ -53,6 +53,10 @@ app.post("/addreservation", async (req, res) => {
     } = req.body.newReservation;
 
     const pricePerDay = req.body.selectedCar.price;
+    const carMake = req.body.selectedCar.make;
+    const carModel = req.body.selectedCar.model;
+    const carColor = req.body.selectedCar.color;
+    const carLabel = req.body.selectedCar.label;
     const carId = req.body.selectedCar.carId;
 
     const { numberOfDays, totalPrice } = req.body;
@@ -100,6 +104,10 @@ app.post("/addreservation", async (req, res) => {
       clientAddressD2: checkedAddressD2,
       carInfo: carInfo,
       carId: carId,
+      carMake: carMake,
+      carModel: carModel,
+      carLabel: carLabel,
+      carColor: carColor,
       pricePerDay: pricePerDay,
       startTime: startTime,
       endTime: endTime,

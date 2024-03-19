@@ -124,6 +124,7 @@ const Reservimet = () => {
   };
 
   const handleReservationSelection = (reservation_object) => {
+    console.log(reservation_object)
     setSelectedReservation({
       ...selectedReservation,
       id: reservation_object.id,
@@ -136,6 +137,11 @@ const Reservimet = () => {
       documentIdD2: reservation_object.clientDocumentIdD2,
       addressD2: reservation_object.clientAddressD2,
       carInfo: reservation_object.carInfo,
+      carMake: reservation_object.carMake,
+      carModel: reservation_object.carModel,
+      carColor: reservation_object.carColor,
+      carId: reservation_object.carId,
+      carLabel: reservation_object.carLabel,
       pricePerDay: reservation_object.pricePerDay,
       startTime: reservation_object.startTime,
       endTime: reservation_object.endTime,
