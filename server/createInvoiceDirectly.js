@@ -58,8 +58,7 @@ function generateFooterDisclaimer(doc) {
     );
 }
 
-function createInvoice(theReservation, res) {
-  console.log('createInvoice',theReservation)
+function createInvoiceDirectly(theReservation, res) {
 
   return new Promise((resolve, reject) => {
     let doc = new PDFDocument({ margin: 50 });
@@ -101,5 +100,5 @@ function createInvoice(theReservation, res) {
 }
 
 module.exports = {
-  createInvoice,
+  createInvoiceDirectly,
 };

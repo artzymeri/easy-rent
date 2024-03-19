@@ -1,20 +1,55 @@
 module.exports = (sequelize, DataTypes) => {
   const reservations = sequelize.define("reservations", {
-    clientNameSurname: {
+    clientNameSurnameD1: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
-    clientPhoneNumber: {
+    clientPhoneNumberD1: {
       type: DataTypes.STRING,
       allowNull: true,
       validate: {
         notEmpty: false,
       },
     },
-    clientDocumentId: {
+    clientDocumentIdD1: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        notEmpty: false,
+      },
+    },
+    clientAddressD1: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        notEmpty: false,
+      },
+    },
+    clientNameSurnameD2: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        notEmpty: false,
+      },
+    },
+    clientPhoneNumberD2: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        notEmpty: false,
+      },
+    },
+    clientDocumentIdD2: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        notEmpty: false,
+      },
+    },
+    clientAddressD2: {
       type: DataTypes.STRING,
       allowNull: true,
       validate: {

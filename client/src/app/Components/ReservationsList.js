@@ -29,6 +29,7 @@ import {
 } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import axios from "axios";
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
@@ -99,6 +100,29 @@ const ReservationsList = (props) => {
       return "active-reservation";
     } else {
       return "inactive-reservation";
+    }
+  };
+
+  const generatePDF = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:1234/generatepdfapi",
+        { selectedReservation },
+        { responseType: "blob" }
+      );
+
+      const downloadLink = document.createElement("a");
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+
+      downloadLink.href = url;
+      downloadLink.setAttribute(
+        "download",
+        `aaa.pdf`
+      );
+      downloadLink.click();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -399,6 +423,9 @@ const ReservationsList = (props) => {
               }}
             >
               Fshi Reservimin
+            </Button>
+            <Button onClick={generatePDF}>
+              Printo
             </Button>
             {editState ? (
               <Button

@@ -65,6 +65,13 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: false,
         },
       },
+      carId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          notEmpty: false,
+        },
+      },
       expiryDate: {
         type: DataTypes.STRING,
         allowNull: true,

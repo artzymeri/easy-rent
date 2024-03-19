@@ -1,5 +1,5 @@
 import Sidebar from "../src/app/Components/Sidebar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "@/app/Styling/global-styling.css";
 import "@/app/Styling/Reservimet/shtoreservim.css";
 import {
@@ -20,14 +20,26 @@ import CarsTest from "../src/app/TestingValues/CarsTest";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { AddAPhoto, Close, Delete } from "@mui/icons-material";
+import {
+  AddAPhoto,
+  CheckCircle,
+  Close,
+  Delete,
+  Person,
+  Person2,
+} from "@mui/icons-material";
 import axios from "axios";
 
 const ShtoReservim = () => {
   const [newReservation, setNewReservation] = useState({
-    firstAndLastName: null,
-    phoneNumber: null,
-    documentId: null,
+    firstAndLastNameD1: null,
+    phoneNumberD1: null,
+    documentIdD1: null,
+    addressD1: null,
+    firstAndLastNameD2: null,
+    phoneNumberD2: null,
+    documentIdD2: null,
+    addressD2: null,
     carInfo: null,
     pricePerDay: null,
     numberOfDays: null,
@@ -38,6 +50,9 @@ const ShtoReservim = () => {
   });
 
   const [carsData, setCarsData] = useState([]);
+
+  const [driverOneDialog, setDriverOneDialog] = useState(false);
+  const [driverTwoDialog, setDriverTwoDialog] = useState(false);
 
   const [carViewImage, setCarViewImage] = useState(null);
 
@@ -147,10 +162,7 @@ const ShtoReservim = () => {
       const url = URL.createObjectURL(blob);
 
       downloadLink.href = url;
-      downloadLink.setAttribute(
-        "download",
-        `aaa.pdf`
-      );
+      downloadLink.setAttribute("download", `aaa.pdf`);
       downloadLink.click();
     } catch (error) {
       console.error(error);
@@ -158,6 +170,10 @@ const ShtoReservim = () => {
   };
 
   const addReservation = () => {
+    if (newReservation.firstAndLastNameD1 == null || newReservation.firstAndLastNameD1 == '') {
+      window.alert('Ju lutem mbushni emrin dhe mbiemrin e Klientit');
+      return;
+    }
     axios
       .post("http://localhost:1234/addreservation", {
         newReservation,
@@ -166,6 +182,7 @@ const ShtoReservim = () => {
         totalPrice,
       })
       .then(() => {
+        generatePDF();
         window.location.reload();
       });
   };
@@ -176,7 +193,37 @@ const ShtoReservim = () => {
     }
   }, [selectedCar, numberOfDays]);
 
-  
+  const driverOneCheck = useMemo(() => {
+    if (
+      newReservation.firstAndLastNameD1 ||
+      newReservation.phoneNumberD1 ||
+      newReservation.addressD1 ||
+      newReservation.documentIdD1
+    ) {
+      return true;
+    }
+  }, [
+    newReservation.firstAndLastNameD1,
+    newReservation.phoneNumberD1,
+    newReservation.addressD1,
+    newReservation.documentIdD1,
+  ]);
+
+  const driverTwoCheck = useMemo(() => {
+    if (
+      newReservation.firstAndLastNameD2 ||
+      newReservation.phoneNumberD2 ||
+      newReservation.addressD2 ||
+      newReservation.documentIdD2
+    ) {
+      return true;
+    }
+  }, [
+    newReservation.firstAndLastNameD2,
+    newReservation.phoneNumberD2,
+    newReservation.addressD2,
+    newReservation.documentIdD2,
+  ]);
 
   return (
     <Sidebar>
@@ -322,6 +369,186 @@ const ShtoReservim = () => {
           style={{ width: "100%", height: "auto", objectFit: "cover" }}
         />
       </Dialog>
+      <Dialog
+        open={driverOneDialog}
+        onClose={() => {
+          setDriverOneDialog(false);
+        }}
+      >
+        <DialogTitle style={{ textAlign: "center", color: "#015c92" }}>
+          Shoferi 1
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            variant="outlined"
+            label="Emri dhe Mbiemri"
+            fullWidth
+            style={{ background: "white", marginTop: "10px" }}
+            value={newReservation.firstAndLastNameD1}
+            onChange={(e) => {
+              setNewReservation({
+                ...newReservation,
+                firstAndLastNameD1: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="Numri Telefonit"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white", marginTop: "10px" }}
+            value={newReservation.phoneNumberD1}
+            onChange={(e) => {
+              setNewReservation({
+                ...newReservation,
+                phoneNumberD1: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="Numri Dokumetit Personal"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white", marginTop: "10px" }}
+            value={newReservation.documentIdD1}
+            onChange={(e) => {
+              setNewReservation({
+                ...newReservation,
+                documentIdD1: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="Adresa"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white", marginTop: "10px" }}
+            value={newReservation.addressD1}
+            onChange={(e) => {
+              setNewReservation({
+                ...newReservation,
+                addressD1: e.target.value,
+              });
+            }}
+          />
+        </DialogContent>
+        <DialogActions
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Button variant="outlined" color="error">
+            Mbyll
+          </Button>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => {
+              setNewReservation({
+                ...newReservation,
+                firstAndLastNameD1: "",
+                phoneNumberD1: "",
+                documentIdD1: "",
+                addressD1: "",
+              });
+            }}
+          >
+            Pastro Detajet
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={driverTwoDialog}
+        onClose={() => {
+          setDriverTwoDialog(false);
+        }}
+      >
+        <DialogTitle style={{ textAlign: "center", color: "#015c92" }}>
+          Shoferi 2
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            variant="outlined"
+            label="Emri dhe Mbiemri"
+            fullWidth
+            style={{ background: "white", marginTop: "10px" }}
+            value={newReservation.firstAndLastNameD2}
+            onChange={(e) => {
+              setNewReservation({
+                ...newReservation,
+                firstAndLastNameD2: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="Numri Telefonit"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white", marginTop: "10px" }}
+            value={newReservation.phoneNumberD2}
+            onChange={(e) => {
+              setNewReservation({
+                ...newReservation,
+                phoneNumberD2: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="Numri Dokumetit Personal"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white", marginTop: "10px" }}
+            value={newReservation.documentIdD2}
+            onChange={(e) => {
+              setNewReservation({
+                ...newReservation,
+                documentIdD2: e.target.value,
+              });
+            }}
+          />
+          <TextField
+            label="Adresa"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white", marginTop: "10px" }}
+            value={newReservation.addressD2}
+            onChange={(e) => {
+              setNewReservation({
+                ...newReservation,
+                addressD2: e.target.value,
+              });
+            }}
+          />
+        </DialogContent>
+        <DialogActions
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Button variant="outlined" color="error">
+            Mbyll
+          </Button>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => {
+              setNewReservation({
+                ...newReservation,
+                firstAndLastNameD2: "",
+                phoneNumberD2: "",
+                documentIdD2: "",
+                addressD2: "",
+              });
+            }}
+          >
+            Pastro Detajet
+          </Button>
+        </DialogActions>
+      </Dialog>
       <h3
         style={{
           textAlign: "center",
@@ -353,45 +580,70 @@ const ShtoReservim = () => {
             gap: "15px",
           }}
         >
-          <TextField
-            variant="outlined"
-            label="Emri dhe Mbiemri"
-            fullWidth
-            style={{ background: "white" }}
-            value={newReservation.firstAndLastName}
-            onChange={(e) => {
-              setNewReservation({
-                ...newReservation,
-                firstAndLastName: e.target.value,
-              });
-            }}
-          />
-          <TextField
-            label="Numri Telefonit"
-            variant="outlined"
-            fullWidth
-            style={{ background: "white" }}
-            value={newReservation.phoneNumber}
-            onChange={(e) => {
-              setNewReservation({
-                ...newReservation,
-                phoneNumber: e.target.value,
-              });
-            }}
-          />
-          <TextField
-            label="Kodi Leternjoftimit"
-            variant="outlined"
-            fullWidth
-            style={{ background: "white" }}
-            value={newReservation.documentId}
-            onChange={(e) => {
-              setNewReservation({
-                ...newReservation,
-                documentId: e.target.value,
-              });
-            }}
-          />
+          <div style={{ width: "100%", display: "flex", gap: "10px" }}>
+            <div
+              onClick={() => {
+                setDriverOneDialog(true);
+              }}
+              style={{
+                height: "80px",
+                width: "100%",
+                borderRadius: "10px",
+                background: "white",
+                border: "1px dashed #015c92",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "#015c92",
+                cursor: "pointer",
+                gap: "5px",
+                position: "relative",
+              }}
+            >
+              {driverOneCheck && (
+                <CheckCircle
+                  style={{
+                    color: "#015c92",
+                    position: "absolute",
+                    top: "4px",
+                    left: "4px",
+                  }}
+                />
+              )}
+              <Person /> Shoferi 1
+            </div>
+            <div
+              onClick={() => {
+                setDriverTwoDialog(true);
+              }}
+              style={{
+                height: "80px",
+                width: "100%",
+                borderRadius: "10px",
+                background: "white",
+                border: "1px dashed #015c92",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "#015c92",
+                cursor: "pointer",
+                gap: "5px",
+                position: 'relative'
+              }}
+            >
+              {driverTwoCheck && (
+                <CheckCircle
+                  style={{
+                    color: "#015c92",
+                    position: "absolute",
+                    top: "4px",
+                    left: "4px",
+                  }}
+                />
+              )}
+              <Person /> Shoferi 2
+            </div>
+          </div>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Vetura</InputLabel>
             <Select
@@ -408,6 +660,7 @@ const ShtoReservim = () => {
                     value={car.make + " " + car.model}
                     onClick={() => {
                       setSelectedCar(car);
+                      console.log(car);
                     }}
                   >
                     {car.make} {car.model}
@@ -416,6 +669,19 @@ const ShtoReservim = () => {
               })}
             </Select>
           </FormControl>
+          <TextField
+            label="Numri i Shasisë"
+            variant="outlined"
+            fullWidth
+            style={{ background: "white" }}
+            value={selectedCar?.carId || ""}
+            onChange={(e) => {
+              setSelectedCar({
+                ...selectedCar,
+                carId: parseInt(e.target.value),
+              });
+            }}
+          />
           <TextField
             label="Çmimi në ditë"
             variant="outlined"
@@ -482,7 +748,6 @@ const ShtoReservim = () => {
           >
             Shto Reservimin
           </Button>
-          <Button variant="contained" onClick={generatePDF}>PDF</Button>
         </div>
       </div>
     </Sidebar>

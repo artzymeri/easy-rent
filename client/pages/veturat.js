@@ -61,6 +61,7 @@ const Veturat = () => {
       color: car.color,
       price: car.price,
       label: car.label,
+      carId: car.carId,
       expiryDate: car.expiryDate,
       image: car.image,
     });
@@ -77,6 +78,7 @@ const Veturat = () => {
     color: null,
     price: null,
     label: null,
+    carId: null,
     expiryDate: null,
     image: null,
   });
@@ -113,6 +115,7 @@ const Veturat = () => {
       color: car.color,
       price: car.price,
       label: car.label,
+      carId: car.carId,
       expiryDate: dayjs(car.expiryDate),
       image: car.image,
     });
@@ -145,6 +148,7 @@ const Veturat = () => {
         color: null,
         price: null,
         label: null,
+        carId: null,
         expiryDate: null,
         image: null,
       });
@@ -178,6 +182,7 @@ const Veturat = () => {
           color: null,
           price: null,
           label: null,
+          carId: null,
           expiryDate: null,
           image: null,
         });
@@ -200,6 +205,7 @@ const Veturat = () => {
         color: null,
         price: null,
         label: null,
+        carId: null,
         expiryDate: null,
         image: null,
       });
@@ -219,6 +225,7 @@ const Veturat = () => {
         car.engine.toLowerCase().includes(searchQuery.toLowerCase()) ||
         car.fuel.toLowerCase().includes(searchQuery.toLowerCase()) ||
         car.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        car.carId.toLowerCase().includes(searchQuery.toLowerCase()) ||
         car.transmission.toLowerCase().includes(searchQuery.toLowerCase()) ||
         car.price.toLowerCase().includes(searchQuery.toLowerCase()) ||
         car.year.toLowerCase().includes(searchQuery.toLowerCase())
@@ -363,6 +370,14 @@ const Veturat = () => {
               setCarInfo({ ...carInfo, label: e.target.value });
             }}
           />
+          <TextField
+            label="Numri i Shasisë"
+            value={carInfo.carId}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, carId: e.target.value });
+            }}
+          />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Skadimi regjistrimit"
@@ -455,6 +470,7 @@ const Veturat = () => {
                 color: null,
                 price: null,
                 label: null,
+                carId: null,
                 expiryDate: null,
                 image: null,
               });
@@ -584,6 +600,14 @@ const Veturat = () => {
               setCarInfo({ ...carInfo, label: e.target.value });
             }}
           />
+          <TextField
+            label="Numri i Shasisë"
+            value={carInfo.carId}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, carId: e.target.value });
+            }}
+          />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Skadimi regjistrimit"
@@ -676,6 +700,7 @@ const Veturat = () => {
                 color: null,
                 price: null,
                 label: null,
+                carId: null,
                 expiryDate: null,
                 image: null,
               });
@@ -703,6 +728,7 @@ const Veturat = () => {
             color: null,
             price: null,
             label: null,
+            carId: null,
             expiryDate: null,
             image: null,
           });
@@ -733,6 +759,7 @@ const Veturat = () => {
                 color: null,
                 price: null,
                 label: null,
+                carId: null,
                 expiryDate: null,
                 image: null,
               });

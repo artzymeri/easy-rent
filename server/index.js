@@ -7,8 +7,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
-const { createInvoice } = require("./createInvoice.js");
-
+const { createInvoiceDirectly } = require("./createInvoiceDirectly.js");
 
 const { reservations, veturat } = require("./models");
 
@@ -19,6 +18,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 
 const db = require("./models");
+const { createInvoiceFromAPI } = require("./createInvoiceFromAPI.js");
 
 const port = 1234;
 
@@ -38,9 +38,14 @@ app.get("/getreservations", async (req, res) => {
 app.post("/addreservation", async (req, res) => {
   try {
     const {
-      firstAndLastName,
-      phoneNumber,
-      documentId,
+      firstAndLastNameD1,
+      phoneNumberD1,
+      documentIdD1,
+      addressD1,
+      firstAndLastNameD2,
+      phoneNumberD2,
+      documentIdD2,
+      addressD2,
       carInfo,
       startTime,
       endTime,
@@ -48,31 +53,59 @@ app.post("/addreservation", async (req, res) => {
     } = req.body.newReservation;
 
     const pricePerDay = req.body.selectedCar.price;
+    const carId = req.body.selectedCar.carId;
 
     const { numberOfDays, totalPrice } = req.body;
 
-    let checkedPhoneNumber = phoneNumber;
-    let checkedDocumentId = documentId;
+    let checkedPhoneNumberD1 = phoneNumberD1;
+    let checkedDocumentIdD1 = documentIdD1;
+    let checkedAddressD1 = addressD1;
 
-    if (phoneNumber === "") {
-      checkedPhoneNumber = null;
+    let checkedPhoneNumberD2 = phoneNumberD2;
+    let checkedDocumentIdD2 = documentIdD2;
+    let checkedAddressD2 = addressD2;
+
+    if (phoneNumberD1 === "") {
+      checkedPhoneNumberD1 = null;
     }
 
-    if (documentId === "") {
-      checkedDocumentId = null;
+    if (documentIdD1 === "") {
+      checkedDocumentIdD1 = null;
+    }
+
+    if (addressD1 === "") {
+      checkedAddressD1 = null;
+    }
+
+    if (phoneNumberD2 === "") {
+      checkedPhoneNumberD2 = null;
+    }
+
+    if (documentIdD2 === "") {
+      checkedDocumentIdD2 = null;
+    }
+
+    if (addressD2 === "") {
+      checkedAddressD2 = null;
     }
 
     await reservations.create({
-      clientNameSurname: firstAndLastName,
-      clientPhoneNumber: checkedPhoneNumber,
-      clientDocumentId: checkedDocumentId,
+      clientNameSurnameD1: firstAndLastNameD1,
+      clientPhoneNumberD1: checkedPhoneNumberD1,
+      clientDocumentIdD1: checkedDocumentIdD1,
+      clientAddressD1: checkedAddressD1,
+      clientNameSurnameD2: firstAndLastNameD2,
+      clientPhoneNumberD2: checkedPhoneNumberD2,
+      clientDocumentIdD2: checkedDocumentIdD2,
+      clientAddressD2: checkedAddressD2,
       carInfo: carInfo,
+      carId: carId,
       pricePerDay: pricePerDay,
       startTime: startTime,
       endTime: endTime,
       numberOfDays: numberOfDays,
       totalPrice: totalPrice,
-      imagesArray: JSON.stringify(imagesArray),
+      imagesArray: imagesArray !== null ? JSON.stringify(imagesArray) : null,
     });
     res.json({
       title: "success",
@@ -88,10 +121,16 @@ app.post("/editreservation/:reservationId", async (req, res) => {
   const { reservationId } = req.params;
 
   const {
-    firstAndLastName,
-    phoneNumber,
-    documentId,
+    firstAndLastNameD1,
+    phoneNumberD1,
+    documentIdD1,
+    addressD1,
+    firstAndLastNameD2,
+    phoneNumberD2,
+    documentIdD2,
+    addressD2,
     carInfo,
+    carId,
     pricePerDay,
     startTime,
     endTime,
@@ -101,16 +140,35 @@ app.post("/editreservation/:reservationId", async (req, res) => {
     active,
   } = req.body.object;
 
+  const checkedFirstAndLastNameD1 =
+    firstAndLastNameD1 === "" ? null : firstAndLastNameD1;
+  const checkedPhoneNumberD1 = phoneNumberD1 === "" ? null : phoneNumberD1;
+  const checkedDocumentIdD1 = documentIdD1 === "" ? null : documentIdD1;
+  const checkedAddressD1 = addressD1 === "" ? null : addressD1;
+
+  const checkedFirstAndLastNameD2 =
+    firstAndLastNameD2 === "" ? null : firstAndLastNameD2;
+  const checkedPhoneNumberD2 = phoneNumberD2 === "" ? null : phoneNumberD2;
+  const checkedDocumentIdD2 = documentIdD2 === "" ? null : documentIdD2;
+  const checkedAddressD2 = addressD2 === "" ? null : addressD2;
+
+
   const reservationToEdit = await reservations.findByPk(reservationId);
 
   if (!reservationId) {
     res.json({ title: "error", message: "Produkti nuk ekziston" });
   }
 
-  reservationToEdit.clientNameSurname = firstAndLastName;
-  reservationToEdit.clientPhoneNumber = phoneNumber;
-  reservationToEdit.clientDocumentId = documentId;
+  reservationToEdit.clientNameSurnameD1 = checkedFirstAndLastNameD1;
+  reservationToEdit.clientPhoneNumberD1 = checkedPhoneNumberD1;
+  reservationToEdit.clientDocumentIdD1 = checkedDocumentIdD1;
+  reservationToEdit.clientAddressD1 = checkedAddressD1;
+  reservationToEdit.clientNameSurnameD2 = checkedFirstAndLastNameD2;
+  reservationToEdit.clientPhoneNumberD2 = checkedPhoneNumberD2;
+  reservationToEdit.clientDocumentIdD2 = checkedDocumentIdD2;
+  reservationToEdit.clientAddressD2 = checkedAddressD2;
   reservationToEdit.carInfo = carInfo;
+  reservationToEdit.carId = carId;
   reservationToEdit.pricePerDay = pricePerDay;
   reservationToEdit.startTime = startTime;
   reservationToEdit.endTime = endTime;
@@ -153,10 +211,22 @@ app.post("/generatepdfdirectly/", async (req, res) => {
   theReservation.totalPrice = req.body.totalPrice;
   theReservation.pricePerDay = req.body.selectedCar.price;
 
-  console.log(theReservation);
+  try {
+    await createInvoiceDirectly(theReservation, res);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      title: "error",
+      message: "Diçka nuk shkoi mirë me kërkesën",
+    });
+  }
+});
+
+app.post("/generatepdfapi/", async (req, res) => {
+  const theReservation = req.body.selectedReservation;
 
   try {
-    await createInvoice(theReservation, res);
+    await createInvoiceFromAPI(theReservation, res);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -192,6 +262,7 @@ app.post("/addveture", async (req, res) => {
       color,
       price,
       label,
+      carId,
       expiryDate,
       image,
     } = req.body.carInfo;
@@ -206,6 +277,7 @@ app.post("/addveture", async (req, res) => {
       color: color,
       price: price,
       label: label,
+      carId: carId,
       expiryDate: expiryDate,
       image: image,
     });
@@ -232,6 +304,7 @@ app.post("/editveture/:veturaId", async (req, res) => {
     color,
     price,
     label,
+    carId,
     expiryDate,
     image,
   } = req.body.carInfo;
@@ -251,6 +324,7 @@ app.post("/editveture/:veturaId", async (req, res) => {
   veturaToEdit.color = color;
   veturaToEdit.price = price;
   veturaToEdit.label = label;
+  veturaToEdit.carId = carId;
   veturaToEdit.expiryDate = expiryDate;
   veturaToEdit.image = image;
 

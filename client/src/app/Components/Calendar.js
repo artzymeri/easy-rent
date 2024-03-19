@@ -21,7 +21,13 @@ import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isBetween from "dayjs/plugin/isBetween";
-import { AddAPhoto, CloseFullscreen, Delete, Error } from "@mui/icons-material";
+import {
+  AddAPhoto,
+  CloseFullscreen,
+  Delete,
+  Error,
+  Print,
+} from "@mui/icons-material";
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
@@ -54,7 +60,25 @@ const Calendar = (props) => {
     handleAvailabilityChange,
   } = props;
 
-  console.log(selectedReservation);
+  const generatePDF = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:1234/generatepdfapi",
+        { selectedReservation },
+        { responseType: "blob" }
+      );
+
+      const downloadLink = document.createElement("a");
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+
+      downloadLink.href = url;
+      downloadLink.setAttribute("download", `aaa.pdf`);
+      downloadLink.click();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -99,9 +123,14 @@ const Calendar = (props) => {
           setSelectedReservationDialog(false);
           setEditState(false);
           setSelectedReservation({
-            firstAndLastName: null,
-            phoneNumber: null,
-            documentId: null,
+            firstAndLastNameD1: null,
+            phoneNumberD1: null,
+            documentIdD1: null,
+            addressD1: null,
+            firstAndLastNameD2: null,
+            phoneNumberD2: null,
+            documentIdD2: null,
+            addressD2: null,
             carInfo: null,
             startTime: null,
             endTime: null,
@@ -110,48 +139,156 @@ const Calendar = (props) => {
         }}
       >
         <DialogContent dividers>
-          <TextField
-            disabled={!editState}
-            variant="outlined"
-            label="Emri dhe Mbiemri"
-            fullWidth
-            style={{ background: "white" }}
-            value={selectedReservation.firstAndLastName}
-            onChange={(e) => {
-              setSelectedReservation({
-                ...selectedReservation,
-                firstAndLastName: e.target.value,
-              });
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "10px",
             }}
-          />
-          <TextField
-            disabled={!editState}
-            label="Numri Telefonit"
-            variant="outlined"
-            fullWidth
-            style={{ background: "white", marginTop: "15px" }}
-            value={selectedReservation.phoneNumber}
-            onChange={(e) => {
-              setSelectedReservation({
-                ...selectedReservation,
-                phoneNumber: e.target.value,
-              });
-            }}
-          />
-          <TextField
-            disabled={!editState}
-            label="Kodi Leternjoftimit"
-            variant="outlined"
-            fullWidth
-            style={{ background: "white", marginTop: "15px" }}
-            value={selectedReservation.documentId}
-            onChange={(e) => {
-              setSelectedReservation({
-                ...selectedReservation,
-                documentId: e.target.value,
-              });
-            }}
-          />
+          >
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            >
+              <h5
+                style={{
+                  textAlign: "center",
+                  padding: "5px 10px",
+                  background: "#015c92",
+                  color: "white",
+                  borderRadius: "5px",
+                }}
+              >
+                Shoferi 1
+              </h5>
+              <TextField
+                disabled={!editState}
+                variant="outlined"
+                label="Emri dhe Mbiemri"
+                fullWidth
+                style={{ background: "white" }}
+                value={selectedReservation.firstAndLastNameD1}
+                onChange={(e) => {
+                  setSelectedReservation({
+                    ...selectedReservation,
+                    firstAndLastNameD1: e.target.value,
+                  });
+                }}
+              />
+              <TextField
+                disabled={!editState}
+                label="Numri Telefonit"
+                variant="outlined"
+                fullWidth
+                style={{ background: "white" }}
+                value={selectedReservation.phoneNumberD1}
+                onChange={(e) => {
+                  setSelectedReservation({
+                    ...selectedReservation,
+                    phoneNumberD1: e.target.value,
+                  });
+                }}
+              />
+              <TextField
+                disabled={!editState}
+                label="Numri i Dokumentit Personal"
+                variant="outlined"
+                fullWidth
+                style={{ background: "white" }}
+                value={selectedReservation.documentIdD1}
+                onChange={(e) => {
+                  setSelectedReservation({
+                    ...selectedReservation,
+                    documentIdD1: e.target.value,
+                  });
+                }}
+              />
+              <TextField
+                disabled={!editState}
+                label="Adresa"
+                variant="outlined"
+                fullWidth
+                style={{ background: "white" }}
+                value={selectedReservation.addressD1}
+                onChange={(e) => {
+                  setSelectedReservation({
+                    ...selectedReservation,
+                    addressD1: e.target.value,
+                  });
+                }}
+              />
+            </div>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            >
+              <h5
+                style={{
+                  textAlign: "center",
+                  padding: "5px 10px",
+                  background: "#015c92",
+                  color: "white",
+                  borderRadius: "5px",
+                }}
+              >
+                Shoferi 2
+              </h5>
+              <TextField
+                disabled={!editState}
+                variant="outlined"
+                label="Emri dhe Mbiemri"
+                fullWidth
+                style={{ background: "white" }}
+                value={selectedReservation.firstAndLastNameD2}
+                onChange={(e) => {
+                  setSelectedReservation({
+                    ...selectedReservation,
+                    firstAndLastNameD2: e.target.value,
+                  });
+                }}
+              />
+              <TextField
+                disabled={!editState}
+                label="Numri Telefonit"
+                variant="outlined"
+                fullWidth
+                style={{ background: "white" }}
+                value={selectedReservation.phoneNumberD2}
+                onChange={(e) => {
+                  setSelectedReservation({
+                    ...selectedReservation,
+                    phoneNumberD2: e.target.value,
+                  });
+                }}
+              />
+              <TextField
+                disabled={!editState}
+                label="Numri i Dokumentit Personal"
+                variant="outlined"
+                fullWidth
+                style={{ background: "white" }}
+                value={selectedReservation.documentIdD2}
+                onChange={(e) => {
+                  setSelectedReservation({
+                    ...selectedReservation,
+                    documentIdD2: e.target.value,
+                  });
+                }}
+              />
+              <TextField
+                disabled={!editState}
+                label="Adresa"
+                variant="outlined"
+                fullWidth
+                style={{ background: "white" }}
+                value={selectedReservation.addressD2}
+                onChange={(e) => {
+                  setSelectedReservation({
+                    ...selectedReservation,
+                    addressD2: e.target.value,
+                  });
+                }}
+              />
+            </div>
+          </div>
           <FormControl
             disabled={!editState}
             style={{ marginTop: "15px" }}
@@ -321,9 +458,14 @@ const Calendar = (props) => {
             color="error"
             onClick={() => {
               setSelectedReservation({
-                firstAndLastName: null,
-                phoneNumber: null,
-                documentId: null,
+                firstAndLastNameD1: null,
+                phoneNumberD1: null,
+                documentIdD1: null,
+                addressD1: null,
+                firstAndLastNameD2: null,
+                phoneNumberD2: null,
+                documentIdD2: null,
+                addressD2: null,
                 carInfo: null,
                 startTime: null,
                 endTime: null,
@@ -337,15 +479,23 @@ const Calendar = (props) => {
             Mbyll
           </Button>
           <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            <Button variant="contained" color="warning" onClick={generatePDF}>
+              <Print />
+            </Button>
             <Button
               variant="contained"
               color="error"
               onClick={() => {
                 deleteReservation(selectedReservation.id);
                 setSelectedReservation({
-                  firstAndLastName: null,
-                  phoneNumber: null,
-                  documentId: null,
+                  firstAndLastNameD1: null,
+                  phoneNumberD1: null,
+                  documentIdD1: null,
+                  addressD1: null,
+                  firstAndLastNameD2: null,
+                  phoneNumberD2: null,
+                  documentIdD2: null,
+                  addressD2: null,
                   carInfo: null,
                   startTime: null,
                   endTime: null,
@@ -354,7 +504,7 @@ const Calendar = (props) => {
                 setSelectedReservationDialog(false);
               }}
             >
-              Fshi Reservimin
+              <Delete />
             </Button>
             {editState ? (
               <Button
@@ -419,7 +569,7 @@ const Calendar = (props) => {
                           setSelectedReservationDialog(true);
                         }}
                       >
-                        {reservation.clientNameSurname}
+                        {reservation.clientNameSurnameD1}
                       </div>
                     );
                   }
