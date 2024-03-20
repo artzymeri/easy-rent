@@ -16,7 +16,6 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import CarsTest from "../src/app/TestingValues/CarsTest";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";

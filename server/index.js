@@ -68,6 +68,7 @@ app.post("/addreservation", async (req, res) => {
     let checkedPhoneNumberD2 = phoneNumberD2;
     let checkedDocumentIdD2 = documentIdD2;
     let checkedAddressD2 = addressD2;
+    let checkedFirstAndLastNameD2 = firstAndLastNameD2;
 
     if (phoneNumberD1 === "") {
       checkedPhoneNumberD1 = null;
@@ -79,6 +80,10 @@ app.post("/addreservation", async (req, res) => {
 
     if (addressD1 === "") {
       checkedAddressD1 = null;
+    }
+
+    if (firstAndLastNameD2 === "") {
+      checkedFirstAndLastNameD2 = null;
     }
 
     if (phoneNumberD2 === "") {
@@ -98,7 +103,7 @@ app.post("/addreservation", async (req, res) => {
       clientPhoneNumberD1: checkedPhoneNumberD1,
       clientDocumentIdD1: checkedDocumentIdD1,
       clientAddressD1: checkedAddressD1,
-      clientNameSurnameD2: firstAndLastNameD2,
+      clientNameSurnameD2: checkedFirstAndLastNameD2,
       clientPhoneNumberD2: checkedPhoneNumberD2,
       clientDocumentIdD2: checkedDocumentIdD2,
       clientAddressD2: checkedAddressD2,

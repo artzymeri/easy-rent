@@ -303,9 +303,10 @@ const Calendar = (props) => {
               onChange={handleCarSelectChange}
               style={{ background: "white" }}
             >
-              {carsData.map((car) => {
+              {carsData.map((car, index) => {
                 return (
                   <MenuItem
+                    key={index}
                     value={car.make + " " + car.model}
                     onClick={() => {
                       setSelectedCar(car);
@@ -366,7 +367,10 @@ const Calendar = (props) => {
             style={{ background: "white", marginTop: "15px" }}
             value={selectedReservation.totalPrice || ""}
             onChange={(e) => {
-              setTotalPrice(parseFloat(e.target.value).toFixed(2));
+              setSelectedReservation({
+                ...selectedReservation,
+                totalPrice: parseInt(e.target.value),
+              });
             }}
           />
           <div className="edit-dialog-images-container">
@@ -564,6 +568,7 @@ const Calendar = (props) => {
                     return (
                       <div
                         className={`nr-${index} calendar-day-box-reservations-item`}
+                        key={index}
                         onClick={() => {
                           handleReservationSelection(reservation);
                           setSelectedReservationDialog(true);

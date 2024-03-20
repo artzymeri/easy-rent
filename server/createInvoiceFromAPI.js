@@ -1,4 +1,5 @@
 const PDFDocument = require("pdfkit");
+const dayjs = require('dayjs');
 
 function generateHr(doc, y) {
   doc.strokeColor("#aaaaaa").lineWidth(1).moveTo(30, y).lineTo(560, y).stroke();
@@ -39,8 +40,8 @@ function generateHeaderInfo(doc) {
 }
 
 function generateReservationInfo(doc, theReservation) {
-  const startTime = "2024-03-01T00:00:00+01:00";
-  const endTime = "2024-03-23T00:00:00+01:00";
+  const startTime = theReservation.startTime;
+  const endTime = theReservation.endTime;
 
   // Extracting start date
   const startDateObj = new Date(startTime);

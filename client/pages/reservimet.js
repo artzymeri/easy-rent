@@ -9,6 +9,34 @@ import ReservationsList from "@/app/Components/ReservationsList";
 import axios from "axios";
 
 const Reservimet = () => {
+  const handleReservationSelection = (reservation_object) => {
+    setSelectedReservation({
+      ...selectedReservation,
+      id: reservation_object.id,
+      firstAndLastNameD1: reservation_object.clientNameSurnameD1,
+      phoneNumberD1: reservation_object.clientPhoneNumberD1,
+      documentIdD1: reservation_object.clientDocumentIdD1,
+      addressD1: reservation_object.clientAddressD1,
+      firstAndLastNameD2: reservation_object.clientNameSurnameD2,
+      phoneNumberD2: reservation_object.clientPhoneNumberD2,
+      documentIdD2: reservation_object.clientDocumentIdD2,
+      addressD2: reservation_object.clientAddressD2,
+      carInfo: reservation_object.carInfo,
+      carMake: reservation_object.carMake,
+      carModel: reservation_object.carModel,
+      carColor: reservation_object.carColor,
+      carId: reservation_object.carId,
+      carLabel: reservation_object.carLabel,
+      pricePerDay: reservation_object.pricePerDay,
+      startTime: reservation_object.startTime,
+      endTime: reservation_object.endTime,
+      numberOfDays: reservation_object.numberOfDays,
+      totalPrice: reservation_object.totalPrice,
+      imagesArray: reservation_object.imagesArray || "[]",
+      active: reservation_object.active,
+    });
+  };
+
   const [currentMonth, setCurrentMonth] = useState(dayjs());
 
   const [currentDay, setCurrentDay] = useState(dayjs());
@@ -59,19 +87,29 @@ const Reservimet = () => {
   };
 
   const handleStartTime = (startTimeValue) => {
-    setSelectedReservation({
-      ...selectedReservation,
-      startTime: startTimeValue.format(),
-    });
-    calculateDays(startTimeValue, selectedReservation.endTime);
+    setSelectedReservation(
+      (prevState) => ({
+        ...prevState,
+        startTime: startTimeValue.format(),
+      }),
+      () => {
+        // This callback function will execute after setSelectedReservation is done
+        calculateDays(startTimeValue, selectedReservation.endTime);
+      }
+    );
   };
 
   const handleEndTime = (endTimeValue) => {
-    setSelectedReservation({
-      ...selectedReservation,
-      endTime: endTimeValue.format(),
-    });
-    calculateDays(selectedReservation.startTime, endTimeValue);
+    setSelectedReservation(
+      (prevState) => ({
+        ...prevState,
+        endTime: endTimeValue.format(),
+      }),
+      () => {
+        // This callback function will execute after setSelectedReservation is done
+        calculateDays(selectedReservation.startTime, endTimeValue);
+      }
+    );
   };
 
   const handleFileChange = (event) => {
@@ -123,46 +161,15 @@ const Reservimet = () => {
     });
   };
 
-  const handleReservationSelection = (reservation_object) => {
-    console.log(reservation_object)
-    setSelectedReservation({
-      ...selectedReservation,
-      id: reservation_object.id,
-      firstAndLastNameD1: reservation_object.clientNameSurnameD1,
-      phoneNumberD1: reservation_object.clientPhoneNumberD1,
-      documentIdD1: reservation_object.clientDocumentIdD1,
-      addressD1: reservation_object.clientAddressD1,
-      firstAndLastNameD2: reservation_object.clientNameSurnameD2,
-      phoneNumberD2: reservation_object.clientPhoneNumberD2,
-      documentIdD2: reservation_object.clientDocumentIdD2,
-      addressD2: reservation_object.clientAddressD2,
-      carInfo: reservation_object.carInfo,
-      carMake: reservation_object.carMake,
-      carModel: reservation_object.carModel,
-      carColor: reservation_object.carColor,
-      carId: reservation_object.carId,
-      carLabel: reservation_object.carLabel,
-      pricePerDay: reservation_object.pricePerDay,
-      startTime: reservation_object.startTime,
-      endTime: reservation_object.endTime,
-      numberOfDays: reservation_object.numberOfDays,
-      totalPrice: reservation_object.totalPrice,
-      imagesArray: reservation_object.imagesArray || "[]",
-      active: reservation_object.active,
-    });
-  };
-
   useEffect(() => {
     axios.get("http://localhost:1234/getreservations").then((res) => {
       setReservations(res.data);
-      console.log(res.data);
     });
   }, []);
 
   useEffect(() => {
     axios.get("http://localhost:1234/getveturat").then((res) => {
       setCarsData(res.data);
-      console.log(res.data);
     });
   }, []);
 
@@ -295,6 +302,7 @@ const Reservimet = () => {
   };
 
   const saveEditReservation = (reservationId, object) => {
+    console.log(selectedReservation.startTime, selectedReservation.endTime);
     axios
       .post(`http://localhost:1234/editreservation/${reservationId}`, {
         object,
@@ -308,12 +316,13 @@ const Reservimet = () => {
   };
 
   const handleAvailabilityChange = (event) => {
-    console.log(event.target.checked);
     setSelectedReservation({
       ...selectedReservation,
       active: event.target.checked,
     });
   };
+
+  console.log(selectedReservation.startTime, selectedReservation.endTime);
 
   return (
     <Sidebar>
