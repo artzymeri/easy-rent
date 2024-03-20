@@ -33,8 +33,8 @@ function generateHeaderInfo(doc) {
   doc
     .fillColor("#000000")
     .fontSize(9)
-    .text("GJENDJA E VETURËS", 285, 34)
-    .text("DERIVATI", 477, 34)
+    .text("Gjendja e veturës", 285, 34)
+    .text("Derivati", 477, 34)
     .moveDown();
 }
 
@@ -65,29 +65,59 @@ function generateReservationInfo(doc, theReservation) {
   doc
     .fontSize(11)
     .fillColor("#000000")
-    .text("KONTRATË MBI DHËNIEN E VETURËS ME QERA", 37, 231)
+    .text("Kontratë mbi dhënien e veturës me qera", 37, 231)
     .fontSize(10)
-    .text("KONTRATA VLEN PËR:   KOSOVË   |   JASHTË-VENDIT", 37, 281)
+    .text("Kontrata vlen për:   Kosovë   |   Jashtë-vendit", 37, 281)
     .fontSize(9)
-    .text("DATA E DHËNIES:", 302, 220)
-    .text("ORA E DHËNIES:", 302, 244)
-    .text("DATA E KTHIMIT:", 302, 269)
-    .text("ORA E KTHIMIT:", 302, 293)
+    .text("Data e dorëzimit::", 302, 220)
+    .text("Ora e dorëzimit:", 302, 244)
+    .text("Data e kthimit:", 302, 269)
+    .text("Ora e kthimit:", 302, 293)
     .text(`${startTimeDate}`, 430, 220)
     .text(`${startTimeClock}`, 430, 244)
     .text(`${endTimeDate}`, 430, 269)
     .text(`${endTimeClock}`, 430, 293)
-    .text("SHËNIMET E VETURËS", 115, 319)
-    .text("MARKA", 35, 344)
-    .text("TIPI", 35, 369)
-    .text("NR.SHASISË", 35, 394)
-    .text("NGJYRA", 35, 419)
-    .text("TARGAT", 35, 444)
+    .text("Shënimet e veturës:", 115, 319)
+    .text("Marka:", 35, 344)
+    .text("Tipi:", 35, 369)
+    .text("Nr.Shasisë:", 35, 394)
+    .text("Ngjyra:", 35, 419)
+    .text("Targat:", 35, 444)
     .text(`${theReservation.carMake}`, 125, 344)
     .text(`${theReservation.carModel}`, 125, 369)
     .text(`${theReservation.carId}`, 125, 394)
     .text(`${theReservation.carColor}`, 125, 419)
     .text(`${theReservation.carLabel}`, 125, 444)
+    .fontSize(10)
+    .text("Me nënshkrimin e kësaj kontrate pranoj se do të marrë", 310, 335)
+    .text("përgiegjësi të plotë për automjetin e cekur nga", 330, 346)
+    .text("Filan Fisteku.", 400, 357)
+    .text("Koment Shtesë::", 300, 390)
+    .text("Shoferi 1", 139, 469)
+    .text("Shoferi 2", 404, 469)
+    .fontSize(9)
+    .text("Emri i plotë:", 35, 494)
+    .text(`${theReservation.firstAndLastNameD1}`, 165, 494)
+    .text("Emri i plotë:", 300, 494)
+    .text(`${theReservation.firstAndLastNameD2}`, 430, 494)
+    .text("Adresa:", 35, 519)
+    .text(`${theReservation.addressD1}`, 165, 519)
+    .text("Adresa:", 300, 519)
+    .text(`${theReservation.addressD2}`, 430, 519)
+    .fontSize(8)
+    .text("NR. Dokumentit Personal:", 35, 544)
+    .fontSize(9)
+    .text(`${theReservation.documentIdD1}`, 165, 544)
+    .fontSize(8)
+    .text("NR. Dokumentit Personal:", 300, 544)
+    .fontSize(9)
+    .text(`${theReservation.documentIdD2}`, 430, 544)
+    .text("Numri Kontaktues:", 35, 569)
+    .text(`${theReservation.phoneNumberD1}`, 165, 569)
+    .text("Numri Kontaktues:", 300, 569)
+    .text(`${theReservation.phoneNumberD2}`, 430, 569)
+    .text("Nënshkrimi:", 35, 594)
+    .text("Nënshkrimi:", 300, 594)
     .moveDown();
 }
 
@@ -95,28 +125,22 @@ function generateSignatureSpots(doc) {
   doc
     .fillColor("#000000")
     .fontSize(9)
-    .text("LËSHON:", 30, 725)
-    .text("PRANON:", 420, 725)
+    .text("LËSHON:", 30, 760)
+    .text("PRANON:", 420, 760)
     .moveDown();
 }
 
-function generateFooterDisclaimer(doc) {
-  doc
-    .font("Helvetica")
-    .fontSize(9)
-    .text(
-      "Kjo faturë eshtë përpiluar në kuadër të softuerit/uebfaqes E-Commerce Kosova",
-      50,
-      800,
-      { align: "center" }
-    );
-}
-
 function createInvoiceFromAPI(theReservation, res) {
-  console.log('wow',theReservation);
 
   return new Promise((resolve, reject) => {
     let doc = new PDFDocument({ size: "A4", margin: 30 });
+
+    generateBackground(doc, 427, 210, 133, 100, "#DDDDDD");
+    generateBackground(doc, 120, 335, 175, 125, "#DDDDDD");
+    generateBackground(doc, 162, 485, 133, 125, "#DDDDDD");
+    generateBackground(doc, 427, 485, 133, 125, "#DDDDDD");
+
+
 
     //KUTIA E PARE
 
@@ -154,24 +178,22 @@ function createInvoiceFromAPI(theReservation, res) {
     generateVr(doc, 30, 560, 560, 560);
     generateVr(doc, 30, 585, 560, 585);
     generateVr(doc, 30, 610, 560, 610);
-    generateVr(doc, 30, 635, 560, 635);
-    generateVr(doc, 30, 210, 30, 635);
+    generateVr(doc, 30, 610, 560, 610);
+    generateVr(doc, 30, 210, 30, 610);
     generateVr(doc, 120, 335, 120, 460);
-    generateVr(doc, 162, 485, 162, 635);
-    generateVr(doc, 560, 210, 560, 635);
-    generateVr(doc, 295, 210, 295, 635);
-    generateVr(doc, 427, 485, 427, 635);
-    generateHr(doc, 635);
+    generateVr(doc, 162, 485, 162, 610);
+    generateVr(doc, 560, 210, 560, 610);
+    generateVr(doc, 295, 210, 295, 610);
+    generateVr(doc, 427, 485, 427, 610);
+    generateHr(doc, 610);
 
     generateReservationInfo(doc, theReservation);
 
     //NENSHRKIMET
 
     generateSignatureSpots(doc);
-    generateVr(doc, 30, 770, 170, 770);
-    generateVr(doc, 420, 770, 560, 770);
-
-    generateFooterDisclaimer(doc); // FUTERI
+    generateVr(doc, 30, 805, 170, 805);
+    generateVr(doc, 420, 805, 560, 805);
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
