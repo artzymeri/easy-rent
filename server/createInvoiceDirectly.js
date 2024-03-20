@@ -130,7 +130,7 @@ function generateSignatureSpots(doc) {
     .moveDown();
 }
 
-function createInvoiceFromAPI(theReservation, res) {
+function createInvoiceDirectly(theReservation, res) {
 
   return new Promise((resolve, reject) => {
     let doc = new PDFDocument({ size: "A4", margin: 30 });
@@ -215,5 +215,5 @@ function createInvoiceFromAPI(theReservation, res) {
 }
 
 module.exports = {
-  createInvoiceFromAPI,
+  createInvoiceDirectly,
 };
