@@ -203,6 +203,9 @@
 }
 
 @media (max-width: 770px) {
+  .content {
+    padding: 20px 20px 70px 20px;
+  }
   .sidebar {
     display: none;
   }

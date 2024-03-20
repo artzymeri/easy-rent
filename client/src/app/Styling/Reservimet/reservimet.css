@@ -74,3 +74,19 @@
   object-fit: cover;
   object-position: center;
 }
+
+@media (max-width: 770px) {
+  .reservimet-header-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .reservimet-header-date-navigator {
+    width: 100%;
+    justify-content: space-between;
+    padding: 7px 15px;
+  }
+  .reservimet-header-view-switch-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

@@ -39,9 +39,25 @@ import dayjs from "dayjs";
 const Veturat = () => {
   const [carsData, setCarsData] = useState([]);
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [carViewMode, setCarViewMode] = useState("list");
+  const [mobileView, setMobileView] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Access window.innerWidth safely
+      setCarViewMode(window.innerWidth > 770 ? "list" : "grid");
+    }
+  }, []);
+
+  useEffect(()=>{
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth < 770) {
+        setMobileView(true)
+      }
+    }
+  },[])
 
   const [addCarDialog, setAddCarDialog] = useState(false);
 
@@ -217,18 +233,19 @@ const Veturat = () => {
   };
 
   const filteredCarsData = useMemo(() => {
-    if (searchQuery.trim() !== '') {
-      return carsData.filter((car) => 
-        car.color.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        car.make.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        car.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        car.engine.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        car.fuel.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        car.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        car.carId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        car.transmission.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        car.price.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        car.year.toLowerCase().includes(searchQuery.toLowerCase())
+    if (searchQuery.trim() !== "") {
+      return carsData.filter(
+        (car) =>
+          car.color.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          car.make.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          car.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          car.engine.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          car.fuel.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          car.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          car.carId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          car.transmission.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          car.price.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          car.year.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
     return carsData;
@@ -785,8 +802,8 @@ const Veturat = () => {
             type="text"
             placeholder="Kërko veturat..."
             value={searchQuery}
-            onChange={(e)=>{
-              setSearchQuery(e.target.value)
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
             }}
           />
           <button
@@ -799,27 +816,49 @@ const Veturat = () => {
             <span>Shto veturë</span>
           </button>
         </div>
-        <div style={{ display: "flex", gap: "10px" }}>
-          {carViewMode == "list" ? (
-            <button
-              className="veturat-listing-button list-active"
-              onClick={() => {
-                setCarViewMode("list");
-              }}
-            >
-              <ViewList />
-            </button>
-          ) : (
-            <button
-              className="veturat-listing-button"
-              onClick={() => {
-                setCarViewMode("list");
-              }}
-            >
-              <ViewList />
-            </button>
-          )}
-          {carViewMode == "grid" ? (
+        {!mobileView ? (
+          <div style={{ display: "flex", gap: "10px" }}>
+            {carViewMode == "list" ? (
+              <button
+                className="veturat-listing-button list-active"
+                onClick={() => {
+                  setCarViewMode("list");
+                }}
+              >
+                <ViewList />
+              </button>
+            ) : (
+              <button
+                className="veturat-listing-button"
+                onClick={() => {
+                  setCarViewMode("list");
+                }}
+              >
+                <ViewList />
+              </button>
+            )}
+            {carViewMode == "grid" ? (
+              <button
+                className="veturat-listing-button list-active"
+                onClick={() => {
+                  setCarViewMode("grid");
+                }}
+              >
+                <GridView />
+              </button>
+            ) : (
+              <button
+                className="veturat-listing-button"
+                onClick={() => {
+                  setCarViewMode("grid");
+                }}
+              >
+                <GridView />
+              </button>
+            )}
+          </div>
+        ) : (
+          <div style={{ display: "flex", gap: "10px" }}>
             <button
               className="veturat-listing-button list-active"
               onClick={() => {
@@ -828,17 +867,8 @@ const Veturat = () => {
             >
               <GridView />
             </button>
-          ) : (
-            <button
-              className="veturat-listing-button"
-              onClick={() => {
-                setCarViewMode("grid");
-              }}
-            >
-              <GridView />
-            </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       {carViewMode == "list" ? (
         <VeturatListView

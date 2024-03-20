@@ -37,6 +37,16 @@ const Reservimet = () => {
     });
   };
 
+  const [mobileView, setMobileView] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (window.innerWidth < 770) {
+        setMobileView(true);
+      }
+    }
+  }, []);
+
   const [currentMonth, setCurrentMonth] = useState(dayjs());
 
   const [currentDay, setCurrentDay] = useState(dayjs());
@@ -322,8 +332,6 @@ const Reservimet = () => {
     });
   };
 
-  console.log(selectedReservation.startTime, selectedReservation.endTime);
-
   return (
     <Sidebar>
       <div
@@ -336,9 +344,9 @@ const Reservimet = () => {
         <div className="reservimet-header-container">
           <div className="reservimet-header-view-switch-buttons">
             {calendarActive ? (
-              <Button variant="contained">Kalendari</Button>
+              !mobileView && (<Button variant="contained">Kalendari</Button>)
             ) : (
-              <Button
+               !mobileView && (<Button
                 variant="outlined"
                 style={{ background: "white" }}
                 onClick={() => {
@@ -347,22 +355,22 @@ const Reservimet = () => {
                 }}
               >
                 Kalendari
-              </Button>
+              </Button>)
             )}
-            {reservationsListActive ? (
-              <Button variant="contained">Lista Ditore</Button>
-            ) : (
-              <Button
-                variant="outlined"
-                style={{ background: "white" }}
-                onClick={() => {
-                  setCalendarActive(false);
-                  setReservationsListActive(true);
-                }}
-              >
-                Lista Ditore
-              </Button>
-            )}
+            {reservationsListActive
+              ? !mobileView && (<Button variant="contained">Lista Ditore</Button>)
+              : !mobileView && (
+                  <Button
+                    variant="outlined"
+                    style={{ background: "white" }}
+                    onClick={() => {
+                      setCalendarActive(false);
+                      setReservationsListActive(true);
+                    }}
+                  >
+                    Lista Ditore
+                  </Button>
+                )}
           </div>
           <div className="reservimet-header-date-navigator">
             <div className="reservimet-header-date-navigator-arrows">

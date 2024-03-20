@@ -65,3 +65,12 @@
   flex-shrink: 0;
   cursor: pointer;
 }
+
+@media (max-width: 770px) {
+  .calendar-wrapper{
+    padding-bottom: 70px;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+}
