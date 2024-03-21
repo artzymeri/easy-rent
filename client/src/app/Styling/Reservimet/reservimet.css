@@ -75,6 +75,22 @@
   object-position: center;
 }
 
+.reservations-found-item {
+  display: flex;
+  padding: 10px 15px;
+  background-color: white;
+  box-shadow: 0px 3px 6px #015d924f;
+  border-radius: 5px;
+  color: #015c92;
+  font-weight: 500;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.qrcodeclass :is(video) {
+    width: 100%;
+}
+
 @media (max-width: 770px) {
   .reservimet-header-container {
     flex-direction: column;

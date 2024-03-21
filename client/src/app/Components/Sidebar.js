@@ -101,7 +101,7 @@ const Sidebar = ({ children }) => {
             alignItems: "center",
             background: "#015c92",
             borderRadius: "5px",
-            zIndex: '999'
+            zIndex: "999",
           }}
         >
           <Close

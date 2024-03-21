@@ -8,6 +8,7 @@ require("dotenv").config();
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
 const { createInvoiceDirectly } = require("./createInvoiceDirectly.js");
+const QRCode = require("qrcode");
 
 const { reservations, veturat } = require("./models");
 
@@ -165,7 +166,6 @@ app.post("/editreservation/:reservationId", async (req, res) => {
   const checkedDocumentIdD2 = documentIdD2 === "" ? null : documentIdD2;
   const checkedAddressD2 = addressD2 === "" ? null : addressD2;
 
-
   const reservationToEdit = await reservations.findByPk(reservationId);
 
   if (!reservationId) {
@@ -262,6 +262,22 @@ app.get("/getveturat", async (req, res) => {
   }
 });
 
+app.get("/getreservationsbyvetura/:veturaCarId", async (req, res) => {
+  const { veturaCarId } = req.params;
+
+  try {
+    const veturatData = await reservations.findAll({
+      where: {
+        carId: veturaCarId,
+      },
+    });
+    res.json(veturatData)
+  } catch (error) {
+    console.error("Database query error:", error);
+    res.status(500).json({ message: "An error occurred" });
+  }
+});
+
 app.post("/addveture", async (req, res) => {
   console.log(req.body);
   try {
@@ -280,7 +296,7 @@ app.post("/addveture", async (req, res) => {
       image,
     } = req.body.carInfo;
 
-    await veturat.create({
+    const vetura = await veturat.create({
       make: make,
       model: model,
       year: year,
@@ -294,13 +310,45 @@ app.post("/addveture", async (req, res) => {
       expiryDate: expiryDate,
       image: image,
     });
+
     res.json({
+      veturaId: vetura.id,
       title: "success",
       message: "Reservimi u shtua me sukses",
     });
   } catch (error) {
     console.error("Database query error:", error);
     res.json({ title: "error", message: "Një problem u shkaktua" });
+  }
+});
+
+const generateQRCode = async (carId) => {
+  return new Promise((resolve, reject) => {
+    QRCode.toDataURL(carId, function (err, url) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(url);
+      }
+    });
+  });
+};
+
+app.post("/generate-qr-code/:veturaId", async (req, res) => {
+  const { veturaId } = req.params;
+
+  try {
+    const veturaToEdit = await veturat.findByPk(veturaId);
+
+    console.log(veturaToEdit.carId);
+
+    const veturaQRCode = await generateQRCode(veturaToEdit.carId);
+
+    veturaToEdit.qrCode = veturaQRCode;
+    await veturaToEdit.save();
+  } catch (error) {
+    console.error("Error generating or updating QR code:", error);
+    res.status(500).json({ error: "Failed to generate or update QR code" });
   }
 });
 

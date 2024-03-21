@@ -51,13 +51,13 @@ const Veturat = () => {
     }
   }, []);
 
-  useEffect(()=>{
-    if (typeof window !== 'undefined') {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       if (window.innerWidth < 770) {
-        setMobileView(true)
+        setMobileView(true);
       }
     }
-  },[])
+  }, []);
 
   const [addCarDialog, setAddCarDialog] = useState(false);
 
@@ -171,6 +171,7 @@ const Veturat = () => {
       axios.get("http://localhost:1234/getveturat").then((res) => {
         setCarsData(res.data);
       });
+      axios.post(`http://localhost:1234/generate-qr-code/${res.data.veturaId}`);
       setAddCarDialog(false);
     });
   };

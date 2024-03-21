@@ -24,6 +24,7 @@
     "nodemon": "^3.1.0",
     "path": "^0.12.7",
     "pdfkit": "^0.14.0",
+    "qrcode": "^1.5.3",
     "sequelize": "^6.37.1",
     "sequelize-cli": "^6.6.2"
   }

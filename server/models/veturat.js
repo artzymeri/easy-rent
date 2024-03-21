@@ -86,6 +86,13 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: false,
         },
       },
+      qrCode: {
+        type: DataTypes.TEXT("long"),
+        allowNull: true,
+        validate: {
+          notEmpty: false,
+        },
+      },
       availability: {
         type: DataTypes.STRING,
         allowNull: false,
