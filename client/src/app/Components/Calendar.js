@@ -132,6 +132,7 @@ const Calendar = (props) => {
             documentIdD2: null,
             addressD2: null,
             carInfo: null,
+            carId: null,
             startTime: null,
             endTime: null,
             imagesArray: "[]",

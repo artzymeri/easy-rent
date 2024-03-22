@@ -109,6 +109,7 @@ const Reservimet = () => {
     documentIdD2: null,
     addressD2: null,
     carInfo: null,
+    carId: null,
     pricePerDay: null,
     startTime: null,
     endTime: null,
@@ -254,6 +255,7 @@ const Reservimet = () => {
       setSelectedReservation({
         ...selectedReservation,
         pricePerDay: selectedCar.price,
+        carId: selectedCar.carId
       });
     }
   }, [selectedCar]);
@@ -350,7 +352,7 @@ const Reservimet = () => {
   };
 
   const saveEditReservation = (reservationId, object) => {
-    console.log(selectedReservation.startTime, selectedReservation.endTime);
+    console.log(object)
     axios
       .post(`http://localhost:1234/editreservation/${reservationId}`, {
         object,
@@ -524,6 +526,7 @@ const Reservimet = () => {
               documentIdD2: null,
               addressD2: null,
               carInfo: null,
+              carId: null,
               startTime: null,
               endTime: null,
               imagesArray: "[]",
@@ -968,7 +971,7 @@ const Reservimet = () => {
             <Button
               variant="contained"
               fullWidth
-              style={{ height: "38px" }}
+              style={{ height: "38px", background: '#015c92' }}
               onClick={() => {
                 setQrCodeDialog(true);
               }}

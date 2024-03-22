@@ -36,6 +36,21 @@ app.get("/getreservations", async (req, res) => {
   }
 });
 
+app.get("/reservations/active", async (req, res) => {
+  try {
+    const reservationsData = await reservations.findAll({
+      where: {
+        active: true,
+      },
+    });
+
+    res.json(reservationsData);
+  } catch (error) {
+    console.error("Database query error:", error);
+    res.status(500).json({ message: "An error occurred" });
+  }
+});
+
 app.post("/addreservation", async (req, res) => {
   try {
     const {
@@ -271,7 +286,7 @@ app.get("/getreservationsbyvetura/:veturaCarId", async (req, res) => {
         carId: veturaCarId,
       },
     });
-    res.json(veturatData)
+    res.json(veturatData);
   } catch (error) {
     console.error("Database query error:", error);
     res.status(500).json({ message: "An error occurred" });
