@@ -10,7 +10,11 @@ import {
 import VeturatFooter from "./VeturatFooter";
 
 const VeturatListView = (props) => {
-  const { carsData, handleClickOnCar, handleDeleteCarClick } = props;
+  const {
+    carsData,
+    handleClickOnCar,
+    handleDeleteCarClick,
+  } = props;
 
   const checkStatus = (carStatus) => {
     if (carStatus == "available") {
@@ -76,9 +80,6 @@ const VeturatListView = (props) => {
                 </h1>
                 {checkStatus(car.availablility)}
                 <div style={{ display: "flex" }}>
-                  <Tooltip title="Kliko për të shikuar detajet">
-                    <button>Detajet</button>
-                  </Tooltip>
                   <Tooltip title="Kliko për të edituar veturën">
                     <button
                       onClick={() => {

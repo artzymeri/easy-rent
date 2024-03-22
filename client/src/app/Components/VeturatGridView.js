@@ -4,13 +4,18 @@ import "@/app/Styling/Veturat/veturat-grid-view.css";
 import VeturatFooter from "./VeturatFooter";
 import {
   Delete,
+  Edit,
   LocalGasStationOutlined,
   RestoreOutlined,
 } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 
 const VeturatListView = (props) => {
-  const { carsData, handleClickOnCar, handleDeleteCarClick } = props;
+  const {
+    carsData,
+    handleClickOnCar,
+    handleDeleteCarClick,
+  } = props;
 
   const checkStatus = (carStatus) => {
     if (carStatus == "available") {
@@ -110,19 +115,6 @@ const VeturatListView = (props) => {
                 }}
               >
                 <button
-                  style={{
-                    border: "0px solid transparent",
-                    background: "#015c92",
-                    color: "white",
-                    borderRadius: "6px",
-                    width: "100%",
-                    height: "30px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Detajet
-                </button>
-                <button
                   onClick={() => {
                     handleClickOnCar(car);
                   }}
@@ -134,8 +126,13 @@ const VeturatListView = (props) => {
                     width: "100%",
                     height: "30px",
                     cursor: "pointer",
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px'
                   }}
                 >
+                  <Edit sx={{height: '17px', width: '17px'}} />
                   Edito
                 </button>
               </div>

@@ -672,6 +672,7 @@ const ShtoReservim = () => {
             label="Numri i Shasisë"
             variant="outlined"
             fullWidth
+            disabled
             style={{ background: "white" }}
             value={selectedCar?.carId || ""}
             onChange={(e) => {

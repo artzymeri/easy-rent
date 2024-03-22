@@ -44,6 +44,10 @@ const Veturat = () => {
   const [carViewMode, setCarViewMode] = useState("list");
   const [mobileView, setMobileView] = useState(false);
 
+  const [carDetailsDialog, setCarDetailsDialog] = useState(false);
+
+  const [selectedCar, setSelectedCar] = useState(null);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       // Access window.innerWidth safely
@@ -876,12 +880,16 @@ const Veturat = () => {
           carsData={filteredCarsData}
           handleClickOnCar={handleClickOnCar}
           handleDeleteCarClick={handleDeleteCarClick}
+          setCarDetailsDialog={setCarDetailsDialog}
+          setSelectedCar={setSelectedCar}
         />
       ) : (
         <VeturatGridView
           carsData={filteredCarsData}
           handleClickOnCar={handleClickOnCar}
           handleDeleteCarClick={handleDeleteCarClick}
+          setCarDetailsDialog={setCarDetailsDialog}
+          setSelectedCar={setSelectedCar}
         />
       )}
     </Sidebar>

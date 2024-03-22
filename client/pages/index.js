@@ -214,7 +214,7 @@ const Home = () => {
                 textAlign: "center",
               }}
             >
-              Reservimet e sotme
+              Fillimet e sotme
             </span>
           </div>
           <div className="home-todays-exchange">
@@ -258,7 +258,7 @@ const Home = () => {
                         <AccessTime
                           sx={{ height: "15px", color: "orangered" }}
                         />
-                        {dayjs(row.startTime).format("HH:MM")}
+                        {dayjs(row.startTime).format("HH:mm")}
                       </span>
                     </div>
                   );
@@ -355,7 +355,7 @@ const Home = () => {
                         <AccessTime
                           sx={{ height: "15px", color: "orangered" }}
                         />
-                        {dayjs(row.startTime).format("HH:MM")}
+                        {dayjs(row.startTime).format("HH:mm")}
                       </span>
                     </div>
                   );
