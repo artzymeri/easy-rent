@@ -18,7 +18,7 @@ import { GridMenuIcon } from "@mui/x-data-grid";
 const navigationOptions = [
   {
     title: "Ballina",
-    link: "/",
+    link: "/ballina",
     icon: <Home />,
   },
   {
