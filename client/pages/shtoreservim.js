@@ -147,27 +147,6 @@ const ShtoReservim = () => {
     setNewReservation({ ...newReservation, imagesArray: images });
     setOpenDialog(false);
   };
-
-  const generatePDF = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:1234/generatepdfdirectly",
-        { newReservation, totalPrice, numberOfDays, selectedCar },
-        { responseType: "blob" }
-      );
-
-      const downloadLink = document.createElement("a");
-      const blob = new Blob([response.data], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-
-      downloadLink.href = url;
-      downloadLink.setAttribute("download", `aaa.pdf`);
-      downloadLink.click();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const addReservation = () => {
     if (newReservation.firstAndLastNameD1 == null || newReservation.firstAndLastNameD1 == '') {
       window.alert('Ju lutem mbushni emrin dhe mbiemrin e Klientit');
@@ -181,7 +160,6 @@ const ShtoReservim = () => {
         totalPrice,
       })
       .then(() => {
-        generatePDF();
         window.location.reload();
       });
   };

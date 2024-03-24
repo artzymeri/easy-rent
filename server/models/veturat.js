@@ -44,6 +44,13 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: false,
         },
       },
+      doors: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          notEmpty: false,
+        },
+      },
       color: {
         type: DataTypes.STRING,
         allowNull: true,

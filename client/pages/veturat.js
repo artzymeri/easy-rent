@@ -78,6 +78,7 @@ const Veturat = () => {
       transmission: car.transmission,
       fuel: car.fuel,
       engine: car.engine,
+      doors: car.doors,
       color: car.color,
       price: car.price,
       label: car.label,
@@ -95,6 +96,7 @@ const Veturat = () => {
     transmission: null,
     fuel: null,
     engine: null,
+    doors: null,
     color: null,
     price: null,
     label: null,
@@ -132,6 +134,7 @@ const Veturat = () => {
       transmission: car.transmission,
       fuel: car.fuel,
       engine: car.engine,
+      doors: car.doors,
       color: car.color,
       price: car.price,
       label: car.label,
@@ -165,6 +168,7 @@ const Veturat = () => {
         transmission: null,
         fuel: null,
         engine: null,
+        doors: null,
         color: null,
         price: null,
         label: null,
@@ -200,6 +204,7 @@ const Veturat = () => {
           transmission: null,
           fuel: null,
           engine: null,
+          doors: null,
           color: null,
           price: null,
           label: null,
@@ -223,6 +228,7 @@ const Veturat = () => {
         transmission: null,
         fuel: null,
         engine: null,
+        doors: null,
         color: null,
         price: null,
         label: null,
@@ -245,6 +251,7 @@ const Veturat = () => {
           car.make.toLowerCase().includes(searchQuery.toLowerCase()) ||
           car.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
           car.engine.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          car.doors.toLowerCase().includes(searchQuery.toLowerCase()) ||
           car.fuel.toLowerCase().includes(searchQuery.toLowerCase()) ||
           car.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
           car.carId.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -368,6 +375,14 @@ const Veturat = () => {
             }}
           />
           <TextField
+            label="Dyer"
+            value={carInfo.doors}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, doors: e.target.value });
+            }}
+          />
+          <TextField
             label="Ngjyra"
             value={carInfo.color}
             style={{ background: "white" }}
@@ -489,6 +504,7 @@ const Veturat = () => {
                 transmission: null,
                 fuel: null,
                 engine: null,
+                doors: null,
                 color: null,
                 price: null,
                 label: null,
@@ -598,6 +614,14 @@ const Veturat = () => {
             }}
           />
           <TextField
+            label="Dyer"
+            value={carInfo.doors}
+            style={{ background: "white" }}
+            onChange={(e) => {
+              setCarInfo({ ...carInfo, doors: e.target.value });
+            }}
+          />
+          <TextField
             label="Ngjyra"
             value={carInfo.color}
             style={{ background: "white" }}
@@ -719,6 +743,7 @@ const Veturat = () => {
                 transmission: null,
                 fuel: null,
                 engine: null,
+                doors: null,
                 color: null,
                 price: null,
                 label: null,
@@ -747,6 +772,7 @@ const Veturat = () => {
             transmission: null,
             fuel: null,
             engine: null,
+            doors: null,
             color: null,
             price: null,
             label: null,
@@ -778,6 +804,7 @@ const Veturat = () => {
                 transmission: null,
                 fuel: null,
                 engine: null,
+                doors: null,
                 color: null,
                 price: null,
                 label: null,

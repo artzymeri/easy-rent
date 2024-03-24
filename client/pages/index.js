@@ -9,6 +9,9 @@ import {
   CarRental,
   Euro,
   LocalGasStation,
+  LocationCity,
+  LocationOn,
+  Phone,
   SensorDoor,
   TimeToLeave,
 } from "@mui/icons-material";
@@ -28,14 +31,14 @@ const HomeView = () => {
 
   return (
     <div className="index-parent">
-      <div className="index-navbar">
+      {/* <div className="index-navbar">
         <h4>RentaCarCompany</h4>
         <input
           className="index-navbar-search"
           placeholder="Kërko veturën..."
           type="text"
         />
-      </div>
+      </div> */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -109,29 +112,17 @@ const HomeView = () => {
               );
             })}
           </div>
-        ) : (
-          <div className="cars-container">
-            {Array.from({ length: 6 }, (_, index) => (
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: "5px" }}
-                key={index}
-              >
-                <Skeleton
-                  variant="rounded"
-                  width={330}
-                  height={200}
-                  animation="wave"
-                />
-                <Skeleton
-                  variant="rounded"
-                  width={330}
-                  height={200}
-                  animation="wave"
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        ) : null}
+      </div>
+      <div className="index-footer">
+        <div>
+          <LocationOn />
+          <p>Adresa e Kompanisë, Shteti</p>
+        </div>
+        <div>
+          <Phone />
+          +383 49 222 222
+        </div>
       </div>
     </div>
   );
