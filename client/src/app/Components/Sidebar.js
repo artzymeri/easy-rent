@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "@/app/Styling/Sidebar/sidebar.css";
 import {
   Add,
@@ -10,10 +10,12 @@ import {
   Logout,
   MenuBook,
   Person2,
+  RssFeed,
 } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { Menu } from "@mui/material";
 import { GridMenuIcon } from "@mui/x-data-grid";
+import axios from "axios";
 
 const navigationOptions = [
   {
@@ -36,6 +38,11 @@ const navigationOptions = [
     link: "/shtoreservim",
     icon: <Add />,
   },
+  {
+    title: "Reservimet Online",
+    link: "/tempreservations",
+    icon: <RssFeed />,
+  },
 ];
 
 const Sidebar = ({ children }) => {
@@ -50,6 +57,14 @@ const Sidebar = ({ children }) => {
   };
 
   const [sidebarMobile, setSidebarMobile] = useState("none");
+
+  const [tempReservations, setTempReservations] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:1234/gettempreservations").then((res) => {
+      setTempReservations(res.data);
+    });
+  }, []);
 
   return (
     <div

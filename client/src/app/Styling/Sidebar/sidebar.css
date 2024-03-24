@@ -112,6 +112,7 @@
   background-color: #015c92;
   border-radius: 12px;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 .sidebar-mobile-button {
@@ -200,6 +201,7 @@
   background-color: #015c92;
   border-radius: 12px;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 @media (max-width: 770px) {

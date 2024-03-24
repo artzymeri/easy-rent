@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 const { createInvoiceDirectly } = require("./createInvoiceDirectly.js");
 const QRCode = require("qrcode");
 
-const { reservations, veturat } = require("./models");
+const { reservations, veturat, tempreservations } = require("./models");
 
 const app = express();
 app.use(express.json({ limit: "50mb" }));
@@ -144,6 +144,113 @@ app.post("/addreservation", async (req, res) => {
     console.error("Database query error:", error);
     res.json({ title: "error", message: "Një problem u shkaktua" });
   }
+});
+
+app.get("/gettempreservations", async (req, res) => {
+  const tempReservations = await tempreservations.findAll();
+
+  res.json(tempReservations);
+});
+
+app.post("/approvetempreservation/:reservationId", async (req, res) => {
+  const { reservationId } = req.params;
+
+  await reservations.create({
+    clientNameSurnameD1: req.body.clientNameSurnameD1,
+    clientPhoneNumberD1: req.body.clientPhoneNumberD1,
+    clientDocumentIdD1: req.body.clientDocumentIdD1,
+    clientAddressD1: req.body.clientAddressD1,
+    clientNameSurnameD2: req.body.clientNameSurnameD2,
+    clientPhoneNumberD2: req.bodyclientPhoneNumberD2,
+    clientDocumentIdD2: req.body.clientDocumentIdD2,
+    clientAddressD2: req.body.clientAddressD2,
+    carInfo: req.body.carInfo,
+    carId: req.body.carId,
+    carMake: req.body.carMake,
+    carModel: req.body.carModel,
+    carLabel: req.body.carLabel,
+    carColor: req.body.carColor,
+    pricePerDay: req.body.pricePerDay,
+    startTime: req.body.startTime,
+    endTime: req.body.endTime,
+    numberOfDays: req.body.numberOfDays,
+    totalPrice: req.body.totalPrice,
+    imagesArray: null,
+  });
+
+  await tempreservations.destroy({
+    where: { id: reservationId },
+  });
+});
+
+app.post("/deletetempreservation/:reservationId", async (req, res) => {
+  const {reservationId} = req.params;
+
+  await tempreservations.destroy({
+    where: { id: reservationId },
+  });
+});
+
+app.post("/savetempreservation/", async (req, res) => {
+  const {
+    firstAndLastNameD1,
+    phoneNumberD1,
+    documentIdD1,
+    addressD1,
+    firstAndLastNameD2,
+    phoneNumberD2,
+    documentIdD2,
+    addressD2,
+    carInfo,
+    carId,
+    carMake,
+    carModel,
+    carColor,
+    carLabel,
+    pricePerDay,
+    startTime,
+    endTime,
+    numberOfDays,
+    totalPrice,
+  } = req.body.object;
+
+  console.log(carInfo);
+
+  const checkedFirstAndLastNameD1 =
+    firstAndLastNameD1 === "" ? null : firstAndLastNameD1;
+  const checkedPhoneNumberD1 = phoneNumberD1 === "" ? null : phoneNumberD1;
+  const checkedDocumentIdD1 = documentIdD1 === "" ? null : documentIdD1;
+  const checkedAddressD1 = addressD1 === "" ? null : addressD1;
+
+  const checkedFirstAndLastNameD2 =
+    firstAndLastNameD2 === "" ? null : firstAndLastNameD2;
+  const checkedPhoneNumberD2 = phoneNumberD2 === "" ? null : phoneNumberD2;
+  const checkedDocumentIdD2 = documentIdD2 === "" ? null : documentIdD2;
+  const checkedAddressD2 = addressD2 === "" ? null : addressD2;
+
+  await tempreservations.create({
+    clientNameSurnameD1: checkedFirstAndLastNameD1,
+    clientPhoneNumberD1: checkedPhoneNumberD1,
+    clientDocumentIdD1: checkedDocumentIdD1,
+    clientAddressD1: checkedAddressD1,
+    clientNameSurnameD2: checkedFirstAndLastNameD2,
+    clientPhoneNumberD2: checkedPhoneNumberD2,
+    clientDocumentIdD2: checkedDocumentIdD2,
+    clientAddressD2: checkedAddressD2,
+    carInfo: carInfo,
+    carId: carId,
+    carMake: carMake,
+    carModel: carModel,
+    carLabel: carLabel,
+    carColor: carColor,
+    pricePerDay: pricePerDay,
+    startTime: startTime,
+    endTime: endTime,
+    numberOfDays: numberOfDays,
+    totalPrice: totalPrice,
+  });
+
+  res.json({ title: "success", message: "Produkti u editua me sukses" });
 });
 
 app.post("/editreservation/:reservationId", async (req, res) => {
