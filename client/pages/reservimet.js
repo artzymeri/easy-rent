@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -35,6 +36,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useTheme } from "@mui/material/styles";
 
 const Reservimet = () => {
+  const [loading, setLoading] = useState(true);
+
   const handleReservationSelection = (reservation_object) => {
     setSelectedReservation({
       ...selectedReservation,
@@ -208,15 +211,19 @@ const Reservimet = () => {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:1234/getreservations").then((res) => {
-      setReservations(res.data);
-    });
-  }, []);
+    setLoading(true);
 
-  useEffect(() => {
-    axios.get("http://localhost:1234/getveturat").then((res) => {
-      setCarsData(res.data);
-    });
+    Promise.all([
+      axios.get("http://localhost:1234/getreservations"),
+      axios.get("http://localhost:1234/getveturat"),
+    ])
+      .then(([reservationsRes, carsRes]) => {
+        setReservations(reservationsRes.data);
+        setCarsData(carsRes.data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const calculateDays = (start, end) => {
@@ -255,7 +262,7 @@ const Reservimet = () => {
       setSelectedReservation({
         ...selectedReservation,
         pricePerDay: selectedCar.price,
-        carId: selectedCar.carId
+        carId: selectedCar.carId,
       });
     }
   }, [selectedCar]);
@@ -342,17 +349,21 @@ const Reservimet = () => {
   };
 
   const deleteReservation = (reservationId) => {
+    setLoading(true);
     axios
       .post(`http://localhost:1234/deletereservation/${reservationId}`)
       .then(() => {
         axios.get("http://localhost:1234/getreservations").then((res) => {
           setReservations(res.data);
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   const saveEditReservation = (reservationId, object) => {
-    console.log(object)
+    setLoading(true);
     axios
       .post(`http://localhost:1234/editreservation/${reservationId}`, {
         object,
@@ -363,6 +374,9 @@ const Reservimet = () => {
           setReservations(res.data);
         });
         setReservationsByCarDialog(false);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -374,6 +388,7 @@ const Reservimet = () => {
   };
 
   const onNewScanResult = (decodedText, decodedResult) => {
+    setLoading(true);
     const veturaCarId = decodedText;
     axios
       .get(`http://localhost:1234/getreservationsbyvetura/${veturaCarId}`)
@@ -381,6 +396,9 @@ const Reservimet = () => {
         setReservationsByCar(res.data);
         setReservationsByCarDialog(true);
         setQrCodeDialog(false);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -406,494 +424,466 @@ const Reservimet = () => {
 
   return (
     <Sidebar>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Dialog
-          fullScreen={fullScreen}
-          open={qrCodeDialog}
-          onClose={() => {
-            setQrCodeDialog(false);
+      {loading && <CircularProgress />}
+      {!loading && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <DialogContent>
-            <QRCodeScanner
-              fps={10}
-              qrbox={250}
-              disableFlip={false}
-              qrCodeSuccessCallback={onNewScanResult}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button
-              fullWidth
-              color="error"
-              variant="contained"
-              onClick={() => {
-                setQrCodeDialog(false);
-              }}
-            >
-              Mbyll
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog
-          fullScreen={fullScreen}
-          open={reservationsByCarDialog}
-          onClose={() => {
-            setReservationsByCarDialog(false);
-          }}
-        >
-          <DialogTitle
-            borderBottom={"1px solid lightgray"}
-            style={{ color: "#015c92", textAlign: "center" }}
-          >
-            Reservimet nga vetura
-          </DialogTitle>
-          <DialogContent
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-              paddingTop: "10px",
-              background: "whitesmoke",
+          <Dialog
+            fullScreen={fullScreen}
+            open={qrCodeDialog}
+            onClose={() => {
+              setQrCodeDialog(false);
             }}
           >
-            {reservationsByCar && reservationsByCar.length > 0 ? (
-              reservationsByCar.map((reservation) => {
-                console.log(dayjs(reservation.startTime).$D);
-                return (
-                  <div
-                    className="reservations-found-item"
-                    onClick={() => {
-                      setSelectedReservationDialog(true);
-                      handleReservationSelection(reservation);
+            <DialogContent>
+              <QRCodeScanner
+                fps={10}
+                qrbox={250}
+                disableFlip={false}
+                qrCodeSuccessCallback={onNewScanResult}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                fullWidth
+                color="error"
+                variant="contained"
+                onClick={() => {
+                  setQrCodeDialog(false);
+                }}
+              >
+                Mbyll
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            fullScreen={fullScreen}
+            open={reservationsByCarDialog}
+            onClose={() => {
+              setReservationsByCarDialog(false);
+            }}
+          >
+            <DialogTitle
+              borderBottom={"1px solid lightgray"}
+              style={{ color: "#015c92", textAlign: "center" }}
+            >
+              Reservimet nga vetura
+            </DialogTitle>
+            <DialogContent
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                paddingTop: "10px",
+                background: "whitesmoke",
+              }}
+            >
+              {reservationsByCar && reservationsByCar.length > 0 ? (
+                reservationsByCar.map((reservation) => {
+                  console.log(dayjs(reservation.startTime).$D);
+                  return (
+                    <div
+                      className="reservations-found-item"
+                      onClick={() => {
+                        setSelectedReservationDialog(true);
+                        handleReservationSelection(reservation);
+                      }}
+                    >
+                      <p>{reservation.clientNameSurnameD1}</p>
+                      <div>
+                        <p>
+                          {dayjs(reservation.startTime).$D}/
+                          {dayjs(reservation.startTime).$M}/
+                          {dayjs(reservation.startTime).$y}
+                        </p>
+                        <p>
+                          {dayjs(reservation.endTime).$D}/
+                          {dayjs(reservation.endTime).$M}/
+                          {dayjs(reservation.endTime).$y}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p style={{ color: "lightgray" }}>
+                  Nuk ka reservime aktive me këtë veturë!
+                </p>
+              )}
+            </DialogContent>
+            <DialogActions style={{ border: "1px solid lightgray" }}>
+              <Button
+                fullWidth
+                color="error"
+                variant="contained"
+                onClick={() => {
+                  setReservationsByCarDialog(false);
+                }}
+              >
+                Mbyll
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            fullScreen={fullScreen}
+            open={selectedReservationDialog}
+            onClose={() => {
+              setImages([]);
+              setSelectedReservationDialog(false);
+              setEditState(false);
+              setSelectedReservation({
+                firstAndLastNameD1: null,
+                phoneNumberD1: null,
+                documentIdD1: null,
+                addressD1: null,
+                firstAndLastNameD2: null,
+                phoneNumberD2: null,
+                documentIdD2: null,
+                addressD2: null,
+                carInfo: null,
+                carId: null,
+                startTime: null,
+                endTime: null,
+                imagesArray: "[]",
+              });
+            }}
+          >
+            <DialogContent dividers>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                  }}
+                >
+                  <h5
+                    style={{
+                      textAlign: "center",
+                      padding: "5px 10px",
+                      background: "#015c92",
+                      color: "white",
+                      borderRadius: "5px",
                     }}
                   >
-                    <p>{reservation.clientNameSurnameD1}</p>
-                    <div>
-                      <p>
-                        {dayjs(reservation.startTime).$D}/
-                        {dayjs(reservation.startTime).$M}/
-                        {dayjs(reservation.startTime).$y}
-                      </p>
-                      <p>
-                        {dayjs(reservation.endTime).$D}/
-                        {dayjs(reservation.endTime).$M}/
-                        {dayjs(reservation.endTime).$y}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <p style={{ color: "lightgray" }}>
-                Nuk ka reservime aktive me këtë veturë!
-              </p>
-            )}
-          </DialogContent>
-          <DialogActions style={{ border: "1px solid lightgray" }}>
-            <Button
-              fullWidth
-              color="error"
-              variant="contained"
-              onClick={() => {
-                setReservationsByCarDialog(false);
-              }}
-            >
-              Mbyll
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog
-          fullScreen={fullScreen}
-          open={selectedReservationDialog}
-          onClose={() => {
-            setImages([]);
-            setSelectedReservationDialog(false);
-            setEditState(false);
-            setSelectedReservation({
-              firstAndLastNameD1: null,
-              phoneNumberD1: null,
-              documentIdD1: null,
-              addressD1: null,
-              firstAndLastNameD2: null,
-              phoneNumberD2: null,
-              documentIdD2: null,
-              addressD2: null,
-              carInfo: null,
-              carId: null,
-              startTime: null,
-              endTime: null,
-              imagesArray: "[]",
-            });
-          }}
-        >
-          <DialogContent dividers>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "10px",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                }}
-              >
-                <h5
-                  style={{
-                    textAlign: "center",
-                    padding: "5px 10px",
-                    background: "#015c92",
-                    color: "white",
-                    borderRadius: "5px",
-                  }}
-                >
-                  Shoferi 1
-                </h5>
-                <TextField
-                  disabled={!editState}
-                  variant="outlined"
-                  label="Emri dhe Mbiemri"
-                  fullWidth
-                  style={{ background: "white" }}
-                  value={selectedReservation.firstAndLastNameD1}
-                  onChange={(e) => {
-                    setSelectedReservation({
-                      ...selectedReservation,
-                      firstAndLastNameD1: e.target.value,
-                    });
-                  }}
-                />
-                <TextField
-                  disabled={!editState}
-                  label="Numri Telefonit"
-                  variant="outlined"
-                  fullWidth
-                  style={{ background: "white" }}
-                  value={selectedReservation.phoneNumberD1}
-                  onChange={(e) => {
-                    setSelectedReservation({
-                      ...selectedReservation,
-                      phoneNumberD1: e.target.value,
-                    });
-                  }}
-                />
-                <TextField
-                  disabled={!editState}
-                  label="Numri i Dokumentit Personal"
-                  variant="outlined"
-                  fullWidth
-                  style={{ background: "white" }}
-                  value={selectedReservation.documentIdD1}
-                  onChange={(e) => {
-                    setSelectedReservation({
-                      ...selectedReservation,
-                      documentIdD1: e.target.value,
-                    });
-                  }}
-                />
-                <TextField
-                  disabled={!editState}
-                  label="Adresa"
-                  variant="outlined"
-                  fullWidth
-                  style={{ background: "white" }}
-                  value={selectedReservation.addressD1}
-                  onChange={(e) => {
-                    setSelectedReservation({
-                      ...selectedReservation,
-                      addressD1: e.target.value,
-                    });
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                }}
-              >
-                <h5
-                  style={{
-                    textAlign: "center",
-                    padding: "5px 10px",
-                    background: "#015c92",
-                    color: "white",
-                    borderRadius: "5px",
-                  }}
-                >
-                  Shoferi 2
-                </h5>
-                <TextField
-                  disabled={!editState}
-                  variant="outlined"
-                  label="Emri dhe Mbiemri"
-                  fullWidth
-                  style={{ background: "white" }}
-                  value={selectedReservation.firstAndLastNameD2}
-                  onChange={(e) => {
-                    setSelectedReservation({
-                      ...selectedReservation,
-                      firstAndLastNameD2: e.target.value,
-                    });
-                  }}
-                />
-                <TextField
-                  disabled={!editState}
-                  label="Numri Telefonit"
-                  variant="outlined"
-                  fullWidth
-                  style={{ background: "white" }}
-                  value={selectedReservation.phoneNumberD2}
-                  onChange={(e) => {
-                    setSelectedReservation({
-                      ...selectedReservation,
-                      phoneNumberD2: e.target.value,
-                    });
-                  }}
-                />
-                <TextField
-                  disabled={!editState}
-                  label="Numri i Dokumentit Personal"
-                  variant="outlined"
-                  fullWidth
-                  style={{ background: "white" }}
-                  value={selectedReservation.documentIdD2}
-                  onChange={(e) => {
-                    setSelectedReservation({
-                      ...selectedReservation,
-                      documentIdD2: e.target.value,
-                    });
-                  }}
-                />
-                <TextField
-                  disabled={!editState}
-                  label="Adresa"
-                  variant="outlined"
-                  fullWidth
-                  style={{ background: "white" }}
-                  value={selectedReservation.addressD2}
-                  onChange={(e) => {
-                    setSelectedReservation({
-                      ...selectedReservation,
-                      addressD2: e.target.value,
-                    });
-                  }}
-                />
-              </div>
-            </div>
-            <FormControl
-              disabled={!editState}
-              style={{ marginTop: "15px" }}
-              fullWidth
-            >
-              <InputLabel id="demo-simple-select-label">Vetura</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={selectedReservation.carInfo}
-                label="Vetura"
-                onChange={handleCarSelectChange}
-                style={{ background: "white" }}
-              >
-                {carsData.map((car, index) => {
-                  return (
-                    <MenuItem
-                      key={index}
-                      value={car.make + " " + car.model}
-                      onClick={() => {
-                        setSelectedCar(car);
-                      }}
-                    >
-                      {car.make} {car.model}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-            <TextField
-              disabled={!editState}
-              label="Çmimi për ditë"
-              variant="outlined"
-              fullWidth
-              style={{ background: "white", marginTop: "15px" }}
-              value={selectedReservation.pricePerDay}
-              onChange={(e) => {
-                setSelectedReservation({
-                  ...selectedReservation,
-                  pricePerDay: e.target.value,
-                });
-              }}
-            />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                disabled={!editState}
-                label="Koha e fillimit"
-                sx={{ width: "100%", background: "white", marginTop: "15px" }}
-                onChange={handleStartTime}
-                value={dayjs(selectedReservation.startTime)}
-              />
-              <DateTimePicker
-                disabled={!editState}
-                label="Koha e mbarimit"
-                sx={{ width: "100%", background: "white", marginTop: "15px" }}
-                onChange={handleEndTime}
-                value={dayjs(selectedReservation.endTime)}
-              />
-            </LocalizationProvider>
-            <TextField
-              disabled={!editState}
-              label="Numri i ditëve"
-              variant="outlined"
-              fullWidth
-              style={{ background: "white", marginTop: "15px" }}
-              value={selectedReservation.numberOfDays || ""}
-              inputProps={{
-                readOnly: true,
-              }}
-            />
-            <TextField
-              disabled={!editState}
-              label="Totali i Çmimit"
-              variant="outlined"
-              fullWidth
-              style={{ background: "white", marginTop: "15px" }}
-              value={selectedReservation.totalPrice || ""}
-              onChange={(e) => {
-                setSelectedReservation({
-                  ...selectedReservation,
-                  totalPrice: parseInt(e.target.value),
-                });
-              }}
-            />
-            <div className="edit-dialog-images-container">
-              {JSON.parse(selectedReservation.imagesArray).length > 0
-                ? JSON.parse(selectedReservation.imagesArray).map(
-                    (image, index) => {
-                      return (
-                        <div className="edit-dialog-images-item" key={index}>
-                          {editState && (
-                            <div
-                              className="edit-dialog-images-delete-item"
-                              onClick={() => deleteImage(image)}
-                            >
-                              <Delete sx={{ color: "red" }} />
-                            </div>
-                          )}
-                          <img
-                            src={image}
-                            onClick={() => setClickedImage(image)}
-                          />
-                        </div>
-                      );
-                    }
-                  )
-                : !editState && (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "5px",
-                      }}
-                    >
-                      <ErrorOutline sx={{ color: "gray" }} />
-                      <span style={{ color: "gray", textWrap: "nowrap" }}>
-                        Reservimi nuk ka fotografi
-                      </span>
-                    </div>
-                  )}
-              {editState && (
-                <div
-                  className="edit-dialog-images-item"
-                  style={{ border: "1px dashed lightgray" }}
-                >
-                  <input
-                    style={{
-                      opacity: "0",
-                      position: "absolute",
-                      left: "0",
-                      right: "0",
-                      top: "0",
-                      bottom: "0",
-                      zIndex: "2",
-                      cursor: "alias",
+                    Shoferi 1
+                  </h5>
+                  <TextField
+                    disabled={!editState}
+                    variant="outlined"
+                    label="Emri dhe Mbiemri"
+                    fullWidth
+                    style={{ background: "white" }}
+                    value={selectedReservation.firstAndLastNameD1}
+                    onChange={(e) => {
+                      setSelectedReservation({
+                        ...selectedReservation,
+                        firstAndLastNameD1: e.target.value,
+                      });
                     }}
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleFileChange}
                   />
-                  <AddAPhoto
-                    sx={{ color: "#015c92", height: "33px", width: "33px" }}
+                  <TextField
+                    disabled={!editState}
+                    label="Numri Telefonit"
+                    variant="outlined"
+                    fullWidth
+                    style={{ background: "white" }}
+                    value={selectedReservation.phoneNumberD1}
+                    onChange={(e) => {
+                      setSelectedReservation({
+                        ...selectedReservation,
+                        phoneNumberD1: e.target.value,
+                      });
+                    }}
+                  />
+                  <TextField
+                    disabled={!editState}
+                    label="Numri i Dokumentit Personal"
+                    variant="outlined"
+                    fullWidth
+                    style={{ background: "white" }}
+                    value={selectedReservation.documentIdD1}
+                    onChange={(e) => {
+                      setSelectedReservation({
+                        ...selectedReservation,
+                        documentIdD1: e.target.value,
+                      });
+                    }}
+                  />
+                  <TextField
+                    disabled={!editState}
+                    label="Adresa"
+                    variant="outlined"
+                    fullWidth
+                    style={{ background: "white" }}
+                    value={selectedReservation.addressD1}
+                    onChange={(e) => {
+                      setSelectedReservation({
+                        ...selectedReservation,
+                        addressD1: e.target.value,
+                      });
+                    }}
                   />
                 </div>
-              )}
-            </div>
-            <FormControlLabel
-              disabled={!editState}
-              control={
-                <Switch
-                  checked={selectedReservation.active}
-                  onChange={handleAvailabilityChange}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                  }}
+                >
+                  <h5
+                    style={{
+                      textAlign: "center",
+                      padding: "5px 10px",
+                      background: "#015c92",
+                      color: "white",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    Shoferi 2
+                  </h5>
+                  <TextField
+                    disabled={!editState}
+                    variant="outlined"
+                    label="Emri dhe Mbiemri"
+                    fullWidth
+                    style={{ background: "white" }}
+                    value={selectedReservation.firstAndLastNameD2}
+                    onChange={(e) => {
+                      setSelectedReservation({
+                        ...selectedReservation,
+                        firstAndLastNameD2: e.target.value,
+                      });
+                    }}
+                  />
+                  <TextField
+                    disabled={!editState}
+                    label="Numri Telefonit"
+                    variant="outlined"
+                    fullWidth
+                    style={{ background: "white" }}
+                    value={selectedReservation.phoneNumberD2}
+                    onChange={(e) => {
+                      setSelectedReservation({
+                        ...selectedReservation,
+                        phoneNumberD2: e.target.value,
+                      });
+                    }}
+                  />
+                  <TextField
+                    disabled={!editState}
+                    label="Numri i Dokumentit Personal"
+                    variant="outlined"
+                    fullWidth
+                    style={{ background: "white" }}
+                    value={selectedReservation.documentIdD2}
+                    onChange={(e) => {
+                      setSelectedReservation({
+                        ...selectedReservation,
+                        documentIdD2: e.target.value,
+                      });
+                    }}
+                  />
+                  <TextField
+                    disabled={!editState}
+                    label="Adresa"
+                    variant="outlined"
+                    fullWidth
+                    style={{ background: "white" }}
+                    value={selectedReservation.addressD2}
+                    onChange={(e) => {
+                      setSelectedReservation({
+                        ...selectedReservation,
+                        addressD2: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+              </div>
+              <FormControl
+                disabled={!editState}
+                style={{ marginTop: "15px" }}
+                fullWidth
+              >
+                <InputLabel id="demo-simple-select-label">Vetura</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selectedReservation.carInfo}
+                  label="Vetura"
+                  onChange={handleCarSelectChange}
+                  style={{ background: "white" }}
+                >
+                  {carsData.map((car, index) => {
+                    return (
+                      <MenuItem
+                        key={index}
+                        value={car.make + " " + car.model}
+                        onClick={() => {
+                          setSelectedCar(car);
+                        }}
+                      >
+                        {car.make} {car.model}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+              <TextField
+                disabled={!editState}
+                label="Çmimi për ditë"
+                variant="outlined"
+                fullWidth
+                style={{ background: "white", marginTop: "15px" }}
+                value={selectedReservation.pricePerDay}
+                onChange={(e) => {
+                  setSelectedReservation({
+                    ...selectedReservation,
+                    pricePerDay: e.target.value,
+                  });
+                }}
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  disabled={!editState}
+                  label="Koha e fillimit"
+                  sx={{ width: "100%", background: "white", marginTop: "15px" }}
+                  onChange={handleStartTime}
+                  value={dayjs(selectedReservation.startTime)}
                 />
-              }
-              label="Aktive"
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: "10px",
-              }}
-            />
-          </DialogContent>
-          <DialogActions
-            style={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => {
-                setSelectedReservation({
-                  firstAndLastNameD1: null,
-                  phoneNumberD1: null,
-                  documentIdD1: null,
-                  addressD1: null,
-                  firstAndLastNameD2: null,
-                  phoneNumberD2: null,
-                  documentIdD2: null,
-                  addressD2: null,
-                  carInfo: null,
-                  startTime: null,
-                  endTime: null,
-                  imagesArray: "[]",
-                });
-                setEditState(false);
-                setSelectedReservationDialog(false);
-                setImages([]);
-              }}
+                <DateTimePicker
+                  disabled={!editState}
+                  label="Koha e mbarimit"
+                  sx={{ width: "100%", background: "white", marginTop: "15px" }}
+                  onChange={handleEndTime}
+                  value={dayjs(selectedReservation.endTime)}
+                />
+              </LocalizationProvider>
+              <TextField
+                disabled={!editState}
+                label="Numri i ditëve"
+                variant="outlined"
+                fullWidth
+                style={{ background: "white", marginTop: "15px" }}
+                value={selectedReservation.numberOfDays || ""}
+                inputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                disabled={!editState}
+                label="Totali i Çmimit"
+                variant="outlined"
+                fullWidth
+                style={{ background: "white", marginTop: "15px" }}
+                value={selectedReservation.totalPrice || ""}
+                onChange={(e) => {
+                  setSelectedReservation({
+                    ...selectedReservation,
+                    totalPrice: parseInt(e.target.value),
+                  });
+                }}
+              />
+              <div className="edit-dialog-images-container">
+                {JSON.parse(selectedReservation.imagesArray).length > 0
+                  ? JSON.parse(selectedReservation.imagesArray).map(
+                      (image, index) => {
+                        return (
+                          <div className="edit-dialog-images-item" key={index}>
+                            {editState && (
+                              <div
+                                className="edit-dialog-images-delete-item"
+                                onClick={() => deleteImage(image)}
+                              >
+                                <Delete sx={{ color: "red" }} />
+                              </div>
+                            )}
+                            <img
+                              src={image}
+                              onClick={() => setClickedImage(image)}
+                            />
+                          </div>
+                        );
+                      }
+                    )
+                  : !editState && (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "5px",
+                        }}
+                      >
+                        <ErrorOutline sx={{ color: "gray" }} />
+                        <span style={{ color: "gray", textWrap: "nowrap" }}>
+                          Reservimi nuk ka fotografi
+                        </span>
+                      </div>
+                    )}
+                {editState && (
+                  <div
+                    className="edit-dialog-images-item"
+                    style={{ border: "1px dashed lightgray" }}
+                  >
+                    <input
+                      style={{
+                        opacity: "0",
+                        position: "absolute",
+                        left: "0",
+                        right: "0",
+                        top: "0",
+                        bottom: "0",
+                        zIndex: "2",
+                        cursor: "alias",
+                      }}
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleFileChange}
+                    />
+                    <AddAPhoto
+                      sx={{ color: "#015c92", height: "33px", width: "33px" }}
+                    />
+                  </div>
+                )}
+              </div>
+              <FormControlLabel
+                disabled={!editState}
+                control={
+                  <Switch
+                    checked={selectedReservation.active}
+                    onChange={handleAvailabilityChange}
+                  />
+                }
+                label="Aktive"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: "10px",
+                }}
+              />
+            </DialogContent>
+            <DialogActions
+              style={{ display: "flex", justifyContent: "space-between" }}
             >
-              Mbyll
-            </Button>
-            <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-              <Button variant="contained" color="warning" onClick={generatePDF}>
-                <Print />
-              </Button>
               <Button
-                variant="contained"
+                variant="outlined"
                 color="error"
                 onClick={() => {
-                  deleteReservation(selectedReservation.id);
                   setSelectedReservation({
                     firstAndLastNameD1: null,
                     phoneNumberD1: null,
@@ -908,157 +898,202 @@ const Reservimet = () => {
                     endTime: null,
                     imagesArray: "[]",
                   });
+                  setEditState(false);
                   setSelectedReservationDialog(false);
+                  setImages([]);
                 }}
               >
-                <Delete />
+                Mbyll
               </Button>
-              {editState ? (
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "5px" }}
+              >
                 <Button
                   variant="contained"
+                  color="warning"
+                  onClick={generatePDF}
+                >
+                  <Print />
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
                   onClick={() => {
-                    saveEditReservation(
-                      selectedReservation.id,
-                      selectedReservation
-                    );
-                    setImages([]);
-                    setEditState(false);
+                    deleteReservation(selectedReservation.id);
+                    setSelectedReservation({
+                      firstAndLastNameD1: null,
+                      phoneNumberD1: null,
+                      documentIdD1: null,
+                      addressD1: null,
+                      firstAndLastNameD2: null,
+                      phoneNumberD2: null,
+                      documentIdD2: null,
+                      addressD2: null,
+                      carInfo: null,
+                      startTime: null,
+                      endTime: null,
+                      imagesArray: "[]",
+                    });
                     setSelectedReservationDialog(false);
                   }}
                 >
-                  Ruaj
+                  <Delete />
                 </Button>
-              ) : (
-                <Button variant="contained" onClick={() => setEditState(true)}>
-                  Edito
-                </Button>
-              )}
-            </div>
-          </DialogActions>
-        </Dialog>
-        <div className="reservimet-header-container">
-          <div className="reservimet-header-view-switch-buttons">
-            {calendarActive
-              ? !mobileView && <Button variant="contained">Kalendari</Button>
-              : !mobileView && (
+                {editState ? (
                   <Button
-                    variant="outlined"
-                    style={{ background: "white" }}
+                    variant="contained"
                     onClick={() => {
-                      setReservationsListActive(false);
-                      setCalendarActive(true);
+                      saveEditReservation(
+                        selectedReservation.id,
+                        selectedReservation
+                      );
+                      setImages([]);
+                      setEditState(false);
+                      setSelectedReservationDialog(false);
                     }}
                   >
-                    Kalendari
+                    Ruaj
                   </Button>
-                )}
-            {reservationsListActive
-              ? !mobileView && <Button variant="contained">Lista Ditore</Button>
-              : !mobileView && (
+                ) : (
                   <Button
-                    variant="outlined"
-                    style={{ background: "white" }}
-                    onClick={() => {
-                      setCalendarActive(false);
-                      setReservationsListActive(true);
-                    }}
+                    variant="contained"
+                    onClick={() => setEditState(true)}
                   >
-                    Lista Ditore
+                    Edito
                   </Button>
                 )}
-          </div>
-          {mobileView && (
-            <Button
-              variant="contained"
-              fullWidth
-              style={{ height: "38px", background: '#015c92' }}
-              onClick={() => {
-                setQrCodeDialog(true);
-              }}
-            >
-              <QrCodeScannerOutlined />
-            </Button>
-          )}
-          <div className="reservimet-header-date-navigator">
-            <div className="reservimet-header-date-navigator-arrows">
-              {calendarActive ? (
-                <ArrowLeft
-                  onClick={previousMonth}
-                  style={{ cursor: "pointer" }}
-                />
-              ) : (
-                <ArrowLeft
-                  onClick={previousDay}
-                  style={{ cursor: "pointer" }}
-                />
-              )}
-              {calendarActive ? (
-                <ArrowRight onClick={nextMonth} style={{ cursor: "pointer" }} />
-              ) : (
-                <ArrowRight onClick={nextDay} style={{ cursor: "pointer" }} />
-              )}
+              </div>
+            </DialogActions>
+          </Dialog>
+          <div className="reservimet-header-container">
+            <div className="reservimet-header-view-switch-buttons">
+              {calendarActive
+                ? !mobileView && <Button variant="contained">Kalendari</Button>
+                : !mobileView && (
+                    <Button
+                      variant="outlined"
+                      style={{ background: "white" }}
+                      onClick={() => {
+                        setReservationsListActive(false);
+                        setCalendarActive(true);
+                      }}
+                    >
+                      Kalendari
+                    </Button>
+                  )}
+              {reservationsListActive
+                ? !mobileView && (
+                    <Button variant="contained">Lista Ditore</Button>
+                  )
+                : !mobileView && (
+                    <Button
+                      variant="outlined"
+                      style={{ background: "white" }}
+                      onClick={() => {
+                        setCalendarActive(false);
+                        setReservationsListActive(true);
+                      }}
+                    >
+                      Lista Ditore
+                    </Button>
+                  )}
             </div>
-            {calendarActive ? (
-              <h5>{formatMonth(currentMonth)}</h5>
-            ) : (
-              <h5>{currentDay.format("DD/MM/YYYY")}</h5>
+            {mobileView && (
+              <Button
+                variant="contained"
+                fullWidth
+                style={{ height: "38px", background: "#015c92" }}
+                onClick={() => {
+                  setQrCodeDialog(true);
+                }}
+              >
+                <QrCodeScannerOutlined />
+              </Button>
             )}
+            <div className="reservimet-header-date-navigator">
+              <div className="reservimet-header-date-navigator-arrows">
+                {calendarActive ? (
+                  <ArrowLeft
+                    onClick={previousMonth}
+                    style={{ cursor: "pointer" }}
+                  />
+                ) : (
+                  <ArrowLeft
+                    onClick={previousDay}
+                    style={{ cursor: "pointer" }}
+                  />
+                )}
+                {calendarActive ? (
+                  <ArrowRight
+                    onClick={nextMonth}
+                    style={{ cursor: "pointer" }}
+                  />
+                ) : (
+                  <ArrowRight onClick={nextDay} style={{ cursor: "pointer" }} />
+                )}
+              </div>
+              {calendarActive ? (
+                <h5>{formatMonth(currentMonth)}</h5>
+              ) : (
+                <h5>{currentDay.format("DD/MM/YYYY")}</h5>
+              )}
+            </div>
           </div>
+          {calendarActive && (
+            <Calendar
+              daysInMonth={daysInMonth}
+              reservations={reservations}
+              deleteReservation={deleteReservation}
+              saveEditReservation={saveEditReservation}
+              viewSelectedDay={viewSelectedDay}
+              clickedImage={clickedImage}
+              selectedReservationDialog={selectedReservationDialog}
+              editState={editState}
+              selectedReservation={selectedReservation}
+              handleCarSelectChange={handleCarSelectChange}
+              handleStartTime={handleStartTime}
+              handleEndTime={handleEndTime}
+              handleReservationSelection={handleReservationSelection}
+              setSelectedReservationDialog={setSelectedReservationDialog}
+              setImages={setImages}
+              setEditState={setEditState}
+              setSelectedReservation={setSelectedReservation}
+              handleFileChange={handleFileChange}
+              deleteImage={deleteImage}
+              setClickedImage={setClickedImage}
+              setSelectedCar={setSelectedCar}
+              carsData={carsData}
+              handleAvailabilityChange={handleAvailabilityChange}
+            />
+          )}
+          {reservationsListActive && (
+            <ReservationsList
+              reservations={reservations}
+              currentDay={currentDay}
+              deleteReservation={deleteReservation}
+              saveEditReservation={saveEditReservation}
+              clickedImage={clickedImage}
+              selectedReservationDialog={selectedReservationDialog}
+              editState={editState}
+              selectedReservation={selectedReservation}
+              handleCarSelectChange={handleCarSelectChange}
+              handleStartTime={handleStartTime}
+              handleEndTime={handleEndTime}
+              handleReservationSelection={handleReservationSelection}
+              setSelectedReservationDialog={setSelectedReservationDialog}
+              setImages={setImages}
+              setEditState={setEditState}
+              setSelectedReservation={setSelectedReservation}
+              handleFileChange={handleFileChange}
+              deleteImage={deleteImage}
+              setClickedImage={setClickedImage}
+              setSelectedCar={setSelectedCar}
+              carsData={carsData}
+              handleAvailabilityChange={handleAvailabilityChange}
+            />
+          )}
         </div>
-        {calendarActive && (
-          <Calendar
-            daysInMonth={daysInMonth}
-            reservations={reservations}
-            deleteReservation={deleteReservation}
-            saveEditReservation={saveEditReservation}
-            viewSelectedDay={viewSelectedDay}
-            clickedImage={clickedImage}
-            selectedReservationDialog={selectedReservationDialog}
-            editState={editState}
-            selectedReservation={selectedReservation}
-            handleCarSelectChange={handleCarSelectChange}
-            handleStartTime={handleStartTime}
-            handleEndTime={handleEndTime}
-            handleReservationSelection={handleReservationSelection}
-            setSelectedReservationDialog={setSelectedReservationDialog}
-            setImages={setImages}
-            setEditState={setEditState}
-            setSelectedReservation={setSelectedReservation}
-            handleFileChange={handleFileChange}
-            deleteImage={deleteImage}
-            setClickedImage={setClickedImage}
-            setSelectedCar={setSelectedCar}
-            carsData={carsData}
-            handleAvailabilityChange={handleAvailabilityChange}
-          />
-        )}
-        {reservationsListActive && (
-          <ReservationsList
-            reservations={reservations}
-            currentDay={currentDay}
-            deleteReservation={deleteReservation}
-            saveEditReservation={saveEditReservation}
-            clickedImage={clickedImage}
-            selectedReservationDialog={selectedReservationDialog}
-            editState={editState}
-            selectedReservation={selectedReservation}
-            handleCarSelectChange={handleCarSelectChange}
-            handleStartTime={handleStartTime}
-            handleEndTime={handleEndTime}
-            handleReservationSelection={handleReservationSelection}
-            setSelectedReservationDialog={setSelectedReservationDialog}
-            setImages={setImages}
-            setEditState={setEditState}
-            setSelectedReservation={setSelectedReservation}
-            handleFileChange={handleFileChange}
-            deleteImage={deleteImage}
-            setClickedImage={setClickedImage}
-            setSelectedCar={setSelectedCar}
-            carsData={carsData}
-            handleAvailabilityChange={handleAvailabilityChange}
-          />
-        )}
-      </div>
+      )}
     </Sidebar>
   );
 };

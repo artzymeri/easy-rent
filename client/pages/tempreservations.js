@@ -17,6 +17,7 @@ import {
 } from "@mui/icons-material";
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -32,15 +33,24 @@ import axios from "axios";
 import Sidebar from "@/app/Components/Sidebar";
 
 const TempReservationsList = (props) => {
+  const [loading, setLoading] = useState(true);
+
   const [reservations, setReservations] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:1234/gettempreservations").then((res) => {
-      setReservations(res.data);
-    });
+    setLoading(true);
+    axios
+      .get("http://localhost:1234/gettempreservations")
+      .then((res) => {
+        setReservations(res.data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const approveReservation = (reservation) => {
+    setLoading(true);
     axios
       .post(
         `http://localhost:1234/approvetempreservation/${reservation.id}`,
@@ -50,90 +60,102 @@ const TempReservationsList = (props) => {
         axios.get("http://localhost:1234/gettempreservations").then((res) => {
           setReservations(res.data);
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   const deleteReservation = (reservation) => {
+    setLoading(true);
     axios
       .post(`http://localhost:1234/deletetempreservation/${reservation.id}`)
       .then((res) => {
         axios.get("http://localhost:1234/gettempreservations").then((res) => {
           setReservations(res.data);
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   return (
     <Sidebar>
-      <div className="reservations-list-container">
-        {reservations && reservations.length > 0
-          ? reservations.map((reservation, index) => {
-              return (
-                <div
-                  className="reservations-list-item"
-                  style={{ justifyContent: "space-between" }}
-                  key={index}
-                >
+      {loading && <CircularProgress />}
+      {!loading && (
+        <div className="reservations-list-container">
+          {reservations && reservations.length > 0
+            ? reservations.map((reservation, index) => {
+                return (
                   <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "5px",
-                      fontSize: "14px",
-                      justifyContent: "center",
-                    }}
+                    className="reservations-list-item"
+                    style={{ justifyContent: "space-between" }}
+                    key={index}
                   >
-                    <span style={{ fontWeight: "600" }}>
-                      {reservation.clientNameSurnameD1}
-                    </span>
-                    <span>{reservation.carInfo}</span>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "10px",
-                    }}
-                  >
-                    <span>
-                      {dayjs(reservation.startTime).format("DD/MM/YYYY HH:mm")}
-                    </span>
-                    <span>
-                      {dayjs(reservation.endTime).format("DD/MM/YYYY HH:mm")}
-                    </span>
-                  </div>
-                  <div
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                      gap: "10px",
-                    }}
-                  >
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      onClick={() => {
-                        deleteReservation(reservation);
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                        fontSize: "14px",
+                        justifyContent: "center",
                       }}
                     >
-                      Fshij
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        approveReservation(reservation);
+                      <span style={{ fontWeight: "600" }}>
+                        {reservation.clientNameSurnameD1}
+                      </span>
+                      <span>{reservation.carInfo}</span>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: "10px",
                       }}
                     >
-                      Aprovo
-                    </Button>
+                      <span>
+                        {dayjs(reservation.startTime).format(
+                          "DD/MM/YYYY HH:mm"
+                        )}
+                      </span>
+                      <span>
+                        {dayjs(reservation.endTime).format("DD/MM/YYYY HH:mm")}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                        gap: "10px",
+                      }}
+                    >
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => {
+                          deleteReservation(reservation);
+                        }}
+                      >
+                        Fshij
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={() => {
+                          approveReservation(reservation);
+                        }}
+                      >
+                        Aprovo
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              );
-            })
-          : null}
-      </div>
+                );
+              })
+            : null}
+        </div>
+      )}
     </Sidebar>
   );
 };

@@ -12,7 +12,7 @@ import {
   NoCrash,
   Person,
 } from "@mui/icons-material";
-import { Tooltip } from "@mui/material";
+import { CircularProgress, Tooltip } from "@mui/material";
 import axios from "axios";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -25,6 +25,8 @@ dayjs.extend(isSameOrBefore);
 const Ballina = () => {
   const router = useRouter();
 
+  const [loading, setLoading] = useState(true);
+
   const [dayRevenue, setDayRevenue] = useState(0);
 
   const [veturatTotal, setVeturatTotal] = useState(0);
@@ -35,6 +37,7 @@ const Ballina = () => {
   const [currentDay, setCurrentDay] = useState(dayjs());
 
   const fetchActiveReservations = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         "http://localhost:1234/reservations/active"
@@ -53,12 +56,15 @@ const Ballina = () => {
           startDate.isSameOrBefore(today.endOf("day")) &&
           endDate.isSameOrAfter(today)
         ) {
-          totalRevenue = totalRevenue + parseInt(reservation.pricePerDay);
+          totalRevenue += parseInt(reservation.pricePerDay);
         }
       });
+
       setDayRevenue(totalRevenue);
     } catch (error) {
       console.error("Error fetching or calculating day revenue:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -138,7 +144,9 @@ const Ballina = () => {
 
   return (
     <Sidebar>
-      <div className="home-content">
+      {loading && <CircularProgress />}
+      {!loading && (
+        <div className="home-content">
         <div className="home-top-wrapper">
           <div className="home-item-top">
             <div>
@@ -381,6 +389,8 @@ const Ballina = () => {
           </div>
         </div>
       </div>
+      )}
+      
     </Sidebar>
   );
 };
