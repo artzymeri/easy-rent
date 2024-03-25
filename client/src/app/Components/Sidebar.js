@@ -58,14 +58,6 @@ const Sidebar = ({ children }) => {
 
   const [sidebarMobile, setSidebarMobile] = useState("none");
 
-  const [tempReservations, setTempReservations] = useState([]);
-
-  useEffect(() => {
-    axios.get("http://localhost:1234/gettempreservations").then((res) => {
-      setTempReservations(res.data);
-    });
-  }, []);
-
   return (
     <div
       style={{
