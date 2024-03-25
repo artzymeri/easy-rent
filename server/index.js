@@ -388,12 +388,13 @@ app.get("/getreservationsbyvetura/:veturaCarId", async (req, res) => {
   const { veturaCarId } = req.params;
 
   try {
-    const veturatData = await reservations.findAll({
+    const reservationsData = await reservations.findAll({
       where: {
         carId: veturaCarId,
+        active: true,
       },
     });
-    res.json(veturatData);
+    res.json(reservationsData);
   } catch (error) {
     console.error("Database query error:", error);
     res.status(500).json({ message: "An error occurred" });
