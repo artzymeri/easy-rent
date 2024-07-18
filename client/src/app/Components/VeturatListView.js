@@ -7,7 +7,6 @@ import {
   LocalGasStationOutlined,
   RestoreOutlined,
 } from "@mui/icons-material";
-import VeturatFooter from "./VeturatFooter";
 
 const VeturatListView = (props) => {
   const {
@@ -120,7 +119,6 @@ const VeturatListView = (props) => {
           );
         })}
       </div>
-      {/* <VeturatFooter /> */}
     </>
   );
 };

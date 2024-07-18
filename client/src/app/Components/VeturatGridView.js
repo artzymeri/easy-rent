@@ -1,7 +1,6 @@
 import React from "react";
 import "@/app/Styling/global-styling.css";
 import "@/app/Styling/Veturat/veturat-grid-view.css";
-import VeturatFooter from "./VeturatFooter";
 import {
   Delete,
   Edit,
@@ -140,7 +139,6 @@ const VeturatListView = (props) => {
           );
         })}
       </div>
-      {/* <VeturatFooter /> */}
     </>
   );
 };

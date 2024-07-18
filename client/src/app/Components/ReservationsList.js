@@ -125,6 +125,16 @@ const ReservationsList = (props) => {
     }
   };
 
+  const checkIfNoTodayReservations = (reservationArray) => {
+      let reservationsToShow = 0;
+      for (const reservation of reservationArray) {
+          if (checkIfToday(reservation) || checkIfBetween(reservation) == 'departing' || checkIfBetween(reservation) == 'arriving') {
+              reservationsToShow++
+          }
+      }
+      return reservationsToShow;
+  }
+
   return (
     <>
       <Dialog open={clickedImage} onClose={() => setClickedImage(null)}>
@@ -706,6 +716,11 @@ const ReservationsList = (props) => {
               }
             })
           : null}
+          {checkIfNoTodayReservations(reservations) == 0 &&
+              <div className="no-active-today-reservations">
+                  <Error style={{color: 'gray'}}/>
+                  <span>Nuk ka reservime aktive sot!</span>
+              </div>}
       </div>
     </>
   );

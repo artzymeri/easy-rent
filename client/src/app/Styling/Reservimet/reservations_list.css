@@ -45,3 +45,15 @@
   color: white;
   border-radius: 20px;
 }
+
+.no-active-today-reservations {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 5px;
+}
+
+.no-active-today-reservations span {
+  color: gray;
+}

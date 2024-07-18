@@ -38,11 +38,6 @@ const navigationOptions = [
     link: "/shtoreservim",
     icon: <Add />,
   },
-  {
-    title: "Reservimet Online",
-    link: "/tempreservations",
-    icon: <RssFeed />,
-  },
 ];
 
 const Sidebar = ({ children }) => {
