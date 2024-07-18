@@ -409,9 +409,12 @@ const Reservimet = () => {
         { selectedReservation },
         { responseType: "blob" }
       );
+      
 
       const downloadLink = document.createElement("a");
       const blob = new Blob([response.data], { type: "application/pdf" });
+
+      console.log(blob);
       const url = URL.createObjectURL(blob);
 
       downloadLink.href = url;

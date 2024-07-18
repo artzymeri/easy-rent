@@ -20,7 +20,7 @@ import axios from "axios";
 const navigationOptions = [
   {
     title: "Ballina",
-    link: "/ballina",
+    link: "/",
     icon: <Home />,
   },
   {

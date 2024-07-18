@@ -26,7 +26,7 @@ function generateCarDiagram(doc) {
 }
 
 function generateCarFuel(doc) {
-  doc.image("fueltank.jpg", 431, 46, { width: 128, height: 133 }).moveDown();
+  doc.image("fueltank.jpeg", 431, 46, { width: 128, height: 133 }).moveDown();
 }
 
 function generateHeaderInfo(doc) {
@@ -92,7 +92,7 @@ function generateReservationInfo(doc, theReservation) {
     .text("Me nënshkrimin e kësaj kontrate pranoj se do të marrë", 310, 335)
     .text("përgiegjësi të plotë për automjetin e cekur nga", 330, 346)
     .text("Filan Fisteku.", 400, 357)
-    .text("Koment Shtesë::", 300, 390)
+    .text("Koment Shtesë:", 300, 390)
     .text("Shoferi 1", 139, 469)
     .text("Shoferi 2", 404, 469)
     .fontSize(9)
