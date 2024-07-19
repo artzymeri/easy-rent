@@ -4,16 +4,13 @@ import "@/app/Styling/Veturat/veturat-list-view.css";
 import { Tooltip } from "@mui/material";
 import {
   Delete,
+  Error,
   LocalGasStationOutlined,
   RestoreOutlined,
 } from "@mui/icons-material";
 
 const VeturatListView = (props) => {
-  const {
-    carsData,
-    handleClickOnCar,
-    handleDeleteCarClick,
-  } = props;
+  const { carsData, handleClickOnCar, handleDeleteCarClick } = props;
 
   const checkStatus = (carStatus) => {
     if (carStatus == "available") {
@@ -118,6 +115,22 @@ const VeturatListView = (props) => {
             </div>
           );
         })}
+        {carsData.length == 0 && (
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            <Error style={{ color: "gray" }} />
+            <span style={{ color: "gray" }}>
+              Skeni vetura të regjistruara akoma
+            </span>
+          </div>
+        )}
       </div>
     </>
   );
