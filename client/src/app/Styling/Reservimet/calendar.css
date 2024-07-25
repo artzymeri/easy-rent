@@ -74,3 +74,21 @@
     margin-top: 20px;
   }
 }
+
+.qrcodeclass {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center;
+  border: 0px solid transparent !important;
+}
+
+#html5-qrcode-button-camera-stop,
+#html5-qrcode-button-camera-start {
+  padding: 6px 12px;
+  background: #015c92;
+  color: white;
+}
+
+#html5-qrcode-anchor-scan-type-change {
+  display: none !important;
+}

@@ -46,6 +46,7 @@ const QRCodeScanner = (props) => {
     return (
         <div id={qrcodeRegionId} className='qrcodeclass' style={{height: '100%', width: '100%'}} />
     );
+
 };
 
 export default QRCodeScanner;
